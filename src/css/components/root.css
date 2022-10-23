@@ -1,4 +1,10 @@
 :root {
+    --sb-red: #98111E;
+    --sb-black: #564e58;
+    --sb-blue: #6494aa;
+    --sb-tan: #ffb07b;
+    --sb-orange: #e24e1b;
+    --sb-white: #f2efe9;
     --header-height: 60px;
 }
 
