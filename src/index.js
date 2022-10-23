@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+
 import './css/index.css';
 import Home from './js/Home';
 import reportWebVitals from './js/reportWebVitals';
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Devplan from "./js/Devplan";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
         <React.StrictMode>
             <Routes>
+                <Route path={"/devplan"} element={<Devplan/>}/>
                 <Route path={"/*"} element={<Home/>}/>
             </Routes>
         </React.StrictMode>
