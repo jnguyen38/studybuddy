@@ -1,4 +1,4 @@
-import ERDiagram from "../media/initial-ER.jpg"
+import ERDiagram from "../media/initial-ER.jpg";
 
 export default function Overview() {
     return (

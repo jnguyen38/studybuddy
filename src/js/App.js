@@ -8,6 +8,8 @@ import Overview from "./Overview";
 export default function App() {
     const [UXMode, setUXMode] = useState(true);
 
+    const path = "/cse30246/studybuddy/build";
+
     function changeUXMode() {
         setUXMode(!UXMode);
     }
@@ -23,11 +25,11 @@ export default function App() {
 
     return (
         <main id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
-            <Header UXMode={UXMode}/>
+            <Header UXMode={UXMode} path={path}/>
             <Routes>
-                <Route path={"/devplan"} element={<Devplan UXMode={UXMode}/>}/>
-                <Route path={"/*"} element={<Home UXMode={UXMode} />}/>
-                <Route path={"/overview"} element={<Overview/>}/>
+                <Route path={path + "/devplan"} element={<Devplan UXMode={UXMode}/>}/>
+                <Route path={path + "/*"} element={<Home UXMode={UXMode} />}/>
+                <Route path={path + "/overview"} element={<Overview/>}/>
             </Routes>
             <button onClick={changeUXMode}>{(UXMode) ? "Dark Mode" : "Light Mode"}</button>
         </main>
