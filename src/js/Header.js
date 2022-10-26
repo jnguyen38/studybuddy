@@ -5,12 +5,12 @@ function handleScroll() {
 
 }
 
-function Header() {
+function Header(props) {
     const [menuClicked, setMenuClicked] = useState(false);
 
-    const homeRedirect = "./";
-    const devRedirect = "./devplan";
-    const overviewRedirect = "./overview";
+    const homeRedirect = props.path + "/";
+    const devRedirect = props.path + "/devplan";
+    const overviewRedirect = props.path + "/overview";
 
     function menuClick() {
         setMenuClicked(() => {
@@ -50,4 +50,3 @@ function Header() {
 }
 
 export default Header;
-
