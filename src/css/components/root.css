@@ -2,6 +2,7 @@
     --sb-red: #98111E;
     --sb-black: #564e58;
     --sb-blue: #6494aa;
+    --sb-dark-blue: #4b7080;
     --sb-tan: #ffb07b;
     --sb-orange: #e24e1b;
     --sb-white: #f2efe9;
@@ -20,6 +21,16 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.dark-mode {
+    background-color: var(--sb-black);
+    color: var(--sb-white);
+}
+
+.light-mode {
+    background-color: var(--sb-white);
+    color: var(--sb-dark-blue);
 }
 
 h1, h2, h3, h4, h5, h6, p {
@@ -70,6 +81,7 @@ textarea:focus, input:focus{
 
 .black {background-color: black !important;}
 .thick {height: 4px !important;}
+
 
 @font-face {
     font-family: Outfit;

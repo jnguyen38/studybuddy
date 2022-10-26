@@ -1,21 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 
 import './css/index.css';
-import Home from './js/Home';
 import reportWebVitals from './js/reportWebVitals';
-import Devplan from "./js/Devplan";
+import App from "./js/App";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
     <BrowserRouter>
-        <React.StrictMode>
-            <Routes>
-                <Route path={"/devplan"} element={<Devplan/>}/>
-                <Route path={"/*"} element={<Home/>}/>
-            </Routes>
-        </React.StrictMode>
+            <App/>
     </BrowserRouter>
 
 );
