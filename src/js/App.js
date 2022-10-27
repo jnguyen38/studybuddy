@@ -5,9 +5,11 @@ import Devplan from "./Devplan";
 import Home from "./Home";
 import Header from "./Header";
 import Overview from "./Overview";
+import Axios from "axios";
 
 export default function App() {
     const [UXMode, setUXMode] = useState(true);
+    const [spots, setSpots] = useState([]);
 
     const path = "";
     const basePath = "http://db8.cse.nd.edu:5000";
@@ -15,6 +17,13 @@ export default function App() {
     function changeUXMode() {
         setUXMode(!UXMode);
     }
+
+    useEffect(() => {
+        Axios.get(basePath + "/api/get").then((data)=>{
+            setSpots(data.data)
+            console.log(data)
+        });
+    }, [basePath]);
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
@@ -29,7 +38,9 @@ export default function App() {
             <Header UXMode={UXMode} path={path}/>
             <Routes>
                 <Route path={path + "/devplan"} element={<Devplan UXMode={UXMode}/>}/>
-                <Route path={path + "/*"} element={<Home UXMode={UXMode} basePath={basePath}/>}/>
+                <Route path={path + "/*"} element={<Home UXMode={UXMode}
+                                                         spots={spots}
+                                                         basePath={basePath}/>}/>
                 <Route path={path + "/overview"} element={<Overview/>}/>
             </Routes>
             <button onClick={changeUXMode}>{(UXMode) ? "Dark Mode" : "Light Mode"}</button>

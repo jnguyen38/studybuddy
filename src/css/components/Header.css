@@ -52,6 +52,10 @@
     height: 100%;
 }
 
+#settings {
+
+}
+
 .nav-item {
     width: 150px;
     height: 100%;
@@ -60,8 +64,8 @@
 }
 
 .nav-item:hover {
-    color: var(--sb-black);
-    background-color: var(--sb-white);
+    color: var(--inverted-text-color);
+    background-color: var(--inverted-bg-color);
 }
 
 .nav-item:active {

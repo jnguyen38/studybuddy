@@ -24,13 +24,26 @@ code {
 }
 
 .dark-mode {
+    --inverted-bg-color: var(--sb-white);
+    --inverted-bg-rgba: rgba(242, 239, 233, .6);
+    --inverted-text-color: var(--sb-dark-blue);
+    --reg-bg-rgba: rgba(86, 78, 88, .6);
     background-color: var(--sb-black);
     color: var(--sb-white);
 }
 
 .light-mode {
+    --inverted-bg-color: var(--sb-blue);
+    --inverted-bg-rgba: rgba(100, 148, 170, .6);
+    --inverted-text-color: var(--sb-white);
+    --reg-bg-rgba: rgba(242, 239, 233, .6);
     background-color: var(--sb-white);
     color: var(--sb-dark-blue);
+}
+
+.blur {
+    backdrop-filter: blur(2px);
+    background-color: var(--inverted-bg-rgba);
 }
 
 h1, h2, h3, h4, h5, h6, p {
@@ -38,7 +51,10 @@ h1, h2, h3, h4, h5, h6, p {
     font-family: Outfit, sans-serif;
 }
 
-a { text-decoration: none; }
+a {
+    text-decoration: none;
+    color: inherit;
+}
 a:active { text-decoration: none; }
 a:visited {
     text-decoration: none;
