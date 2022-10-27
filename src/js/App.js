@@ -1,14 +1,16 @@
 import {Route, Routes} from "react-router-dom";
+import {useEffect, useState} from "react";
+
 import Devplan from "./Devplan";
 import Home from "./Home";
-import {useEffect, useState} from "react";
 import Header from "./Header";
 import Overview from "./Overview";
 
 export default function App() {
     const [UXMode, setUXMode] = useState(true);
 
-    const path = "/cse30246/studybuddy/build";
+    const path = "";
+    const basePath = "http://db8.cse.nd.edu:5000";
 
     function changeUXMode() {
         setUXMode(!UXMode);
@@ -16,7 +18,6 @@ export default function App() {
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
-        console.log(window.localStorage)
     }, []);
 
     useEffect(() => {
@@ -28,7 +29,7 @@ export default function App() {
             <Header UXMode={UXMode} path={path}/>
             <Routes>
                 <Route path={path + "/devplan"} element={<Devplan UXMode={UXMode}/>}/>
-                <Route path={path + "/*"} element={<Home UXMode={UXMode} />}/>
+                <Route path={path + "/*"} element={<Home UXMode={UXMode} basePath={basePath}/>}/>
                 <Route path={path + "/overview"} element={<Overview/>}/>
             </Routes>
             <button onClick={changeUXMode}>{(UXMode) ? "Dark Mode" : "Light Mode"}</button>
