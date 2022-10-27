@@ -4,14 +4,14 @@ function Names() {
             <h1>Study Buddy</h1>
             <h2>Stage 2: Development Plan</h2>
             <h3>Team Members:</h3>
-            <p>
-                <ul>
-                    <li>Andrea Turner (aturne22)</li>
-                    <li>Brooke Mackey (bmackey)</li>
-                    <li>Thomas Mercurio (tmercuri)</li>
-                    <li>Jon Nguyen (jngyen5)</li>
-                </ul>
-            </p>
+
+            <ul>
+                <li>Andrea Turner (aturne22)</li>
+                <li>Brooke Mackey (bmackey)</li>
+                <li>Thomas Mercurio (tmercuri)</li>
+                <li>Jon Nguyen (jngyen5)</li>
+            </ul>
+
         </section>
     );
 }
