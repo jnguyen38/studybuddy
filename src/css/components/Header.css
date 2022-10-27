@@ -52,8 +52,22 @@
     height: 100%;
 }
 
-#settings {
+#settings-icon {
+    --settings-width: 36px;
+    margin-left: 20px;
+    width: 40px;
+    filter: var(--icon-filter);
+    cursor: pointer;
+}
 
+#settings-icon:hover {
+    --settings-width: 40px;
+}
+
+.settings {
+    color: white;
+    width: var(--settings-width);
+    transition: width .25s;
 }
 
 .nav-item {

@@ -42,8 +42,9 @@ function Header(props) {
                 <Link to={overviewRedirect}>
                     <div className="nav-item d-flex-row-c"><h2 className="nav-link">Overview</h2></div>
                 </Link>
-                <div id={"settings-icon"}>
-                    <img src={settings} alt=""/>
+                <div id={"settings-icon"} className={"d-flex-row-c"}>
+                    <img src={settings} alt="" className={"settings"}/>
+                    {/*<span className={"settings"}>{settings}</span>*/}
                 </div>
             </nav>
             <div id="nav-menu" className={(menuClicked) ? "open" : ""} onClick={menuClick}>
