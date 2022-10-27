@@ -1,11 +1,59 @@
-#home-container, #devplan-container, #overview-container {
-    width: 80%;
+#home-bg {
+    background-image: url("../../media/ND_map_bw.png");
+
+}
+
+#home-container {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
     padding-top: calc(var(--header-height) * 1.5);
     margin: 0 auto;
     min-height: 100vh;
+    background-color: var(--reg-bg-rgba);
+}
+
+#home-menu {
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+    gap: 30px;
+    max-width: 800px;
+    margin: 50px;
+}
+
+.home-option {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    width: 250px;
+    height: 150px;
+    background-color: var(--inverted-bg-color);
+    color: var(--inverted-text-color);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px var(--inverted-bg-color);
+    transition: all .25s;
+}
+
+.home-option:hover {
+    box-shadow: 0 0 20px var(--inverted-bg-color);
+}
+
+.home-option p {
+    font-size: 1.1em;
+}
+
+.home-intro {
+    width: 600px;
+    height: 150px;
+    border-radius: 10px;
+    margin: 20px 0;
 }
 
 .typewriter h1 {
+    color: var(--inverted-text-color);
     width: 430px;
     overflow: hidden;
     border-right: 5px solid var(--sb-orange);
