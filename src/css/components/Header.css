@@ -62,12 +62,18 @@
 
 #settings-icon:hover {
     --settings-width: 40px;
+    animation: rotate 2s linear infinite;
+}
+
+#settings-icon:active {
+    --settings-width: 48px;
+    animation: rotate 2s linear infinite;
 }
 
 .settings {
     color: white;
     width: var(--settings-width);
-    transition: width .25s;
+    transition: width .15s;
 }
 
 .nav-item {
@@ -125,3 +131,7 @@
     }
 }
 
+@keyframes rotate {
+    from {rotate: 0deg;}
+    to {rotate: 360deg;}
+}
