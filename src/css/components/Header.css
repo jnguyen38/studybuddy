@@ -7,7 +7,7 @@
     width: 100%;
     max-width: 100%;
     position: fixed;
-    z-index: 200;
+    z-index: 20;
     opacity: 1;
     box-shadow: 0 0 10px black;
     backdrop-filter: blur(5px);
@@ -54,6 +54,7 @@
     width: 40px;
     filter: var(--icon-filter);
     cursor: pointer;
+    z-index: 50;
 }
 
 #settings-icon:hover {

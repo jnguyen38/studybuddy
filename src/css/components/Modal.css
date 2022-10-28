@@ -1,0 +1,54 @@
+@keyframes modalOpacity {
+    0% {background-color: rgba(0,0,0,0)}
+    100% {background-color: rgba(0,0,0,0.7)}
+}
+
+@keyframes slideOut {
+    from {transform: translateX(100%)}
+    to {transform: translateX(0)}
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 30;
+    animation: modalOpacity .25s linear;
+}
+
+.modal-main {
+    background-color: var(--reg-bg-color);
+    display: flex;
+    flex-flow: column;
+    position: absolute;
+    right: 0;
+    width: 400px;
+    height: 100vw;
+    margin-left: auto;
+    padding: 40px 0 40px 40px;
+    animation: slideOut .2s ease-in-out;
+}
+
+.modal-title {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.options-display {
+    display: flex;
+    flex-flow: column;
+    margin-top: 20px;
+}
+
+.settings-button {
+    width: 100px;
+}
+
+.item-clicked {
+    animation: modalOpacity 1s;
+}

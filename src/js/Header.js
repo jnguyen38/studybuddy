@@ -1,13 +1,14 @@
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import settings from "../media/icons/settings.svg";
+import SettingsModal from "./Modal";
 
 function handleScroll() {
 
 }
 
 function Header(props) {
-
+    const [showSettings, setShowSettings] = useState(false);
     const [menuClicked, setMenuClicked] = useState(false);
 
     const homeRedirect = props.path + "/";
@@ -15,9 +16,15 @@ function Header(props) {
     const overviewRedirect = props.path + "/overview";
 
     function menuClick() {
-        setMenuClicked(() => {
-           return !menuClicked;
-        });
+        setMenuClicked(() => !menuClicked);
+    }
+
+    function handleClose() {
+        setShowSettings(false);
+    }
+
+    function changeSettings() {
+        setShowSettings(() => !showSettings)
     }
 
     useEffect(() => {
@@ -47,10 +54,12 @@ function Header(props) {
                 <Link to={overviewRedirect}>
                     <div className="nav-item d-flex-row-c"><h2 className="nav-link">Overview</h2></div>
                 </Link>
-                <div id={"settings-icon"} className={"d-flex-row-c"}>
+                <div id={"settings-icon"} className={"d-flex-row-c"} onClick={changeSettings}>
                     <img src={settings} alt="" className={"settings"}/>
-                    {/*<span className={"settings"}>{settings}</span>*/}
                 </div>
+                <SettingsModal show={showSettings} close={handleClose}
+                               changeUXMode={props.changeUXMode} UXMode={props.UXMode}
+                               className={(showSettings) ? "item-clicked" : 0}/>
             </nav>
             <div id="nav-menu" className={(menuClicked) ? "open" : ""} onClick={menuClick}>
                 <span/> <span/> <span/> <span/>

@@ -5,6 +5,7 @@ import Devplan from "./Devplan";
 import Home from "./Home";
 import Header from "./Header";
 import Overview from "./Overview";
+import Footer from "./Footer";
 import Axios from "axios";
 
 export default function App() {
@@ -37,7 +38,7 @@ export default function App() {
 
     return (
         <main id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
-            <Header UXMode={UXMode} path={path}/>
+            <Header changeUXMode={changeUXMode} UXMode={UXMode} path={path}/>
             <Routes>
                 <Route path={path + "/devplan"} element={<Devplan UXMode={UXMode}/>}/>
                 <Route path={path + "/*"} element={<Home UXMode={UXMode}
@@ -45,7 +46,7 @@ export default function App() {
                                                          basePath={basePath}/>}/>
                 <Route path={path + "/overview"} element={<Overview/>}/>
             </Routes>
-            <button onClick={changeUXMode}>{(UXMode) ? "Dark Mode" : "Light Mode"}</button>
+            <Footer/>
         </main>
     );
 }

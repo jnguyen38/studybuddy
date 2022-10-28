@@ -14,8 +14,8 @@
 
 #home-menu {
     background-color: var(--reg-bg-color);
-    padding: 50px 10vw;
-    width: 80vw;
+    padding: 50px 10%;
+    width: 80%;
     min-height: 100vh;
     z-index: 10;
 }
