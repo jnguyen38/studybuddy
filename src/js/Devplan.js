@@ -1,7 +1,8 @@
 function Names() {
     return (
         <section>
-            <h1>Study Buddy</h1>
+            <h1>Study Buddy</h1><br/>
+            <div className={"line"}/><br/>
             <h2>Stage 2: Development Plan</h2>
             <h3>Team Members:</h3>
 
@@ -9,7 +10,7 @@ function Names() {
                 <li>Andrea Turner (aturne22)</li>
                 <li>Brooke Mackey (bmackey)</li>
                 <li>Thomas Mercurio (tmercuri)</li>
-                <li>Jon Nguyen (jngyen5)</li>
+                <li>Jon Nguyen (jnguyen5)</li>
             </ul>
 
         </section>
@@ -19,7 +20,8 @@ function Names() {
 export default function Devplan() {
     return (
         <div id="devplan-container">
-          <Names/>
+            <Names/>
+            <div className={"line"}/>
 
           <h3>Relational Schema</h3>
           <p>

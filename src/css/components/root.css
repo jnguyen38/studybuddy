@@ -1,9 +1,11 @@
 :root {
     --sb-red: #98111E;
     --sb-black: #564e58;
-    --sb-blue: #6494aa;
-    --sb-dark-blue: #4b7080;
+    --sb-dark-blue: #0b2141;
+    --sb-light-blue: #6494aa;
+    --sb-blue: #4b7080;
     --sb-tan: #ffb07b;
+    --sb-yellow: #c99601;
     --sb-orange: #e24e1b;
     --sb-white: #f2efe9;
     --header-height: 60px;
@@ -27,20 +29,23 @@ code {
     --inverted-bg-color: var(--sb-white);
     --inverted-bg-rgba: rgba(242, 239, 233, .8);
     --inverted-text-color: var(--sb-dark-blue);
-    --reg-bg-rgba: rgba(86, 78, 88, .6);
+    --reg-bg-color: var(--sb-dark-blue);
+    --reg-bg-rgba: rgba(11, 33, 65, .4);
+    --reg-bg-rgba-header: rgba(11, 33, 65, .8);
     --icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);;
-    background-color: var(--sb-black);
+    background-color: var(--sb-dark-blue);
     color: var(--sb-white);
 }
 
 .light-mode {
-    --inverted-bg-color: var(--sb-blue);
-    --inverted-bg-rgba: rgba(100, 148, 170, .6);
+    --inverted-bg-color: var(--sb-light-blue);
+    --inverted-bg-rgba: rgba(11, 33, 65, .75);
     --inverted-text-color: var(--sb-white);
+    --reg-bg-color: var(--sb-white);
     --reg-bg-rgba: rgba(242, 239, 233, .6);
     --icon-filter: invert(39%) sepia(27%) saturate(540%) hue-rotate(153deg) brightness(96%) contrast(86%);
     background-color: var(--sb-white);
-    color: var(--sb-dark-blue);
+    color: var(--sb-blue);
 }
 
 .blur {
@@ -81,6 +86,13 @@ a:link { text-decoration: none; }
     flex-flow: column;
 }
 
+.d-flex-col-c {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+}
+
 textarea:focus, input:focus{
     outline: none;
 }
@@ -100,6 +112,31 @@ textarea:focus, input:focus{
 .black {background-color: black !important;}
 .thick {height: 4px !important;}
 
+.fs-buffer {
+    height: 100vh;
+    width: 80%;
+}
+
+@media only screen and (max-width: 768px) {
+    #header-nav {
+        display: none !important;
+    }
+
+    #home-menu {
+        text-align: center;
+    }
+
+    .home-intro h1 {
+        font-size: 3em !important;
+    }
+
+    .typewriter {
+        --home-typewriter-width: 290px !important;
+        --carat-width: 5px !important;
+        height: 40px !important;
+    }
+}
+
 
 @font-face {
     font-family: Outfit;
@@ -110,4 +147,9 @@ textarea:focus, input:focus{
 @font-face {
     font-family: Yellowtail;
     src: url("../../media/fonts/Yellowtail/Yellowtail-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: College;
+    src: url("../../media/fonts/College/college.ttf") format("truetype");
 }

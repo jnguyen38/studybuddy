@@ -9,7 +9,7 @@ import Axios from "axios";
 
 export default function App() {
     const [UXMode, setUXMode] = useState(true);
-    const [spots, setSpots] = useState([]);
+    const [spots, setSpots] = useState("");
 
     const path = "";
     const basePath = "http://db8.cse.nd.edu:5000";
@@ -19,11 +19,13 @@ export default function App() {
     }
 
     useEffect(() => {
-        Axios.get(basePath + "/api/get").then((data)=>{
-            setSpots(data.data)
+        Axios.get(basePath + "/api/get/test").then((data)=>{
+            setSpots(data.data[0].url)
             console.log(data)
+        }).then(() => {
+            console.log(spots)
         });
-    }, [basePath]);
+    }, [basePath, spots]);
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));

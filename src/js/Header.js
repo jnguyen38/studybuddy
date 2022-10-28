@@ -7,6 +7,7 @@ function handleScroll() {
 }
 
 function Header(props) {
+
     const [menuClicked, setMenuClicked] = useState(false);
 
     const homeRedirect = props.path + "/";
@@ -20,11 +21,15 @@ function Header(props) {
     }
 
     useEffect(() => {
+        console.log(props.spots)
+    }, [props.spots]);
+
+    useEffect(() => {
         window.addEventListener('scroll', handleScroll, { passive: true })
         return () => {
             window.removeEventListener('scroll', handleScroll)
         };
-    });
+    }, []);
 
     return (
         <div className="header">

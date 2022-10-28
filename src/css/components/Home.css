@@ -1,6 +1,5 @@
 #home-bg {
     background-image: url("../../media/ND_map_bw.png");
-
 }
 
 #home-container {
@@ -8,13 +7,24 @@
     flex-flow: column;
     align-items: center;
     width: 100%;
-    padding-top: calc(var(--header-height) * 1.5);
     margin: 0 auto;
     min-height: 100vh;
     background-color: var(--reg-bg-rgba);
 }
 
 #home-menu {
+    background-color: var(--reg-bg-color);
+    padding: 50px 10vw;
+    width: 80vw;
+    min-height: 100vh;
+    z-index: 10;
+}
+
+#home-menu > h1 {
+    font-size: 3.5em;
+}
+
+#home-op-display {
     display: flex;
     justify-content: center;
     flex-flow: wrap;
@@ -41,27 +51,34 @@
     box-shadow: 0 0 20px var(--inverted-bg-color);
 }
 
-.home-option p {
-    font-size: 1.1em;
+.home-option p {font-size: 1.1em;}
+
+.home-intro h1 {
+    font-family: College, sans-serif;
+    font-size: 9em;
+    cursor: default;
 }
 
-.home-intro {
-    width: 600px;
-    height: 150px;
-    border-radius: 10px;
-    margin: 20px 0;
+.typewriter {
+    --home-typewriter-width: 820px;
+    --carat-width: 15px;
+    height: 140px;
+    background-color: var(--sb-dark-blue);
+    padding: 15px 25px 15px 15px;
+    display: flex;
+    align-items: center;
 }
 
 .typewriter h1 {
-    color: var(--inverted-text-color);
-    width: 430px;
+    color: var(--sb-yellow);
+    width: var(--home-typewriter-width);
     overflow: hidden;
-    border-right: 5px solid var(--sb-orange);
+    border-right: var(--carat-width) solid var(--sb-white);
     white-space: nowrap;
     margin: 0 auto;
     letter-spacing: 3px;
     animation:
-            typing 2s steps(23, end),
+            typing 1.5s steps(20, end),
             blink-caret .75s step-end infinite;
 }
 
@@ -86,7 +103,7 @@
 
 @keyframes typing {
     from { width: 0; }
-    to { width: 430px; }
+    to { width: var(--home-typewriter-width); }
 }
 
 @keyframes typingOut {
@@ -106,5 +123,5 @@
 
 @keyframes blink-caret {
     from, to { border-color: transparent; }
-    50% { border-color: var(--sb-orange); }
+    50% { border-color: var(--sb-white); }
 }
