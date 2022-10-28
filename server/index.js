@@ -8,7 +8,8 @@ app.use(cors());
 app.use(express.json())
 
 app.get("/api/get/study-location", (req, res) => {
-    db.query("SELECT spot_id, building, location FROM study_spots", (err, result) => {
+    db.query("SELECT spot_id, building, location \
+                FROM study_spots", (err, result) => {
         if (err) console.log(err)
         res.send(result)
     })
@@ -16,10 +17,19 @@ app.get("/api/get/study-location", (req, res) => {
 
 // Route to get all posts
 app.get("/api/get", (req, res) => {
-    db.query("SELECT spot_id FROM study_spots", (err, result) => {
+    db.query("SELECT * \
+                FROM study_spots", (err, result) => {
         if (err) console.log(err)
         res.send(result)
     });
+});
+
+app.get("/api/get/test", (req, res) => {
+    db.query("SELECT * \
+                FROM test", (err,result) => {
+        if (err) console.log(err)
+        res.send(result)
+    })
 });
 
 app.listen(PORT, ()=>{
