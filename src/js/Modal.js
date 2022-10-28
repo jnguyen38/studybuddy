@@ -6,6 +6,7 @@ export default function SettingsModal(props) {
 
     return (
         <div className={"modal"} onClick={props.close}>
+            <div className={"modal-effect"}/>
             <div className={"modal-main"}>
                 <h1 className={"modal-title"}>Settings</h1>
                 <div className={"line thick"}/>

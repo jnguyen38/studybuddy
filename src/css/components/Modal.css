@@ -3,9 +3,15 @@
     100% {background-color: rgba(0,0,0,0.7)}
 }
 
+@keyframes bumpOut {
+    from {transform: translateX(100%)}
+    80% {transform: translateX(-10%)}
+    to {transform: translateX(0%)}
+}
+
 @keyframes slideOut {
     from {transform: translateX(100%)}
-    to {transform: translateX(0)}
+    to {transform: translateX(0%)}
 }
 
 .modal {
@@ -21,6 +27,15 @@
     animation: modalOpacity .25s linear;
 }
 
+.modal-effect {
+    background-color: var(--sb-yellow);
+    position: absolute;
+    right: 0;
+    width: 440px;
+    height: 100vh;
+    animation: bumpOut .25s ease-in-out;
+}
+
 .modal-main {
     background-color: var(--reg-bg-color);
     display: flex;
@@ -31,7 +46,7 @@
     height: 100vw;
     margin-left: auto;
     padding: 40px 0 40px 40px;
-    animation: slideOut .2s ease-in-out;
+    animation: slideOut .25s ease-in-out;
 }
 
 .modal-title {
