@@ -28,9 +28,10 @@ code {
 .dark-mode {
     --inverted-bg-color: var(--sb-white);
     --inverted-bg-rgba: rgba(242, 239, 233, .8);
-    --inverted-text-color: var(--sb-blue);
+    --inverted-text-color: var(--sb-dark-blue);
     --reg-bg-color: var(--sb-dark-blue);
     --reg-bg-rgba: rgba(11, 33, 65, .4);
+    --reg-bg-rgba-header: rgba(11, 33, 65, .8);
     --icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);;
     background-color: var(--sb-dark-blue);
     color: var(--sb-white);
@@ -85,6 +86,13 @@ a:link { text-decoration: none; }
     flex-flow: column;
 }
 
+.d-flex-col-c {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+}
+
 textarea:focus, input:focus{
     outline: none;
 }
@@ -106,6 +114,27 @@ textarea:focus, input:focus{
 
 .fs-buffer {
     height: 100vh;
+    width: 80%;
+}
+
+@media only screen and (max-width: 768px) {
+    #header-nav {
+        display: none !important;
+    }
+
+    #home-menu {
+        text-align: center;
+    }
+
+    .home-intro h1 {
+        font-size: 3em !important;
+    }
+
+    .typewriter {
+        --home-typewriter-width: 290px !important;
+        --carat-width: 5px !important;
+        height: 40px !important;
+    }
 }
 
 

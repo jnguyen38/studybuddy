@@ -10,7 +10,8 @@
     z-index: 200;
     opacity: 1;
     box-shadow: 0 0 10px black;
-    background-color: inherit;
+    backdrop-filter: blur(5px);
+    background-color: var(--reg-bg-rgba-header);
 }
 
 .header-buffer {
@@ -25,9 +26,10 @@
 }
 
 #header-main h1 {
-    font-size: 2.1em;
+    font-size: 2.3em;
     font-family: Yellowtail, sans-serif;
     font-weight: 200;
+    color: var(--sb-yellow);
 }
 
 #header-logo {
@@ -40,12 +42,6 @@
 #header-nav {
     height: 100%;
     margin-right: 20px;
-}
-
-@media only screen and (max-width: 768px) {
-    #header-nav {
-        display: none;
-    }
 }
 
 #header-nav a{
