@@ -15,7 +15,8 @@ export default function Home() {
                 </div>
 
                 <div id={"home-menu"} className={"d-flex-col-c"}>
-                    <h1>Explore Our Page</h1>
+                    <h1>Explore Our Page</h1><br/>
+                    <div className={"line thick"}/>
                     <div id={"home-op-display"}>
                         <Link to={"/search"}><div className={"home-option"}>
                             <h1>🔍 Search &rarr;</h1>
