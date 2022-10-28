@@ -22,6 +22,14 @@ app.get("/api/get", (req, res) => {
     });
 });
 
+app.get("/api/get/test", (req, res) => {
+    db.query("SELECT * \
+                FROM test", (err, result) => {
+        if (err) console.log(err)
+        res.send(result)
+    });
+});
+
 app.listen(PORT, ()=>{
     console.log("Server is running on port " + PORT)
 })
