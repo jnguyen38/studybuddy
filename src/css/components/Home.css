@@ -56,7 +56,7 @@
     color: var(--inverted-text-color);
     width: 430px;
     overflow: hidden;
-    border-right: 5px solid var(--sb-orange);
+    border-right: 5px solid var(--sb-yellow);
     white-space: nowrap;
     margin: 0 auto;
     letter-spacing: 3px;
@@ -106,5 +106,5 @@
 
 @keyframes blink-caret {
     from, to { border-color: transparent; }
-    50% { border-color: var(--sb-orange); }
+    50% { border-color: var(--sb-yellow); }
 }
