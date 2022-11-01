@@ -6,6 +6,7 @@ import Home from "./Home";
 import Header from "./Header";
 import Overview from "./Overview";
 import Footer from "./Footer";
+import Search from "./Search"
 import Axios from "axios";
 
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
                                                          spots={spots}
                                                          basePath={basePath}/>}/>
                 <Route path={path + "/overview"} element={<Overview/>}/>
+                <Route path={path + "/search"} element={<Search UXMode={UXMode}/>}/>
             </Routes>
             <Footer/>
         </main>
