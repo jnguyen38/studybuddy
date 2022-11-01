@@ -35,6 +35,10 @@ export default function Home() {
                             <h1>😍 Favorite &rarr;</h1>
                             <p>Give us your thoughts on which study space you like the most!</p>
                         </div></Link>
+                        <Link to={"/location"}><div className={"home-option"}>
+                            <h1>🔬 Location &rarr;</h1>
+                            <p>Location test page!</p>
+                        </div></Link>
                     </div>
                 </div>
             </div>
