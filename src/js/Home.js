@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 
-export default function Home() {
+export default function Home(props) {
     return (
         <div id={"home-bg"}>
             <div id={"home-container"}>
@@ -32,8 +32,8 @@ export default function Home() {
                             <p>Feeling Lucky? Find a hidden gem on campus.</p>
                         </div></Link>
                         <Link to={"/favorite"}><div className={"home-option"}>
-                            <h1>😍 Favorite &rarr;</h1>
-                            <p>Give us your thoughts on which study space you like the most!</p>
+                            <h1>📤 Upload &rarr;</h1>
+                            <p>Add your favorite study space!</p>
                         </div></Link>
                     </div>
                 </div>
