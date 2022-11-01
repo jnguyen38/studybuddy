@@ -5,7 +5,7 @@ export default function Home() {
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
-
+    
     return (
         <div id={"home-bg"}>
             <div id={"home-container"}>
@@ -36,9 +36,9 @@ export default function Home() {
                             <h1>🎲 Random &rarr;</h1>
                             <p>Feeling Lucky? Find a hidden gem on campus.</p>
                         </div></Link>
-                        <Link to={"/favorite"}><div className={"home-option"}>
-                            <h1>😍 Favorite &rarr;</h1>
-                            <p>Give us your thoughts on which study space you like the most!</p>
+                        <Link to={"/upload"}><div className={"home-option"}>
+                            <h1>📤 Upload &rarr;</h1>
+                            <p>Add your favorite study space!</p>
                         </div></Link>
                         <Link to={"/location"}><div className={"home-option"}>
                             <h1>🔬 Location &rarr;</h1>
