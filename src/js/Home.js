@@ -1,6 +1,11 @@
 import {Link} from "react-router-dom";
+import {useEffect} from "react";
 
-export default function Home(props) {
+export default function Home() {
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+    
     return (
         <div id={"home-bg"}>
             <div id={"home-container"}>
@@ -31,9 +36,13 @@ export default function Home(props) {
                             <h1>🎲 Random &rarr;</h1>
                             <p>Feeling Lucky? Find a hidden gem on campus.</p>
                         </div></Link>
-                        <Link to={"/favorite"}><div className={"home-option"}>
+                        <Link to={"/upload"}><div className={"home-option"}>
                             <h1>📤 Upload &rarr;</h1>
                             <p>Add your favorite study space!</p>
+                        </div></Link>
+                        <Link to={"/location"}><div className={"home-option"}>
+                            <h1>🔬 Location &rarr;</h1>
+                            <p>Location test page!</p>
                         </div></Link>
                     </div>
                 </div>
