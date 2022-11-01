@@ -1,6 +1,11 @@
 import ERDiagram from "../media/initial_ER.jpg";
+import {useEffect} from "react";
 
 export default function Overview() {
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
     return (
         <section id={"overview-container"}>
             <h1>Study Buddy</h1>

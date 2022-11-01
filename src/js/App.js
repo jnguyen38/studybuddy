@@ -7,15 +7,17 @@ import Home from "./Home";
 import Header from "./Header";
 import Overview from "./Overview";
 import Footer from "./Footer";
-import Location from "./Location";
+import Location, {Random} from "./Location";
 import Search from "./Search";
 
 export default function App() {
     // useState Hooks
     const [UXMode, setUXMode] = useState(true);
     const [spots, setSpots] = useState("");
+    const [tmp, setTmp] = useState([]);
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+    const [rand, setRand] = useState({});
 
     // Path variables
     const path = "";
@@ -30,14 +32,20 @@ export default function App() {
     function handleUXMode() {setUXMode(!UXMode);closeSettings();}
     function handleMenu() {setShowMenu(() => !showMenu);closeSettings();}
     function handleSettings() {setShowSettings(() => !showSettings);closeMenu();}
+    function randomize(n) {return Math.floor(Math.random() * n);}
 
     // useEffect Hooks
     useEffect(() => {
-        Axios.get(basePath + "/api/get/test").then((data) => {
-            setSpots(data.data[0].url)
+        Axios.get(basePath + "/api/get").then((data) => {
+            setSpots(data.data)
+            setTmp(data.data[33])
             console.log(data)
         });
     }, [basePath]);
+
+    useEffect(() => {
+        setRand(spots[randomize(spots.length)])
+    }, [spots]);
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
@@ -62,11 +70,16 @@ export default function App() {
                                                              spots={spots}
                                                              basePath={basePath}/>}/>
                     <Route path={path + "/overview"} element={<Overview/>}/>
-                    <Route path={path + "/location"} element={<Location spots={spots}/>}/>
-                    <Route path={path + "/search"} element={<Search/>}/>
+                    <Route path={path + "/location"} element={spots &&
+                        <Location spots={spots} id={tmp.spot_id} building={tmp.building}
+                                  maxGroup={tmp.max_group_size} capacity={tmp.max_capacity}
+                                  location={tmp.location} loudness={tmp.loudness_rating}
+                                  description={tmp.description} floor={tmp.floor}/>
+                    }/>
+                    <Route path={path + "/search"} element={<Search UXMode={UXMode}/>}/>
+                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots}/>}/>
                 </Routes>
             </main>
-
             <Footer/>
         </div>
     );

@@ -9,6 +9,7 @@
     --sb-orange: #e24e1b;
     --sb-white: #f2efe9;
     --header-height: 60px;
+    --loudness-width: 0;
 }
 
 body {
@@ -117,6 +118,10 @@ textarea:focus, input:focus{
 .fs-buffer {
     height: 100vh;
     width: 80%;
+}
+
+.icon {
+    filter: var(--icon-filter);
 }
 
 @media only screen and (max-width: 768px) {
