@@ -7,7 +7,7 @@ import Home from "./Home";
 import Header from "./Header";
 import Overview from "./Overview";
 import Footer from "./Footer";
-import Location from "./Location";
+import Location, {Random} from "./Location";
 import Search from "./Search";
 
 export default function App() {
@@ -36,7 +36,7 @@ export default function App() {
     useEffect(() => {
         Axios.get(basePath + "/api/get").then((data) => {
             setSpots(data.data)
-            setTmp(data.data[19])
+            setTmp(data.data[33])
             console.log(data)
         });
     }, [basePath]);
@@ -71,6 +71,7 @@ export default function App() {
                                   description={tmp.description} floor={tmp.floor}/>
                     }/>
                     <Route path={path + "/search"} element={<Search/>}/>
+                    <Route path={path + "/random"} element={spots && <Random spots={spots}/>}/>
                 </Routes>
             </main>
 
