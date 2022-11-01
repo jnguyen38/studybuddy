@@ -1,3 +1,5 @@
+import {useEffect} from "react";
+
 function Names() {
     return (
         <section>
@@ -18,6 +20,10 @@ function Names() {
 }
 
 export default function Devplan() {
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
     return (
         <div id="devplan-container">
             <Names/>

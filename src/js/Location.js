@@ -1,6 +1,9 @@
 import {useEffect} from "react";
 
 export default function Location(props) {
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
 
     useEffect(() => {
         console.log(props.spots)
