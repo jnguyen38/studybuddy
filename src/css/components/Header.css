@@ -101,6 +101,7 @@
     transition: .5s ease-in-out;
     cursor: pointer;
     display: none;
+    z-index: 50;
 }
 
 #nav-menu span {
@@ -108,7 +109,7 @@
     position: absolute;
     height: 3px;
     width: 100%;
-    background: white;
+    background: var(--inverted-bg-color);
     border-radius: 4px;
     opacity: 1;
     left: 0;

@@ -1,7 +1,14 @@
-export default function Location() {
-    return (
-      <div id={"location-container"}>
+import {useEffect} from "react";
 
-      </div>
+export default function Location(props) {
+
+    useEffect(() => {
+        console.log(props.spots)
+    }, [props.spots]);
+
+    return (
+        <div id={"location-container"}>
+            <img src={props.spots} alt=""/>
+        </div>
     );
 }

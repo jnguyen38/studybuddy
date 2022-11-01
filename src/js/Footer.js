@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-        <div id="footer-container">
+        <footer id="footer-container">
             <div id="footer-info">
                 <div id="footer-contact">
                     <h1>Contact</h1>
@@ -21,6 +21,6 @@ export default function Footer() {
             <div id="footer-cr">
                 <p><span>&#169;</span> 2022 by The StudyBuddies DBC Team</p>
             </div>
-        </div>
+        </footer>
     );
 }
