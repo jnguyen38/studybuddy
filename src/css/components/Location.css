@@ -1,0 +1,31 @@
+#location-container {
+    min-height: 100vh;
+    width: 80%;
+    padding: calc(var(--header-height) *1.5) 10%;
+    background-color: var(--reg-bg-color);
+}
+
+.location-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-flow: wrap;
+    margin: 20px 0;
+    font-size: 1.3em;
+}
+
+.location-title > h1 {
+    max-width: 90%;
+}
+
+.location-img {
+    width: 600px;
+    height: 400px;
+    background-color: var(--inverted-bg-color);
+    color: var(--inverted-text-color);
+    border-radius: 5px;
+}
+
+.person {
+    width: 36px;
+}

@@ -14,6 +14,7 @@ export default function App() {
     // useState Hooks
     const [UXMode, setUXMode] = useState(true);
     const [spots, setSpots] = useState("");
+    const [tmp, setTmp] = useState([]);
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
@@ -33,8 +34,9 @@ export default function App() {
 
     // useEffect Hooks
     useEffect(() => {
-        Axios.get(basePath + "/api/get/test").then((data) => {
-            setSpots(data.data[0].url)
+        Axios.get(basePath + "/api/get").then((data) => {
+            setSpots(data.data)
+            setTmp(data.data[19])
             console.log(data)
         });
     }, [basePath]);
@@ -62,7 +64,12 @@ export default function App() {
                                                              spots={spots}
                                                              basePath={basePath}/>}/>
                     <Route path={path + "/overview"} element={<Overview/>}/>
-                    <Route path={path + "/location"} element={<Location spots={spots}/>}/>
+                    <Route path={path + "/location"} element={spots &&
+                        <Location spots={spots} id={tmp.spot_id} building={tmp.building}
+                                  maxGroup={tmp.max_group_size} capacity={tmp.max_capacity}
+                                  location={tmp.location} loudness={tmp.loudness_rating}
+                                  description={tmp.description} floor={tmp.floor}/>
+                    }/>
                     <Route path={path + "/search"} element={<Search/>}/>
                 </Routes>
             </main>

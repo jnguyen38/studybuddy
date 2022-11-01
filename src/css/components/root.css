@@ -119,6 +119,10 @@ textarea:focus, input:focus{
     width: 80%;
 }
 
+.icon {
+    filter: var(--icon-filter);
+}
+
 @media only screen and (max-width: 768px) {
     #header-nav {
         display: none !important;

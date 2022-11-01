@@ -11,10 +11,6 @@ function handleScroll() {
 
 export default function Header(props) {
     useEffect(() => {
-        console.log(props.spots)
-    }, [props.spots]);
-
-    useEffect(() => {
         window.addEventListener('scroll', handleScroll, { passive: true })
         return () => {
             window.removeEventListener('scroll', handleScroll)
@@ -39,7 +35,7 @@ export default function Header(props) {
                     <div className="nav-item d-flex-row-c"><h2>Overview</h2></div>
                 </Link>
                 <div id={"settings-icon"} className={"d-flex-row-c"} onClick={props.handleSettings}>
-                    <img src={settings} alt="" className={"settings"}/>
+                    <img src={settings} alt="" className={"icon settings"}/>
                 </div>
             </nav>
 
