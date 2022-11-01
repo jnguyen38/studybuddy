@@ -1,24 +1,17 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import person from "../media/icons/person.svg";
 
 export function Random(props) {
-    const [rand, setRand] = useState([]);
-    
-    function randomize() {
-        return 0;
-    }
-    
-    useEffect(() => {
-    }, [props.spots]);
-    
+    if (!(props.rand && props.spots)) return;
+
+    const rand = props.rand;
+
     return (
         <div>
-            {rand &&
-                <Location spots={props.spots} id={rand.spot_id} building={rand.building}
-                          maxGroup={rand.max_group_size} capacity={rand.max_capacity}
-                          location={rand.location} loudness={rand.loudness_rating}
-                          description={rand.description} floor={rand.floor}/>
-            }
+            <Location spots={props.spots} id={rand.spot_id} building={rand.building}
+                      maxGroup={rand.max_group_size} capacity={rand.max_capacity}
+                      location={rand.location} loudness={rand.loudness_rating}
+                      description={rand.description} floor={rand.floor}/>
         </div>
     );
 }

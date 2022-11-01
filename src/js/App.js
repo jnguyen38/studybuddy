@@ -17,6 +17,7 @@ export default function App() {
     const [tmp, setTmp] = useState([]);
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+    const [rand, setRand] = useState({});
 
     // Path variables
     const path = "";
@@ -31,6 +32,7 @@ export default function App() {
     function handleUXMode() {setUXMode(!UXMode);closeSettings();}
     function handleMenu() {setShowMenu(() => !showMenu);closeSettings();}
     function handleSettings() {setShowSettings(() => !showSettings);closeMenu();}
+    function randomize(n) {return Math.floor(Math.random() * n);}
 
     // useEffect Hooks
     useEffect(() => {
@@ -40,6 +42,10 @@ export default function App() {
             console.log(data)
         });
     }, [basePath]);
+
+    useEffect(() => {
+        setRand(spots[randomize(spots.length)])
+    }, [spots]);
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
@@ -71,7 +77,7 @@ export default function App() {
                                   description={tmp.description} floor={tmp.floor}/>
                     }/>
                     <Route path={path + "/search"} element={<Search/>}/>
-                    <Route path={path + "/random"} element={spots && <Random spots={spots}/>}/>
+                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots}/>}/>
                 </Routes>
             </main>
 
