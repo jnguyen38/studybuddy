@@ -29,6 +29,8 @@ code {
     --inverted-bg-color: var(--sb-white);
     --inverted-bg-rgba: rgba(242, 239, 233, .8);
     --inverted-text-color: var(--sb-dark-blue);
+    --inverted-block-color: var(--sb-white);
+    --inverted-block-text: var(--sb-blue);
     --reg-bg-color: var(--sb-dark-blue);
     --reg-bg-rgba: rgba(11, 33, 65, .4);
     --reg-bg-rgba-header: rgba(11, 33, 65, .8);
@@ -41,6 +43,8 @@ code {
     --inverted-bg-color: var(--sb-light-blue);
     --inverted-bg-rgba: rgba(11, 33, 65, .75);
     --inverted-text-color: var(--sb-white);
+    --inverted-block-color: var(--sb-dark-blue);
+    --inverted-block-text: var(--sb-white);
     --reg-bg-color: var(--sb-white);
     --reg-bg-rgba: rgba(242, 239, 233, .6);
     --icon-filter: invert(39%) sepia(27%) saturate(540%) hue-rotate(153deg) brightness(96%) contrast(86%);
