@@ -76,11 +76,10 @@ export default function App() {
                                   location={tmp.location} loudness={tmp.loudness_rating}
                                   description={tmp.description} floor={tmp.floor}/>
                     }/>
-                    <Route path={path + "/search"} element={<Search/>}/>
+                    <Route path={path + "/search"} element={<Search UXMode={UXMode}/>}/>
                     <Route path={path + "/random"} element={<Random rand={rand} spots={spots}/>}/>
                 </Routes>
             </main>
-
             <Footer/>
         </div>
     );
