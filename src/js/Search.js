@@ -1,3 +1,4 @@
+import ERDiagram from "../media/initial_ER.jpg";
 
 export default function Search() {
     return (
