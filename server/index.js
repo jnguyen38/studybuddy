@@ -1,11 +1,12 @@
 const express = require('express');
-const db = require('./config/db')
-const cors = require('cors')
+const db = require('./config/db');
+const cors = require('cors');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const  PORT = 5000;
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
 
 app.get("/api/get/study-location", (req, res) => {
     db.query("SELECT spot_id, building, location \
@@ -29,6 +30,35 @@ app.get("/api/get/test", (req, res) => {
                 FROM test", (err,result) => {
         if (err) console.log(err)
         res.send(result)
+    })
+});
+
+app.post("/api/post/hello", (req, res) => {
+    let transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+            user: "studybuddynotredame@gmail.com",
+            pass: "pwpwpwpw"
+        }
+    });
+
+    let text = "Hello world from \n" + req.body.name;
+    
+    let mailOptions = {
+        from: "studybuddynotredame@gmail.com",
+        to: "studybuddynotredame@gmail.com",
+        subject: "Test Email!",
+        text: "Hello"
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            console.log(err);
+            res.json({yo: "error"});
+        } else {
+            console.log("Message sent: " + info.response);
+            res.json({yo: info.resposne});
+        }
     })
 });
 
