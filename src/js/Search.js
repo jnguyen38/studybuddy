@@ -1,4 +1,5 @@
 import ERDiagram from "../media/initial_ER.jpg";
+import {useEffect, useState} from "react";
 
 export default function Search() {
 
@@ -38,19 +39,6 @@ export default function Search() {
                 </div>
               <br></br>
               <h2>Natural Light</h2>
-<<<<<<< HEAD
-                <div className={"rating"}>
-                  <input id="rating1" type="radio" name="rating" value="1"></input>
-                  <label htmlFor="rating1">1</label>
-                  <input id="rating2" type="radio" name="rating" value="2"></input>
-                  <label htmlFor="rating2">2</label>
-                  <input id="rating3" type="radio" name="rating" value="3"></input>
-                  <label htmlFor="rating3">3</label>
-                  <input id="rating4" type="radio" name="rating" value="4"></input>
-                  <label htmlFor="rating4">4</label>
-                  <input id="rating5" type="radio" name="rating" value="5"></input>
-                  <label htmlFor="rating5">5</label>
-=======
                 <div class="ratingNL">
                   <input id="ratingNL1" type="radio" name="ratingNL" value="1"></input>
                   <label for="ratingNL1">1</label>
@@ -62,7 +50,6 @@ export default function Search() {
                   <label for="ratingNL4">4</label>
                   <input id="ratingNL5" type="radio" name="ratingNL" value="5"></input>
                   <label for="ratingNL5">5</label>
->>>>>>> 78b69b4 (Slider bar component)
                 </div>
               <br></br>
               <h2>Loudness</h2>
