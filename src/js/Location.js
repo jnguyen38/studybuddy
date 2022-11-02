@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {RevModal} from "./Modal";
+import {RevModal, EditDescModal} from "./Modal";
 
 import person from "../media/icons/person.svg";
 import star from "../media/icons/double_star.svg";
@@ -70,6 +70,17 @@ function LocationButtons(props) {
 }
 
 function LocationMain(props) {
+    const [showEditDesc, setShowEditDesc] = useState(false);
+    const [editSubmitted, setEditSubmitted] = useState(false);
+
+
+    function handleShowEditDesc() {
+        setShowEditDesc(() => !showEditDesc);
+        setEditSubmitted(false);
+    }
+    function closeShowEditDesc() {setShowEditDesc(false)}
+    function editSubmit() {setEditSubmitted(true)}
+
     return (
         <div id={"location-main"}>
             <LocationButtons {...props}/>
@@ -91,7 +102,10 @@ function LocationMain(props) {
                 <br/><div className={"thin full-length line"}></div>
                 <h4>About</h4>
                 <p>{props.description}</p><br/>
-                <button className={"btn d-flex-row-c"}>Read More</button>
+                <div className={"d-flex jc-sb full-length"}>
+                    <button className={"btn d-flex-row-c"}>Read More</button>
+                    <button className={"btn d-flex-row-c"} onClick={handleShowEditDesc}>Edit</button>
+                </div>
 
                 <br/><div className={"thin full-length line"}></div>
                 <h4>More Spaces Like This</h4>
@@ -108,6 +122,9 @@ function LocationMain(props) {
                 </div>
 
             </div>
+
+            <EditDescModal {...props} show={showEditDesc} close={closeShowEditDesc}
+                           editSubmitted={editSubmitted} editSubmit={editSubmit}/>
         </div>
 
     );
