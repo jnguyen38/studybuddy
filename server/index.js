@@ -33,6 +33,15 @@ app.get("/api/get/test", (req, res) => {
     })
 });
 
+app.post("/api/post/review", (req, res) => {
+    console.log(req.body.name);
+    db.query(`INSERT INTO reviews (time, date, content, name, rating, space_id) \
+                VALUES (now(), curdate(), \"${req.body.content}\", \"${req.body.name}\", ${req.body.rating}, ${req.body.space_id})`, (err, result) => {
+        if (err) console.log(err)
+        res.send(result)
+    });
+});
+
 app.post("/api/post/hello", (req, res) => {
     let transporter = nodemailer.createTransport({
         service: "Gmail",
@@ -43,7 +52,7 @@ app.post("/api/post/hello", (req, res) => {
     });
 
     let text = "Hello world from \n" + req.body.name;
-    
+
     let mailOptions = {
         from: "studybuddynotredame@gmail.com",
         to: "studybuddynotredame@gmail.com",
