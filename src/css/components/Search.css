@@ -61,29 +61,156 @@
     display: flex;
 }
 
-.rating {
-    padding-top: 15px;
-    display: flex;
+.ratingNL {
+  padding-top: 15px;
+  display: flex;
 }
 
-.rating input {
-    position: absolute;
-    left: -100vw;
+.ratingNL input {
+  position: absolute;
+  left: -100vw;
 }
 
-.rating label {
-    width: 48px;
-    padding: 24px 0 0 0;
-    color: var(--inverted-text-color);
-    background: url('stars.svg') no-repeat top left;
+.ratingNL label {
+  width: 48px;
+  padding: 24px 0 0 0;
+  color: var(--inverted-text-color);
+  background: url('stars.svg') no-repeat top left;
 }
 
-.rating:not(:hover) input:indeterminate + label,
-.rating:not(:hover) input:checked ~ input + label,
-.rating input:hover ~ input + label{
-    background-position : -48px 0;
+.ratingNL:not(:hover) input:indeterminate + label,
+.ratingNL:not(:hover) input:checked ~ input + label,
+.ratingNL input:hover ~ input + label{
+  background-position : -48px 0;
 }
 
-.rating:not(:hover) input:focus-visible + label{
-    background-position : -96px 0;
+.ratingNL:not(:hover) input:focus-visible + label{
+  background-position : -96px 0;
+}
+
+.ratingSC {
+  padding-top: 15px;
+  display: flex;
+}
+
+.ratingSC input {
+  position: absolute;
+  left: -100vw;
+}
+
+.ratingSC label {
+  width: 48px;
+  padding: 24px 0 0 0;
+  color: var(--inverted-text-color);
+  background: url('stars.svg') no-repeat top left;
+}
+
+.ratingSC:not(:hover) input:indeterminate + label,
+.ratingSC:not(:hover) input:checked ~ input + label,
+.ratingSC input:hover ~ input + label{
+  background-position : -48px 0;
+}
+
+.ratingSC:not(:hover) input:focus-visible + label{
+  background-position : -96px 0;
+}
+
+.ratingL {
+  padding-top: 15px;
+  display: flex;
+}
+
+.ratingL input {
+  position: absolute;
+  left: -100vw;
+}
+
+.ratingL label {
+  width: 48px;
+  padding: 24px 0 0 0;
+  color: var(--inverted-text-color);
+  background: url('stars.svg') no-repeat top left;
+}
+
+.ratingL:not(:hover) input:indeterminate + label,
+.ratingL:not(:hover) input:checked ~ input + label,
+.ratingL input:hover ~ input + label{
+  background-position : -48px 0;
+}
+
+.ratingL:not(:hover) input:focus-visible + label{
+  background-position : -96px 0;
+}
+
+.ratingO {
+  padding-top: 15px;
+  display: flex;
+}
+
+.ratingO input {
+  position: absolute;
+  left: -100vw;
+}
+
+.ratingO label {
+  width: 48px;
+  padding: 24px 0 0 0;
+  color: var(--inverted-text-color);
+  background: url('stars.svg') no-repeat top left;
+}
+
+.ratingO:not(:hover) input:indeterminate + label,
+.ratingO:not(:hover) input:checked ~ input + label,
+.ratingO input:hover ~ input + label{
+  background-position : -48px 0;
+}
+
+.ratingO:not(:hover) input:focus-visible + label{
+  background-position : -96px 0;
+}
+
+.slide-containerGS {
+  padding-top: 15px;
+  display: flex;
+}
+
+.sliderGS {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: white;
+  outline: none;
+}
+
+.sliderGS::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--sb-yellow);
+}
+
+.slide-containerC {
+  padding-top: 15px;
+  display: flex;
+}
+
+.sliderC {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: white;
+  outline: none;
+}
+
+.sliderC::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--sb-yellow);
 }
