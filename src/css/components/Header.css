@@ -69,6 +69,7 @@
 .settings {
     color: white;
     width: var(--settings-width);
+    margin: 0;
     transition: width .15s;
 }
 
