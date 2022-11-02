@@ -28,7 +28,7 @@ export default function Search() {
     return (
         <div className={"search-container"}>
           <div className={"search-header"}>
-            <h1>Find a study spot...</h1>
+            <h1 style={{textAlign: 'left'}}>Find a study spot...</h1>
           </div>
           <div className={"search-row"}>
             <div className={"filter-column"}>
