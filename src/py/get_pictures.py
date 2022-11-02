@@ -12,7 +12,7 @@ def get_pictures(id):
     return pictures
 
 def main():
-    print(get_pictures(sys.argv[1]))
+    return get_pictures(sys.argv[1])
 
 if __name__ == "__main__":
     main()
