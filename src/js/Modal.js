@@ -4,6 +4,39 @@
 import {Link} from "react-router-dom";
 import Axios from "axios";
 
+export function EditDescModal(props) {
+    if (!props.show) return;
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        Axios.post(props.basePath + "/api/post/editDesc", {
+            "description": event.target.description.value,
+            "id": props.id
+        }).then((data) => {
+            console.log(data)
+        });
+        props.editSubmit();
+    }
+
+    return (
+        <div className={"modal"} onClick={props.close}>
+            <div className={"modal-rev"} onClick={e => e.stopPropagation()}>
+                {(!props.editSubmitted) ?
+                    <form onSubmit={handleSubmit}>
+                        <input type="text" placeholder="Description" name="description"/>
+                        <input type="reset" value="Clear"/>
+                        <input type="submit" value="Submit"/>
+                    </form>
+                    :
+                    <div>
+                        <h1 style={{color:"black"}}>Thank You!</h1>
+                    </div>
+                }
+            </div>
+        </div>
+    );
+}
+
 export function RevModal(props) {
     if (!props.show) return;
 
@@ -16,7 +49,6 @@ export function RevModal(props) {
         }).then((data) => {
             console.log(data)
         });
-        console.log(event.target.name.value)
     }
 
     return (

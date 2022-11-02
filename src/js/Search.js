@@ -1,6 +1,6 @@
 import ERDiagram from "../media/initial_ER.jpg";
 import Select from "react-select";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export default function Search() {
 
