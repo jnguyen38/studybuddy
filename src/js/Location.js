@@ -1,8 +1,12 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import {RevModal} from "./Modal";
+
 import person from "../media/icons/person.svg";
 import star from "../media/icons/double_star.svg";
 import share from "../media/icons/share.svg";
 import camera from "../media/icons/camera.svg";
+import wrong from "../media/icons/close.svg";
+import check from "../media/icons/check.svg";
 
 export function Random(props) {
     if (!(props.rand && props.spots)) return;
@@ -16,8 +20,8 @@ export function Random(props) {
                       location={rand.location} loudness={rand.loudness_rating}
                       outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
                       comfortability={[rand.table_seat_comfort, rand.nontable_seat_comfort, rand.couch_comfort]}
-                      printer={rand.printer} tables={rand.tables} overall={rand.overall_rating}
-                      description={rand.description} floor={rand.floor} notes={rand.notes}/>
+                      hasPrinter={rand.printer} hasTables={rand.tables} overall={rand.overall_rating}
+                      description={rand.description} floor={rand.floor} notes={rand.notes} basePath={props.basePath}/>
         </div>
     );
 }
@@ -38,10 +42,15 @@ function LocationHeader(props) {
     );
 }
 
-function LocationButtons() {
+function LocationButtons(props) {
+    const [showRev, setShowRev] = useState(false);
+
+    function handleRev() {setShowRev(() => !showRev);}
+    function closeRev() {setShowRev(false);}
+
     return (
         <div className={"location-buttons"}>
-            <button className={"btn d-flex-row-c"} id={"write-review-btn"}>
+            <button className={"btn d-flex-row-c"} id={"write-review-btn"} onClick={handleRev}>
                 <img src={star} alt="" className={"icon white-icon sm-icon"}/>
                 Write a Review
             </button>
@@ -53,6 +62,9 @@ function LocationButtons() {
                 <img src={camera} alt="" className={"icon invert-icon sm-icon"}/>
                 Add a Photo
             </button>
+
+            <RevModal {...props} show={showRev} close={closeRev}
+                      className={(showRev) ? "item-clicked" : 0}/>
         </div>
     );
 }
@@ -60,7 +72,7 @@ function LocationButtons() {
 function LocationMain(props) {
     return (
         <div id={"location-main"}>
-            <LocationButtons/>
+            <LocationButtons {...props}/>
             <div className={"location-info"}>
                 <div className={"line thin full-length"}/>
                 <h4>Space Statistics</h4>
@@ -86,6 +98,15 @@ function LocationMain(props) {
 
                 <br/><div className={"thin full-length line"}></div>
                 <h4>Amenities</h4>
+                <div className={"d-flex"}>
+                    {(props.hasPrinter) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
+                    <p>Printer</p>
+                </div>
+                <div className={"d-flex"}>
+                    {(props.hasTables) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
+                    <p>Tables</p>
+                </div>
+
             </div>
         </div>
 
@@ -94,8 +115,8 @@ function LocationMain(props) {
 
 function LocationAside() {
     return (
-        <div id={"location-aside"} className={"d-flex-row-c"}>
-            Aside
+        <div id={"location-aside"}>
+            <h1>Aside</h1>
         </div>
     );
 }

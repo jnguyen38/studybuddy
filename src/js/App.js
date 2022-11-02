@@ -38,7 +38,7 @@ export default function App() {
     useEffect(() => {
         Axios.get(basePath + "/api/get").then((data) => {
             setSpots(data.data)
-            setTmp(data.data[3])
+            setTmp(data.data[81])
             console.log(data)
         });
     }, [basePath]);
@@ -76,11 +76,11 @@ export default function App() {
                                   location={tmp.location} loudness={tmp.loudness_rating}
                                   outlets={tmp.outlets_rating} naturalLight={tmp.natural_light_rating}
                                   comfortability={[tmp.table_seat_comfort, tmp.nontable_seat_comfort, tmp.couch_comfort]}
-                                  printer={tmp.printer} tables={tmp.tables} overall={tmp.overall_rating}
-                                  description={tmp.description} floor={tmp.floor} notes={tmp.notes}/>
+                                  hasPrinter={tmp.printer} hasTables={tmp.tables} overall={tmp.overall_rating}
+                                  description={tmp.description} floor={tmp.floor} notes={tmp.notes} basePath={basePath}/>
                     }/>
                     <Route path={path + "/search"} element={<Search UXMode={UXMode}/>}/>
-                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots}/>}/>
+                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots} basePath={basePath}/>}/>
                 </Routes>
             </main>
             <Footer/>

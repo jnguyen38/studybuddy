@@ -136,9 +136,12 @@
 
 #location-aside {
     display: flex;
+    justify-content: center;
+    align-items: flex-start;
     position: sticky;
     min-width: 30vw;
-    height: max-content;
+    height: 100%;
     margin-left: 20px;
     background-color: var(--inverted-bg-rgba);
+    color: var(--inverted-text-color);
 }
