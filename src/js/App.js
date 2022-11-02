@@ -9,6 +9,7 @@ import Overview from "./Overview";
 import Footer from "./Footer";
 import Location, {Random} from "./Location";
 import Search from "./Search";
+import Upload from "./Upload";
 
 export default function App() {
     // useState Hooks
@@ -80,6 +81,7 @@ export default function App() {
                                   description={tmp.description} floor={tmp.floor} notes={tmp.notes} basePath={basePath}/>
                     }/>
                     <Route path={path + "/search"} element={<Search UXMode={UXMode}/>}/>
+                    <Route path={path + "/upload"} element={<Upload UXMode={UXMode}/>}/>
                     <Route path={path + "/random"} element={<Random rand={rand} spots={spots} basePath={basePath}/>}/>
                 </Routes>
             </main>

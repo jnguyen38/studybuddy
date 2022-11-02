@@ -28,7 +28,7 @@ export default function Search() {
     return (
         <div className={"search-container"}>
           <div className={"search-header"}>
-            <h1>Find a study spot...</h1>
+            <h1 style={{textAlign: 'left'}}>Find a study spot...</h1>
           </div>
           <div className={"search-row"}>
             <div className={"filter-column"}>
@@ -47,7 +47,15 @@ export default function Search() {
 
               <br></br>
               <h2>Features</h2>
-
+              <input type="checkbox" id="table"></input>
+              <label for="tables">Table</label>
+              <br></br>
+              <input type="checkbox" id="couch"></input>
+              <label for="couch">Couch</label>
+              <br></br>
+              <input type="checkbox" id="printer"></input>
+              <label for="printer">Printer</label>
+              <br></br>
               <br></br>
               <h2>Seat Comfort</h2>
 
@@ -68,6 +76,13 @@ export default function Search() {
                   <input id="rating5" type="radio" name="rating" value="5"></input>
                   <label htmlFor="rating5">5</label>
                 </div>
+                <input type="radio" id="less" name="less" value="less"></input>
+                <label htmlFor="less">Less than</label>
+
+                <input type="radio" id="more" name="more" value="more"></input>
+                <label htmlFor="more">Greater than or equal to</label>
+
+              <br></br>
               <br></br>
               <h2>Loudness</h2>
               <br></br>
