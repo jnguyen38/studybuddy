@@ -5,7 +5,8 @@ export default function Home() {
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
-    
+
+
     return (
         <div id={"home-bg"}>
             <div id={"home-container"}>

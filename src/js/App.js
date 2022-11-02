@@ -12,7 +12,7 @@ import Search from "./Search";
 
 export default function App() {
     // useState Hooks
-    const [UXMode, setUXMode] = useState(true);
+    const [UXMode, setUXMode] = useState(false);
     const [spots, setSpots] = useState("");
     const [tmp, setTmp] = useState([]);
     const [showSettings, setShowSettings] = useState(false);
@@ -38,7 +38,7 @@ export default function App() {
     useEffect(() => {
         Axios.get(basePath + "/api/get").then((data) => {
             setSpots(data.data)
-            setTmp(data.data[33])
+            setTmp(data.data[81])
             console.log(data)
         });
     }, [basePath]);
@@ -74,10 +74,13 @@ export default function App() {
                         <Location spots={spots} id={tmp.spot_id} building={tmp.building}
                                   maxGroup={tmp.max_group_size} capacity={tmp.max_capacity}
                                   location={tmp.location} loudness={tmp.loudness_rating}
-                                  description={tmp.description} floor={tmp.floor}/>
+                                  outlets={tmp.outlets_rating} naturalLight={tmp.natural_light_rating}
+                                  comfortability={[tmp.table_seat_comfort, tmp.nontable_seat_comfort, tmp.couch_comfort]}
+                                  hasPrinter={tmp.printer} hasTables={tmp.tables} overall={tmp.overall_rating}
+                                  description={tmp.description} floor={tmp.floor} notes={tmp.notes} basePath={basePath}/>
                     }/>
                     <Route path={path + "/search"} element={<Search UXMode={UXMode}/>}/>
-                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots}/>}/>
+                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots} basePath={basePath}/>}/>
                 </Routes>
             </main>
             <Footer/>
