@@ -1,6 +1,7 @@
 import {Route, Routes} from "react-router-dom";
 import {useEffect, useState} from "react";
 
+
 import Axios from "axios";
 import Devplan from "./Devplan";
 import Home from "./Home";
@@ -12,13 +13,16 @@ import Search from "./Search";
 import Upload from "./Upload";
 
 export default function App() {
+
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
     const [spots, setSpots] = useState("");
-    const [tmp, setTmp] = useState([]);
+    const [testSpot, setTestSpot] = useState([]);
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [rand, setRand] = useState({});
+    const [pageLoaded, setPageLoaded] = useState(false);
+    const [admin, setAdmin] = useState(false);
 
     // Path variables
     const path = "/cse30246/studybuddy/build";
@@ -33,13 +37,15 @@ export default function App() {
     function handleUXMode() {setUXMode(!UXMode);closeSettings();}
     function handleMenu() {setShowMenu(() => !showMenu);closeSettings();}
     function handleSettings() {setShowSettings(() => !showSettings);closeMenu();}
+    function makeAdmin() {setAdmin(true)}
+    function dropAdmin() {setAdmin(false)}
     function randomize(n) {return Math.floor(Math.random() * n);}
 
     // useEffect Hooks
     useEffect(() => {
         Axios.get(basePath + "/api/get").then((data) => {
             setSpots(data.data)
-            setTmp(data.data[81])
+            setTestSpot(data.data[81])
             console.log(data)
         });
     }, [basePath]);
@@ -50,19 +56,30 @@ export default function App() {
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
+        setAdmin(JSON.parse(window.localStorage.getItem("admin")));
+        function onPageLoad() {setPageLoaded(true);}
+        if (document.readyState === "complete") {
+            onPageLoad()
+        } else {
+            window.addEventListener("load", onPageLoad);
+            return () => window.removeEventListener("load", onPageLoad);
+        }
+
     }, []);
 
     useEffect(() => {
         window.localStorage.setItem("UXMode", JSON.stringify(UXMode));
-    }, [UXMode]);
+        window.localStorage.setItem("admin", JSON.stringify(admin));
+    }, [UXMode, admin]);
 
-    return (
+    return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
             <Header handleMenu={handleMenu} handleSettings={handleSettings}
                     closeMenu={closeMenu} closeSettings={closeSettings}
                     handleUXMode={handleUXMode} UXMode={UXMode}
                     homeRedirect={homeRedirect} devRedirect={devRedirect}
                     overviewRedirect={overviewRedirect} spots={spots}
+                    admin={admin} logInAdmin={makeAdmin} logOutAdmin={dropAdmin}
                     showSettings={showSettings} showMenu={showMenu}/>
             <main>
                 <Routes>
@@ -72,20 +89,24 @@ export default function App() {
                                                              basePath={basePath}/>}/>
                     <Route path={path + "/overview"} element={<Overview/>}/>
                     <Route path={path + "/location"} element={spots &&
-                        <Location spots={spots} id={tmp.spot_id} building={tmp.building}
-                                  maxGroup={tmp.max_group_size} capacity={tmp.max_capacity}
-                                  location={tmp.location} loudness={tmp.loudness_rating}
-                                  outlets={tmp.outlets_rating} naturalLight={tmp.natural_light_rating}
-                                  comfortability={[tmp.table_seat_comfort, tmp.nontable_seat_comfort, tmp.couch_comfort]}
-                                  hasPrinter={tmp.printer} hasTables={tmp.tables} overall={tmp.overall_rating}
-                                  description={tmp.description} floor={tmp.floor} notes={tmp.notes} basePath={basePath}/>
+                        <Location spots={spots} admin={admin} setAdmin={makeAdmin} id={testSpot.spot_id} building={testSpot.building}
+                                  maxGroup={testSpot.max_group_size} capacity={testSpot.max_capacity}
+                                  location={testSpot.location} loudness={testSpot.loudness_rating}
+                                  outlets={testSpot.outlets_rating} naturalLight={testSpot.natural_light_rating}
+                                  comfortability={[testSpot.table_seat_comfort, testSpot.nontable_seat_comfort, testSpot.couch_comfort]}
+                                  hasPrinter={testSpot.printer} hasTables={testSpot.tables} overall={testSpot.overall_rating}
+                                  description={testSpot.description} floor={testSpot.floor} notes={testSpot.notes} basePath={basePath}/>
                     }/>
-                    <Route path={path + "/search"} element={<Search UXMode={UXMode}/>}/>
+                    <Route path={path + "/search"} element={<Search UXMode={UXMode} basePath={basePath}/>}/>
                     <Route path={path + "/upload"} element={<Upload UXMode={UXMode}/>}/>
-                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots} basePath={basePath}/>}/>
+                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots}
+                                                                    basePath={basePath}
+                                                                    admin={admin} makeAdmin={makeAdmin}/>}/>
                 </Routes>
             </main>
             <Footer/>
         </div>
+    ) : (
+        <div></div>
     );
 }

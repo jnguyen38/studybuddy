@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {RevModal} from "./Modal";
+import {RevModal, EditDescModal} from "./Modal";
 
 import person from "../media/icons/person.svg";
 import star from "../media/icons/double_star.svg";
@@ -15,7 +15,7 @@ export function Random(props) {
 
     return (
         <div>
-            <Location spots={props.spots} id={rand.spot_id} building={rand.building}
+            <Location spots={props.spots} admin={props.admin} setAdmin={props.makeAdmin} id={rand.spot_id} building={rand.building}
                       maxGroup={rand.max_group_size} capacity={rand.max_capacity}
                       location={rand.location} loudness={rand.loudness_rating}
                       outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
@@ -26,7 +26,7 @@ export function Random(props) {
     );
 }
 
-function LocationHeader(props) {
+export function LocationHeader(props) {
     return (
         <div id={"location-header"}>
             <img src={props.image} alt="" className={"location-img"}/>
@@ -70,6 +70,17 @@ function LocationButtons(props) {
 }
 
 function LocationMain(props) {
+    const [showEditDesc, setShowEditDesc] = useState(false);
+    const [editSubmitted, setEditSubmitted] = useState(false);
+
+
+    function handleShowEditDesc() {
+        setShowEditDesc(() => !showEditDesc);
+        setEditSubmitted(false);
+    }
+    function closeShowEditDesc() {setShowEditDesc(false)}
+    function editSubmit() {setEditSubmitted(true)}
+
     return (
         <div id={"location-main"}>
             <LocationButtons {...props}/>
@@ -77,7 +88,7 @@ function LocationMain(props) {
                 <div className={"line thin full-length"}/>
                 <h4>Space Statistics</h4>
                 <div className={"d-flex jc-sb full-length"}>
-                    <h3>Maximum Group Size</h3>
+                    <h3>Maximum Capacity</h3>
                     <div className={"d-flex"}>
                         <img src={person} alt="" className={"person icon"}/>
                         <p>{props.capacity}</p>
@@ -91,7 +102,10 @@ function LocationMain(props) {
                 <br/><div className={"thin full-length line"}></div>
                 <h4>About</h4>
                 <p>{props.description}</p><br/>
-                <button className={"btn d-flex-row-c"}>Read More</button>
+                <div className={"d-flex jc-sb full-length"}>
+                    <button className={"btn d-flex-row-c"}>Read More</button>
+                    <button className={"btn d-flex-row-c"} onClick={handleShowEditDesc}>Edit</button>
+                </div>
 
                 <br/><div className={"thin full-length line"}></div>
                 <h4>More Spaces Like This</h4>
@@ -108,6 +122,9 @@ function LocationMain(props) {
                 </div>
 
             </div>
+
+            <EditDescModal {...props} show={showEditDesc} close={closeShowEditDesc}
+                           editSubmitted={editSubmitted} editSubmit={editSubmit}/>
         </div>
 
     );
