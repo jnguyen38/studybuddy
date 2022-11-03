@@ -1,3 +1,4 @@
+
 .search-container {
     padding-top: var(--header-height);
     padding-left: 20px;
@@ -82,10 +83,6 @@
 .ratingNL:not(:hover) input:checked ~ input + label,
 .ratingNL input:hover ~ input + label{
   background-position : -48px 0;
-}
-
-.ratingNL:not(:hover) input:focus-visible + label{
-  background-position : -96px 0;
 }
 
 .ratingSC {

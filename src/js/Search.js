@@ -3,26 +3,37 @@ import Select from "react-select";
 import {useState} from "react";
 
 function Ratings(props) {
+
+    var selectedOption = undefined;
+
+    function formSubmit (val) {
+      selectedOption = val;
+      console.log(val);
+    }
+
     return (
-        <div className={props.class}>
-            <input id={props.class + "1"} type="radio" name={props.class} value="1"></input>
+        <form className={props.class}>
+            <input id={props.class + "1"} type="radio" name={props.class} value="1" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "1"}>1</label>
-            <input id={props.class + "2"} type="radio" name={props.class} value="2"></input>
+            <input id={props.class + "2"} type="radio" name={props.class} value="2" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "2"}>2</label>
-            <input id={props.class + "3"} type="radio" name={props.class} value="3"></input>
+            <input id={props.class + "3"} type="radio" name={props.class} value="3" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "3"}>3</label>
-            <input id={props.class + "4"} type="radio" name={props.class} value="4"></input>
+            <input id={props.class + "4"} type="radio" name={props.class} value="4" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "4"}>4</label>
-            <input id={props.class + "5"} type="radio" name={props.class} value="5"></input>
+            <input id={props.class + "5"} type="radio" name={props.class} value="5" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "5"}>5</label>
-        </div>
+        </form>
     );
 }
 
 export default function Search() {
 
-  const [valueGS, setValueGS] = useState(0)
-  const [valueC, setValueC] = useState(0)
+    const [valueGS, setValueGS] = useState(0)
+    const [valueC, setValueC] = useState(0)
+
+    var sliderGS = document.getElementsByClassName("sliderGS")[0];
+    var sliderC = document.getElementsByClassName("sliderC")[0];
 
     const optionList = [
       { value: "hammes-notre-dame-bookstore", label: "Hammes Notre Dame Bookstore" },
@@ -84,7 +95,7 @@ export default function Search() {
               <h2>Group Size</h2>
                 <div className="slide-containerGS">
                   <input type="range" min="1" max="20" onChange={(e) => setValueGS(e.target.value)} value={valueGS} className="sliderGS"></input>
-                </div>
+                  </div>
               <br/>
               <h2>Natural Light</h2>
               <Ratings class={"ratingNL"}/>
@@ -99,7 +110,7 @@ export default function Search() {
                 <Ratings class={"ratingL"}/>
               <br></br>
               <h2>Outlets</h2>
-              <Ratings class={"ratingO"}/>
+                <Ratings class={"ratingO"}/>
               <br></br>
               <h2>Capacity</h2>
                 <div className="slide-containerC">
@@ -120,4 +131,3 @@ export default function Search() {
         </div>
     );
 };
-
