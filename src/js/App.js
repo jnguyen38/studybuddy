@@ -25,8 +25,8 @@ export default function App() {
     const [admin, setAdmin] = useState(false);
 
     // Path variables
-    const path = "";
-    const basePath = "http://db8.cse.nd.edu:5001";
+    const path = "/cse30246/studybuddy/build";
+    const basePath = "http://db8.cse.nd.edu:5000";
     const homeRedirect = path + "/";
     const devRedirect = path + "/devplan";
     const overviewRedirect = path + "/overview";
@@ -85,7 +85,7 @@ export default function App() {
                 <Routes>
                     <Route path={path + "/devplan"} element={<Devplan UXMode={UXMode}/>}/>
                     <Route path={path + "/*"} element={<Home UXMode={UXMode}
-                                                             spots={spots}
+                                                             spots={spots} path={path}
                                                              basePath={basePath}/>}/>
                     <Route path={path + "/overview"} element={<Overview/>}/>
                     <Route path={path + "/location"} element={spots &&

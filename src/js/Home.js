@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {useEffect} from "react";
 
-export default function Home() {
+export default function Home(props) {
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
@@ -24,24 +24,24 @@ export default function Home() {
                     <h1>Explore Our Page</h1><br/>
                     <div className={"line thick"}/>
                     <div id={"home-op-display"}>
-                        <Link to={"/search"}><div className={"home-option"}>
+                        <Link to={props.path + "/search"}><div className={"home-option"}>
                             <h1>🔍 Search &rarr;</h1>
                             <p>Search for your favorite study spaces on campus!
                             </p>
                         </div></Link>
-                        <Link to={"/explore"}><div className={"home-option"}>
+                        <Link to={props.path + "/explore"}><div className={"home-option"}>
                             <h1>🚀 Explore &rarr;</h1>
                             <p>Explore study spaces on campus that you haven't visited before!</p>
                         </div></Link>
-                        <Link to={"/random"}><div className={"home-option"}>
+                        <Link to={props.path + "/random"}><div className={"home-option"}>
                             <h1>🎲 Random &rarr;</h1>
                             <p>Feeling Lucky? Find a hidden gem on campus.</p>
                         </div></Link>
-                        <Link to={"/upload"}><div className={"home-option"}>
+                        <Link to={props.path + "/upload"}><div className={"home-option"}>
                             <h1>📤 Upload &rarr;</h1>
                             <p>Add your favorite study space!</p>
                         </div></Link>
-                        <Link to={"/location"}><div className={"home-option"}>
+                        <Link to={props.path + "/location"}><div className={"home-option"}>
                             <h1>🔬 Location &rarr;</h1>
                             <p>Location test page!</p>
                         </div></Link>
