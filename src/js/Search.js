@@ -91,6 +91,11 @@ export default function Search() {
               <br/>
               <h2>Seat Comfort</h2>
                 <Ratings class={"ratingSC"}/>
+                <input type="radio" id="less" name="radio1" value="less"></input>
+                <label htmlFor="less">Less than</label>
+                <input type="radio" id="more" name="radio1" value="more"></input>
+                <label htmlFor="more">Greater than</label>
+                <br></br>
               <br/>
 
               <h2>Group Size</h2>
@@ -100,20 +105,28 @@ export default function Search() {
               <br/>
               <h2>Natural Light</h2>
               <Ratings class={"ratingNL"}/>
-              <input type="radio" id="less" name="less" value="less"></input>
+              <input type="radio" id="less" name="radio2" value="less"></input>
               <label htmlFor="less">Less than</label>
-
-
-              <input type="radio" id="more" name="more" value="more"></input>
-              <label htmlFor="more">Greater than or equal to</label>
+              <input type="radio" id="more" name="radio2" value="more"></input>
+              <label htmlFor="more">Greater than</label>
               <br></br>
               <br></br>
               <h2>Loudness</h2>
 
                 <Ratings class={"ratingL"}/>
+                <input type="radio" id="less" name="radio3" value="less"></input>
+                <label htmlFor="less">Less than</label>
+                <input type="radio" id="more" name="radio3" value="more"></input>
+                <label htmlFor="more">Greater than</label>
+                <br></br>
               <br></br>
               <h2>Outlets</h2>
                 <Ratings class={"ratingO"}/>
+                <input type="radio" id="less" name="radio3" value="less"></input>
+                <label htmlFor="less">Less than</label>
+                <input type="radio" id="more" name="radio3" value="more"></input>
+                <label htmlFor="more">Greater than</label>
+                <br></br>
 
               <br></br>
               <h2>Capacity</h2>
