@@ -4,26 +4,24 @@ import {useState} from "react";
 
 function Ratings(props) {
 
-    var i = 1;
+    var selectedOption = undefined;
 
-    for (i = 1; i <= 5; i++) {
-      var result = document.getElementById(props.class + i.toString())
-      if (result != undefined) {
-        console.log(result.value)
-      }
+    function formSubmit (val) {
+      selectedOption = val;
+      console.log(val);
     }
 
     return (
         <form className={props.class}>
-            <input id={props.class + "1"} type="radio" name={props.class} value="1"></input>
+            <input id={props.class + "1"} type="radio" name={props.class} value="1" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "1"}>1</label>
-            <input id={props.class + "2"} type="radio" name={props.class} value="2"></input>
+            <input id={props.class + "2"} type="radio" name={props.class} value="2" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "2"}>2</label>
-            <input id={props.class + "3"} type="radio" name={props.class} value="3"></input>
+            <input id={props.class + "3"} type="radio" name={props.class} value="3" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "3"}>3</label>
-            <input id={props.class + "4"} type="radio" name={props.class} value="4"></input>
+            <input id={props.class + "4"} type="radio" name={props.class} value="4" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "4"}>4</label>
-            <input id={props.class + "5"} type="radio" name={props.class} value="5"></input>
+            <input id={props.class + "5"} type="radio" name={props.class} value="5" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
             <label htmlFor={props.class + "5"}>5</label>
         </form>
     );
