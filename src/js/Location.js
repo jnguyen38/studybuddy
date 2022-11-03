@@ -15,7 +15,7 @@ export function Random(props) {
 
     return (
         <div>
-            <Location spots={props.spots} admin={props.admin} makeAdmin={props.makeAdmin} id={rand.spot_id} building={rand.building}
+            <Location spots={props.spots} admin={props.admin} setAdmin={props.makeAdmin} id={rand.spot_id} building={rand.building}
                       maxGroup={rand.max_group_size} capacity={rand.max_capacity}
                       location={rand.location} loudness={rand.loudness_rating}
                       outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
@@ -88,7 +88,7 @@ function LocationMain(props) {
                 <div className={"line thin full-length"}/>
                 <h4>Space Statistics</h4>
                 <div className={"d-flex jc-sb full-length"}>
-                    <h3>Maximum Group Size</h3>
+                    <h3>Maximum Capacity</h3>
                     <div className={"d-flex"}>
                         <img src={person} alt="" className={"person icon"}/>
                         <p>{props.capacity}</p>
