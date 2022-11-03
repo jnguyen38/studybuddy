@@ -1,8 +1,33 @@
-// import dark from "../media/icons/dark_mode.svg";
-// import light from "../media/icons/light_mode.svg";
-
 import {Link} from "react-router-dom";
 import Axios from "axios";
+import SHA3 from "sha3";
+
+function Authenticate(props) {
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        let hash = new SHA3(512);
+        hash.update(event.target.password.value)
+        Axios.post(props.basePath + "/api/post/admin", {
+           "user": event.target.user.value,
+           "password": hash.digest("hex").toString()
+        }).then(data => {
+            console.log(data)
+        });
+    }
+
+    return (
+        <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
+            <h2>Admin Portal</h2>
+            <div className={"light-blue line"}/>
+            <input type="text" placeholder="Username" name="user" required/>
+            <input type="password" placeholder="Password" name="password" required/>
+            <div className={"form-buttons d-flex jc-fe"}>
+                <input type="submit" value="Log In" className={"btn submit-btn"}/>
+            </div>
+        </form>
+    );
+}
 
 export function EditDescModal(props) {
     if (!props.show) return;
@@ -18,19 +43,30 @@ export function EditDescModal(props) {
         props.editSubmit();
     }
 
+
     return (
-        <div className={"modal"} onClick={props.close}>
-            <div className={"modal-rev"} onClick={e => e.stopPropagation()}>
-                {(!props.editSubmitted) ?
-                    <form onSubmit={handleSubmit}>
-                        <input type="text" placeholder="Description" name="description"/>
-                        <input type="reset" value="Clear"/>
-                        <input type="submit" value="Submit"/>
-                    </form>
-                    :
+        <div className={"modal"} onMouseDown={props.close}>
+            <div className={"modal-form"} onMouseDown={e => e.stopPropagation()}>
+                {props.admin ?
                     <div>
-                        <h1 style={{color:"black"}}>Thank You!</h1>
+                        {(!props.editSubmitted) ?
+                            <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
+                                <h2>Edit the Description</h2>
+                                <div className={"light-blue line"}/>
+                                <textarea placeholder="Enter your description here..." name="description" maxLength="100" required/>
+                                <div className={"form-buttons d-flex jc-fe"}>
+                                    <input type="reset" value="Clear" className={"btn"}/>
+                                    <input type="submit" value="Submit" className={"btn submit-btn"}/>
+                                </div>
+                            </form>
+                            :
+                            <div>
+                                <h1 style={{color:"black"}}>Thank You!</h1>
+                            </div>
+                        }
                     </div>
+                    :
+                    <Authenticate {...props}/>
                 }
             </div>
         </div>
@@ -53,7 +89,7 @@ export function RevModal(props) {
 
     return (
         <div className={"modal"} onClick={props.close}>
-            <div className={"modal-rev"} onClick={e => e.stopPropagation()}>
+            <div className={"modal-form"} onClick={e => e.stopPropagation()}>
                 <form onSubmit={handleSubmit}>
                     <input type="text" placeholder="Name" name="name"/>
                     <input type="text" placeholder="Content" name="content"/>

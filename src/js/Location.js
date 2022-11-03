@@ -15,7 +15,7 @@ export function Random(props) {
 
     return (
         <div>
-            <Location spots={props.spots} id={rand.spot_id} building={rand.building}
+            <Location spots={props.spots} admin={props.admin} makeAdmin={props.makeAdmin} id={rand.spot_id} building={rand.building}
                       maxGroup={rand.max_group_size} capacity={rand.max_capacity}
                       location={rand.location} loudness={rand.loudness_rating}
                       outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
