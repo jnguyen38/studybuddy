@@ -83,7 +83,8 @@ a:link { text-decoration: none; }
 .d-flex {display: flex; align-items: center;}
 .f-col {flex-flow: column;}
 .jc-sb {justify-content: space-between;}
-.jc-l {justify-content: flex-start;}
+.jc-fs {justify-content: flex-start;}
+.jc-fe {justify-content: flex-end;}
 .jc-c {justify-content: center;}
 
 .d-flex-row-l {
@@ -121,11 +122,12 @@ textarea:focus, input:focus{
     height: 40px;
     font-family: Outfit, sans-serif;
     border-radius: 5px;
-    border-color: var(--sb-white);
+    border-color: var(--inverted-bg-color);
     border-style: solid;
     border-width: 1px;
     cursor: pointer;
     padding: 0 20px;
+    font-size: 1em;
 }
 
 .grid-4 {grid-column: span 4;}
@@ -142,6 +144,7 @@ textarea:focus, input:focus{
 
 .black {background-color: black !important;}
 .yellow {background-color: var(--sb-yellow) !important;}
+.light-blue {background-color: var(--sb-light-blue) !important;}
 .thick {height: 5px !important;}
 .thin {height: 1px !important;}
 .full-length {width: 100% !important;}
@@ -163,6 +166,12 @@ textarea:focus, input:focus{
 .lg-icon {width: 40px;}
 .xl-icon {width: 48px;}
 
+textarea {
+    max-width: 100%;
+    max-height: 100%;
+    font-family: Outfit, sans-serif;
+}
+
 @media only screen and (max-width: 768px) {
     #header-nav {
         display: none !important;
@@ -183,14 +192,10 @@ textarea:focus, input:focus{
         height: 40px !important;
     }
 
-    #location-header {
-        height: calc(100vw) !important;
-    }
+    #location-header {height: calc(100vw) !important;}
+    #location-aside {display: none !important;}
 
-    #location-aside {
-        display: none !important;
-    }
-
+    .form-container h2 {font-size: 1.5em !important;}
 }
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {

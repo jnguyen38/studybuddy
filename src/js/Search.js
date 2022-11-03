@@ -1,170 +1,174 @@
-import ERDiagram from "../media/initial_ER.jpg";
 import Select from "react-select";
+import {Link} from "react-router-dom";
 import {useState} from "react";
+import axios from "axios";
 
-export default function Search() {
+function FilterTitle(props) {
+    return (
+        <div className={"filter-title"}>
+            <div className={"thin full-length line"} />
+            <h4>{props.title}</h4>
+        </div>
+    );
+}
 
-  const [valueGS, setValueGS] = useState(0)
-  const [valueC, setValueC] = useState(0)
+function Ratings(props) {
+    let selectedOption = undefined;
+
+    function formSubmit (val) {
+      selectedOption = val;
+    }
+
+    return (
+        <div className={"rating d-flex"}>
+            <input id={props.class + "1"} type="radio" name={props.class} value="1" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
+            <label htmlFor={props.class + "1"}>1</label>
+            <input id={props.class + "2"} type="radio" name={props.class} value="2" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
+            <label htmlFor={props.class + "2"}>2</label>
+            <input id={props.class + "3"} type="radio" name={props.class} value="3" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
+            <label htmlFor={props.class + "3"}>3</label>
+            <input id={props.class + "4"} type="radio" name={props.class} value="4" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
+            <label htmlFor={props.class + "4"}>4</label>
+            <input id={props.class + "5"} type="radio" name={props.class} value="5" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
+            <label htmlFor={props.class + "5"}>5</label>
+        </div>
+    );
+}
+
+function Results(props) {
+    return (
+        <div className={"results-container d-flex-col-c gap-20"}>
+            {(props.results.length === 0) ?
+                <div>Hello</div>
+                :
+                props.results.map(result => {
+                    const image = "./media/locations/" + result.spot_id + "-00.jpg";
+
+                    return (
+                        <Link to={`/location/${result.spot_id}`}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                            <img src={image} alt="" className={"location-img"}/>
+                            <div className={"location-header-info full-length result-item-header"}>
+                                <h2>{result.building}</h2>
+                                <h3>{result.location}</h3>
+                                <p className={"rating"}>★★★★☆</p>
+                            </div>
+                        </div></Link>
+                    );
+                })
+            }
+        </div>
+    );
+}
+
+export default function Search(props) {
+    const [sliderGroup, setSliderGroup] = useState(1)
+    const [sliderCapacity, setSliderCapacity] = useState(1)
+    const [results, setResults] = useState([])
 
     const optionList = [
-      { value: "hammes-notre-dame-bookstore", label: "Hammes Notre Dame Bookstore" },
-      { value: "notre-dame-law-school", label: "Notre Dame Law School" },
-      { value: "stinson-remick-hall-of-engineering", label: "Stinson-Remick Hall of Engineering" },
-      { value: "hesburgh-center", label: "Hesburgh Center" },
-      { value: "stayer-center", label: "Stayer Center" },
-      { value: "mendoza-college-of-business", label: "Mendoza College of Business" },
-      { value: "debartolo-hall", label: "Debartolo Hall" },
-      { value: "fitzpatrick-hall-of-engineering", label: "Fitzpatrick Hall of Engineering" },
-      { value: "cushing-hall-of-engineering", label: "Cushing Hall of Engineering" },
-      { value: "duncan-student-center", label: "Duncan Student Center" },
-      { value: "bond-hall", label: "Bond Hall" },
-      { value: "coleman-morse-center", label: "Coleman-Morse Center" },
-      { value: "oshaughnessy-hall", label: "O'Shaughnessy Hall" },
-      { value: "jordan-hall-of-science", label: "Jordan Hall of Science" },
-      { value: "pasquerilla-center", label: "Pasquerilla Center" },
-      { value: "mccourtney-hall", label: "McCourtney Hall" },
-      { value: "hesburgh-library", label: "Hesburgh Library" },
-      { value: "niewland-hall-of-science", label: "Niewland Hall of Science" },
-      { value: "lafortune-student-center", label: "LaFortune Student Center" },
+        { value: "Hammes Notre Dame Bookstore", label: "Hammes Notre Dame Bookstore" },
+        { value: "Notre Dame Law School", label: "Notre Dame Law School" },
+        { value: "Stinson-Remick Hall of Engineering", label: "Stinson-Remick Hall of Engineering" },
+        { value: "Hesburgh Center", label: "Hesburgh Center" },
+        { value: "Stayer Center", label: "Stayer Center" },
+        { value: "Mendoza College of Business", label: "Mendoza College of Business" },
+        { value: "DeBartolo Hall", label: "DeBartolo Hall" },
+        { value: "Fitzpatrick Hall of Engineering", label: "Fitzpatrick Hall of Engineering" },
+        { value: "Cushing Hall of Engineering", label: "Cushing Hall of Engineering" },
+        { value: "Duncan Student Center", label: "Duncan Student Center" },
+        { value: "Bond Hall", label: "Bond Hall" },
+        { value: "Coleman Morse Center", label: "Coleman-Morse Center" },
+        { value: "O'Shaughnessy Hall", label: "O'Shaughnessy Hall" },
+        { value: "Jordan Hall of Science", label: "Jordan Hall of Science" },
+        { value: "Pasquerilla Center", label: "Pasquerilla Center" },
+        { value: "McCourtney Hall", label: "McCourtney Hall" },
+        { value: "Hesburgh Library", label: "Hesburgh Library" },
+        { value: "Nieuwland Hall of Science", label: "Nieuwland Hall of Science" },
+        { value: "LaFortune Student Center", label: "LaFortune Student Center" },
     ];
+
+    function handleSubmit(event) {
+        event.preventDefault()
+        axios.post(props.basePath + "/api/post/search", {
+            "building": event.target.buildings.value,
+            "seatComfort": event.target.ratingSC.value,
+            "outlets": event.target.ratingO.value,
+            "loudness": event.target.ratingL.value,
+            "naturalLight": event.target.ratingNL.value,
+            "capacity": event.target.capacity.value,
+            "group": event.target.group.value
+        }).then(data => {
+           console.log(data)
+            setResults(data.data)
+        });
+    }
 
     return (
         <div className={"search-container"}>
-          <div className={"search-header"}>
-            <h1>Find A Study Spot</h1>
-          </div>
-          <div className={"search-row"}>
-            <div className={"filter-column"}>
-              <h2>Building</h2>
-              <div className="App">
-                <div className="dropdown-container" style={{width: '250px'}}>
-                  <Select
-                      isMulti
-                      name="colors"
-                      options={optionList}
-                      className="basic-multi-select"
-                      classNamePrefix="select"
-                  />
-                </div>
-              </div>
-
-              <br></br>
-              <h2>Features</h2>
-                <div class="features-container">
-                  <input type="checkbox" id="table"></input>
-                  <label for="tables">Table</label>
-                  <br></br>
-                  <input type="checkbox" id="couch"></input>
-                  <label for="couch">Couch</label>
-                  <br></br>
-                  <input type="checkbox" id="printer"></input>
-                  <label for="printer">Printer</label>
-                </div>
-              <h2>Seat Comfort</h2>
-                <div class="ratingSC">
-                  <input id="ratingSC1" type="radio" name="ratingSC" value="1"></input>
-                  <label for="ratingSC1">1</label>
-                  <input id="ratingSC2" type="radio" name="ratingSC" value="2"></input>
-                  <label for="ratingSC2">2</label>
-                  <input id="ratingSC3" type="radio" name="ratingSC" value="3"></input>
-                  <label for="ratingSC3">3</label>
-                  <input id="ratingSC4" type="radio" name="ratingSC" value="4"></input>
-                  <label for="ratingSC4">4</label>
-                  <input id="ratingSC5" type="radio" name="ratingSC" value="5"></input>
-                  <label for="ratingSC5">5</label>
-                </div>
-
-                <input type="radio" id="less" name="less" value="less"></input>
-                <label htmlFor="less">Less than</label>
-
-                <input type="radio" id="more" name="more" value="more"></input>
-                <label htmlFor="more">Greater than</label>
-              <br/>
-              <br></br>
-              <h2>Group Size</h2>
-                <div class="slide-containerGS">
-                  <input type="range" min="1" max="20" onChange={(e) => setValueGS(e.target.value)} value={valueGS} class="sliderGS"></input>
-                </div>
-              <br></br>
-              <h2>Natural Light</h2>
-                <div class="ratingNL">
-                  <input id="ratingNL1" type="radio" name="ratingNL" value="1"></input>
-                  <label for="ratingNL1">1</label>
-                  <input id="ratingNL2" type="radio" name="ratingNL" value="2"></input>
-                  <label for="ratingNL2">2</label>
-                  <input id="ratingNL3" type="radio" name="ratingNL" value="3"></input>
-                  <label for="ratingNL3">3</label>
-                  <input id="ratingNL4" type="radio" name="ratingNL" value="4"></input>
-                  <label for="ratingNL4">4</label>
-                  <input id="ratingNL5" type="radio" name="ratingNL" value="5"></input>
-                  <label for="ratingNL5">5</label>
-                </div>
-                <input type="radio" id="less" name="less" value="less"></input>
-                <label htmlFor="less">Less than</label>
-
-                <input type="radio" id="more" name="more" value="more"></input>
-                <label htmlFor="more">Greater than</label>
-
-              <br></br>
-              <br></br>
-              <h2>Loudness</h2>
-                <div class="ratingL">
-                  <input id="ratingL1" type="radio" name="ratingL" value="1"></input>
-                  <label for="ratingL1">1</label>
-                  <input id="ratingL2" type="radio" name="ratingL" value="2"></input>
-                  <label for="ratingL2">2</label>
-                  <input id="ratingL3" type="radio" name="ratingL" value="3"></input>
-                  <label for="ratingL3">3</label>
-                  <input id="ratingL4" type="radio" name="ratingL" value="4"></input>
-                  <label for="ratingL4">4</label>
-                  <input id="ratingL5" type="radio" name="ratingL" value="5"></input>
-                <label for="ratingL5">5</label>
-                </div>
-                <input type="radio" id="less" name="less" value="less"></input>
-                <label htmlFor="less">Less than</label>
-
-                <input type="radio" id="more" name="more" value="more"></input>
-                <label htmlFor="more">Greater than</label>
-              <br/>
-              <br></br>
-              <h2>Outlets</h2>
-                <div class="ratingO">
-                  <input id="ratingO1" type="radio" name="ratingO" value="1"></input>
-                  <label for="ratingO1">1</label>
-                  <input id="ratingO2" type="radio" name="ratingO" value="2"></input>
-                  <label for="ratingO2">2</label>
-                  <input id="ratingO3" type="radio" name="ratingO" value="3"></input>
-                  <label for="ratingO3">3</label>
-                  <input id="ratingO4" type="radio" name="ratingO" value="4"></input>
-                  <label for="ratingO4">4</label>
-                  <input id="ratingO5" type="radio" name="ratingO" value="5"></input>
-                  <label for="ratingO5">5</label>
-                  </div>
-
-                <input type="radio" id="less" name="less" value="less"></input>
-                <label htmlFor="less">Less than</label>
-
-                <input type="radio" id="more" name="more" value="more"></input>
-                <label htmlFor="more">Greater than</label>
-              <br/>
-              <br></br>
-              <h2>Capacity</h2>
-                <div class="slide-containerC">
-                  <input type="range" min="1" max="20" onChange={(e) => setValueC(e.target.value)} value={valueC} class="sliderC"></input>
-                </div>
+            <div className={"search-header d-flex-col-c"}>
+                <h1>Find a Study Spot</h1>
+                <div className={"thick line"}/>
             </div>
-            <div className={"results-column"}>
-              <div className={"results-list"}>
 
-                <img className={"spotimg"} src={ERDiagram} alt=""/>
-                <div className={"spotinfo"}>
-                  <h1>Spot Name</h1>
-                </div>
-              </div>
-              <br></br>
+            <div className={"search-row"}>
+                <form className={"filter-column"} onSubmit={handleSubmit}>
+                    <FilterTitle title={"Building"}/>
+                    <div className="App">
+                        <div className="dropdown-container">
+                            <Select isMulti name="buildings" options={optionList}
+                                    className="basic-multi-select" classNamePrefix="select"/>
+                        </div>
+                    </div>
+
+                    <FilterTitle title={"Features"}/>
+                    <div>
+                        <input type="checkbox" name="table"/>
+                        <label htmlFor="tables">Table</label><br/>
+                        <input type="checkbox" name="couch"/>
+                        <label htmlFor="couch">Couch</label><br/>
+                        <input type="checkbox" name="printer"/>
+                        <label htmlFor="printer">Printer</label>
+                    </div>
+
+                    <FilterTitle title={"Seat Comfort"}/>
+                    <Ratings class={"ratingSC"}/>
+
+
+                    <FilterTitle title={"Natural Light"}/>
+                    <Ratings class={"ratingNL"}/>
+
+                    <FilterTitle title={"Loudness"}/>
+                    <Ratings class={"ratingL"}/>
+
+                    <FilterTitle title={"Outlets"}/>
+                    <Ratings class={"ratingO"}/>
+
+                    <FilterTitle title={"Group Size"}/>
+                    <div className={"d-flex jc-sb"}>
+                        <input type="range" min="1" max="20" className="slider"
+                               onChange={(e) => setSliderGroup(parseInt(e.target.value))} value={sliderGroup}/>
+                        <input type="number" className={"slider-num"} min="1" max="20" name="group"
+                               onChange={e => setSliderGroup(parseInt(e.target.value))} value={sliderGroup}/>
+                    </div>
+
+                    <FilterTitle title={"Capacity"}/>
+                    <div className={"d-flex jc-sb"}>
+                        <input type="range" min="1" max="100" className="slider"
+                           onChange={(e) => setSliderCapacity(parseInt(e.target.value))} value={sliderCapacity}/>
+                        <input type="number" className={"slider-num"} min="1" max="100" name="capacity"
+                               onChange={e => setSliderCapacity(parseInt(e.target.value))} value={sliderCapacity}/>
+                    </div>
+
+                    <FilterTitle title={""}/><br/>
+                    <div className={"form-buttons d-flex-row-c"}>
+                        <input type="reset" value="Clear" className={"btn"} onClick={() => {setSliderCapacity(1); setSliderGroup(1);}}/>
+                        <input type="submit" value="Submit" className={"btn submit-btn"}/>
+                    </div>
+                </form>
+
+                <Results results={results}/>
+
             </div>
-          </div>
         </div>
     );
 };

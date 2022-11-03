@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
 import {RevModal, EditDescModal} from "./Modal";
+import {useParams} from "react-router-dom";
+import axios from "axios";
 
 import person from "../media/icons/person.svg";
 import star from "../media/icons/double_star.svg";
@@ -15,7 +17,7 @@ export function Random(props) {
 
     return (
         <div>
-            <Location spots={props.spots} id={rand.spot_id} building={rand.building}
+            <Location spots={props.spots} admin={props.admin} setAdmin={props.makeAdmin} id={rand.spot_id} building={rand.building}
                       maxGroup={rand.max_group_size} capacity={rand.max_capacity}
                       location={rand.location} loudness={rand.loudness_rating}
                       outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
@@ -26,7 +28,7 @@ export function Random(props) {
     );
 }
 
-function LocationHeader(props) {
+export function LocationHeader(props) {
     return (
         <div id={"location-header"}>
             <img src={props.image} alt="" className={"location-img"}/>
@@ -88,7 +90,7 @@ function LocationMain(props) {
                 <div className={"line thin full-length"}/>
                 <h4>Space Statistics</h4>
                 <div className={"d-flex jc-sb full-length"}>
-                    <h3>Maximum Group Size</h3>
+                    <h3>Maximum Capacity</h3>
                     <div className={"d-flex"}>
                         <img src={person} alt="" className={"person icon"}/>
                         <p>{props.capacity}</p>
@@ -142,15 +144,29 @@ export default function Location(props) {
     const image = "./media/locations/" + props.id + "-00.jpg";
     const root = document.querySelector(":root");
 
+    const params = useParams()
+
+    function getSpotData(spot_id) {
+        axios.post(props.basePath + "/api/post/location", {
+            "spot_id": spot_id
+        }).then(data => {
+           return data.data
+        });
+    }
+
+    const spotData = getSpotData(params.spot_id)
+    console.log(spotData)
+
     function calcComf(comfRatings) {
-        let avg = 0;
+        /* let avg = 0;
         let count = 0;
         for (const rating of comfRatings) {
             if (rating < 1) continue;
             avg += rating;
             count++;
         }
-        return avg/count;
+        return avg/count; */
+        return 1
     }
 
     useEffect(() => {
@@ -162,16 +178,14 @@ export default function Location(props) {
 
     useEffect(() => {
         window.scrollTo(0, 0)
-        console.log(props.spots)
-        console.log(props.id)
     }, [props.id, props.spots]);
 
     return (
         <section id={"location-container"}>
-            <LocationHeader {...props} image={image}/>
+            <LocationHeader {...spotData} image={image}/>
             <div className={"d-flex-row-l"}>
-                <LocationMain {...props}/>
-                <LocationAside {...props}/>
+                <LocationMain {...spotData}/>
+                <LocationAside {...spotData}/>
             </div>
         </section>
     );
