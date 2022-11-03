@@ -86,6 +86,7 @@ a:link { text-decoration: none; }
 .jc-fs {justify-content: flex-start;}
 .jc-fe {justify-content: flex-end;}
 .jc-c {justify-content: center;}
+.gap-20{gap:20px;}
 
 .d-flex-row-l {
     display: flex;
@@ -158,6 +159,7 @@ textarea:focus, input:focus{
     filter: var(--icon-filter);
     margin-right: 5px;
 }
+
 .invert-icon {filter: var(--inverted-filter) !important;}
 .white-icon {--icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%) !important;}
 .xs-icon {width: 22px;}
@@ -169,6 +171,10 @@ textarea:focus, input:focus{
 textarea {
     max-width: 100%;
     max-height: 100%;
+    font-family: Outfit, sans-serif;
+}
+
+input {
     font-family: Outfit, sans-serif;
 }
 

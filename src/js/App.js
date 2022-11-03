@@ -38,6 +38,7 @@ export default function App() {
     function handleMenu() {setShowMenu(() => !showMenu);closeSettings();}
     function handleSettings() {setShowSettings(() => !showSettings);closeMenu();}
     function makeAdmin() {setAdmin(true)}
+    function dropAdmin() {setAdmin(false)}
     function randomize(n) {return Math.floor(Math.random() * n);}
 
     // useEffect Hooks
@@ -55,6 +56,7 @@ export default function App() {
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
+        setAdmin(JSON.parse(window.localStorage.getItem("admin")));
         function onPageLoad() {setPageLoaded(true);}
         if (document.readyState === "complete") {
             onPageLoad()
@@ -67,7 +69,8 @@ export default function App() {
 
     useEffect(() => {
         window.localStorage.setItem("UXMode", JSON.stringify(UXMode));
-    }, [UXMode]);
+        window.localStorage.setItem("admin", JSON.stringify(admin));
+    }, [UXMode, admin]);
 
     return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
@@ -76,6 +79,7 @@ export default function App() {
                     handleUXMode={handleUXMode} UXMode={UXMode}
                     homeRedirect={homeRedirect} devRedirect={devRedirect}
                     overviewRedirect={overviewRedirect} spots={spots}
+                    admin={admin} logInAdmin={makeAdmin} logOutAdmin={dropAdmin}
                     showSettings={showSettings} showMenu={showMenu}/>
             <main>
                 <Routes>
@@ -85,7 +89,7 @@ export default function App() {
                                                              basePath={basePath}/>}/>
                     <Route path={path + "/overview"} element={<Overview/>}/>
                     <Route path={path + "/location"} element={spots &&
-                        <Location spots={spots} admin={admin} makeAdmin={makeAdmin} id={testSpot.spot_id} building={testSpot.building}
+                        <Location spots={spots} admin={admin} setAdmin={makeAdmin} id={testSpot.spot_id} building={testSpot.building}
                                   maxGroup={testSpot.max_group_size} capacity={testSpot.max_capacity}
                                   location={testSpot.location} loudness={testSpot.loudness_rating}
                                   outlets={testSpot.outlets_rating} naturalLight={testSpot.natural_light_rating}

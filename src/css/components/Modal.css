@@ -76,6 +76,7 @@
     color: var(--inverted-text-color);
     padding: 10px;
     margin: 10px 0;
+    cursor: pointer;
 }
 
 .modal-nav-item {

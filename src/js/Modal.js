@@ -13,6 +13,7 @@ function Authenticate(props) {
            "password": hash.digest("hex").toString()
         }).then(data => {
             console.log(data)
+            props.setAdmin(data.data)
         });
     }
 
@@ -22,7 +23,7 @@ function Authenticate(props) {
             <div className={"light-blue line"}/>
             <input type="text" placeholder="Username" name="user" required/>
             <input type="password" placeholder="Password" name="password" required/>
-            <div className={"form-buttons d-flex jc-fe"}>
+            <div className={"form-buttons d-flex jc-c"}>
                 <input type="submit" value="Log In" className={"btn submit-btn"}/>
             </div>
         </form>
@@ -46,25 +47,22 @@ export function EditDescModal(props) {
 
     return (
         <div className={"modal"} onMouseDown={props.close}>
-            <div className={"modal-form"} onMouseDown={e => e.stopPropagation()}>
+            <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
                 {props.admin ?
-                    <div>
-                        {(!props.editSubmitted) ?
-                            <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
-                                <h2>Edit the Description</h2>
-                                <div className={"light-blue line"}/>
-                                <textarea placeholder="Enter your description here..." name="description" maxLength="100" required/>
-                                <div className={"form-buttons d-flex jc-fe"}>
-                                    <input type="reset" value="Clear" className={"btn"}/>
-                                    <input type="submit" value="Submit" className={"btn submit-btn"}/>
-                                </div>
-                            </form>
-                            :
-                            <div>
-                                <h1 style={{color:"black"}}>Thank You!</h1>
+                    (!props.editSubmitted) ?
+                        <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
+                            <h2>Edit the Description</h2>
+                            <div className={"light-blue line"}/>
+                            <textarea placeholder="Enter your description here..." name="description" maxLength="100" required/>
+                            <div className={"form-buttons d-flex jc-fe"}>
+                                <input type="reset" value="Clear" className={"btn"}/>
+                                <input type="submit" value="Submit" className={"btn submit-btn"}/>
                             </div>
-                        }
-                    </div>
+                        </form>
+                        :
+                        <div>
+                            <h1 style={{color:"black"}}>Thank You!</h1>
+                        </div>
                     :
                     <Authenticate {...props}/>
                 }
@@ -89,16 +87,20 @@ export function RevModal(props) {
 
     return (
         <div className={"modal"} onClick={props.close}>
-            <div className={"modal-form"} onClick={e => e.stopPropagation()}>
-                <form onSubmit={handleSubmit}>
-                    <input type="text" placeholder="Name" name="name"/>
-                    <input type="text" placeholder="Content" name="content"/>
-                    <input type="number" placeholder="Rating" name="rating"/>
-                    <input type="reset" value="Clear"/>
-                    <input type="submit" value="Submit"/>
+            <div className={"modal-form d-flex-col-c"} onClick={e => e.stopPropagation()}>
+                <form onSubmit={handleSubmit} id={"write-review"} className={"form-container d-flex f-col"}>
+                    <h2>Write a Review</h2>
+                    <div className={"light-blue line"}/>
+                    <div className={"d-flex jc-sb full-length"}>
+                        <input type="text" placeholder="Name" name="name" required/>
+                        <input type="number" placeholder="Rating" name="rating" required/>
+                    </div>
+                    <textarea type="text" placeholder="Content" name="description" required/>
+                    <div className={"form-buttons d-flex jc-fe"}>
+                        <input type="reset" value="Clear" className={"btn"}/>
+                        <input type="submit" value="Submit" className={"btn submit-btn"}/>
+                    </div>
                 </form>
-                <button id={"write-review-btn"} className={"btn d-flex-row-c"} onClick={handleSubmit}>Submit</button>
-
             </div>
         </div>
     );
@@ -152,6 +154,12 @@ export function SettingsModal(props) {
                     </button>
                 </div>
                 <div className={"line thick yellow"}/>
+                <div className={"options-display"}>
+                    <h2>Admin</h2>
+                    <button onClick={(props.admin) ? props.logOutAdmin : "No"} className={"settings-button"}>
+                        {(props.admin) ? "Log Out" : "Log In"}
+                    </button>
+                </div>
             </div>
         </div>
     );

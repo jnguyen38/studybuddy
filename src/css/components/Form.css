@@ -18,7 +18,7 @@
 
 .modal-form textarea[name="description"] {
     width: 90%;
-    height: 80%;
+    min-height: 200px;
     padding: 5%;
     resize: none;
     border-radius: 5px;
@@ -27,15 +27,20 @@
 
 .modal-form textarea[name="description"]:focus {
     border-color: var(--sb-light-blue);
-    border-width: 3px;
+    border-width: 3px !important;
     padding: calc(5% - 2px);
+}
+
+.modal input:focus {
+    border-color: var(--sb-light-blue);
+    border-width: 3px !important;
+    padding: calc(2% - 2px) !important;
 }
 
 .form-container {
     gap: 20px;
     color: var(--sb-light-blue);
     width: 90%;
-    height: 90%;
     padding: 5%;
 }
 
@@ -43,19 +48,29 @@
     font-size: 2.1em;
 }
 
-#edit-desc, #admin-container {
+#edit-desc, #admin-container, #write-review {
     color: var(--sb-light-blue);
     align-items: center;
-    height: 100%;
 }
 
 .form-buttons {
     gap: 10px;
     width: 100%;
-
 }
 
 .form-buttons .btn {
     border-color: var(--sb-light-blue);
     color: var(--sb-light-blue);
+}
+
+#admin-container input, #write-review input {
+    padding: 2%;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 1em;
+}
+
+#write-review input[type="number"] {
+    width: 20%;
 }
