@@ -1,6 +1,6 @@
 import ERDiagram from "../media/initial_ER.jpg";
 import Select from "react-select";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export default function Search() {
 
@@ -51,16 +51,16 @@ export default function Search() {
 
               <br></br>
               <h2>Features</h2>
-              <input type="checkbox" id="table"></input>
-              <label for="tables">Table</label>
-              <br></br>
-              <input type="checkbox" id="couch"></input>
-              <label for="couch">Couch</label>
-              <br></br>
-              <input type="checkbox" id="printer"></input>
-              <label for="printer">Printer</label>
-              <br></br>
-              <br></br>
+                <div class="features-container">
+                  <input type="checkbox" id="table"></input>
+                  <label for="tables">Table</label>
+                  <br></br>
+                  <input type="checkbox" id="couch"></input>
+                  <label for="couch">Couch</label>
+                  <br></br>
+                  <input type="checkbox" id="printer"></input>
+                  <label for="printer">Printer</label>
+                </div>
               <h2>Seat Comfort</h2>
                 <div class="ratingSC">
                   <input id="ratingSC1" type="radio" name="ratingSC" value="1"></input>
@@ -148,4 +148,3 @@ export default function Search() {
         </div>
     );
 };
-

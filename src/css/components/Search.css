@@ -2,10 +2,10 @@
     padding-top: var(--header-height);
     padding-left: 20px;
     padding-right: 20px;
-    text-align: center;
 }
 
 .search-header {
+    padding-left: 29%;
     padding-top: 50px;
     font-size: 2em;
 }
@@ -47,6 +47,7 @@
 
 .dropdown-container {
     color: black;
+    padding-top: 15px;
 }
 
 .spotimg {
@@ -107,12 +108,8 @@
 
 .ratingSC:not(:hover) input:indeterminate + label,
 .ratingSC:not(:hover) input:checked ~ input + label,
-.ratingSC input:hover ~ input + label{
+.ratingSC input:hover ~ input + label {
   background-position : -48px 0;
-}
-
-.ratingSC:not(:hover) input:focus-visible + label{
-  background-position : -96px 0;
 }
 
 .ratingL {
@@ -194,7 +191,6 @@
 
 .slide-containerC {
   padding-top: 15px;
-  display: flex;
 }
 
 .sliderC {
@@ -213,4 +209,13 @@
   height: 25px;
   border-radius: 50%;
   background: var(--sb-yellow);
+}
+
+.basic-multi-select {
+  width: 100%;
+}
+
+.features-container {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
