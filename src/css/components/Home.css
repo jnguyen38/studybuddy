@@ -1,19 +1,85 @@
-#home-container, #devplan-container, #overview-container {
-    width: 80%;
-    padding-top: calc(var(--header-height) * 1.5);
+#home-bg {
+    background-image: url("../../media/ND_map_bw.png");
+}
+
+#home-container {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
     margin: 0 auto;
     min-height: 100vh;
+    background-color: var(--reg-bg-rgba);
+}
+
+#home-menu {
+    background-color: var(--reg-bg-color);
+    padding: 50px 10%;
+    width: 80%;
+    min-height: 100vh;
+    z-index: 10;
+}
+
+#home-menu > h1 {
+    font-size: 3.5em;
+}
+
+#home-op-display {
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+    gap: 30px;
+    max-width: 800px;
+    margin: 50px;
+}
+
+.home-option {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    width: 250px;
+    height: 150px;
+    background-color: var(--inverted-bg-color);
+    color: var(--inverted-text-color);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px var(--inverted-bg-color);
+    transition: all .25s;
+}
+
+.home-option:hover {
+    box-shadow: 0 0 20px var(--inverted-bg-color);
+}
+
+.home-option p {font-size: 1.1em;}
+
+.home-intro h1 {
+    font-family: College, sans-serif;
+    font-size: 9em;
+    cursor: default;
+}
+
+.typewriter {
+    --home-typewriter-width: 820px;
+    --carat-width: 15px;
+    --carat-padding: 25px;
+    height: 140px;
+    background-color: var(--sb-dark-blue);
+    padding: 15px var(--carat-padding) 15px 15px;
+    display: flex;
+    align-items: center;
 }
 
 .typewriter h1 {
-    width: 430px;
+    color: var(--sb-yellow);
+    width: var(--home-typewriter-width);
     overflow: hidden;
-    border-right: 5px solid var(--sb-orange);
+    border-right: var(--carat-width) solid var(--sb-white);
     white-space: nowrap;
     margin: 0 auto;
     letter-spacing: 3px;
     animation:
-            typing 2s steps(23, end),
+            typing 1.5s steps(20, end),
             blink-caret .75s step-end infinite;
 }
 
@@ -38,7 +104,7 @@
 
 @keyframes typing {
     from { width: 0; }
-    to { width: 430px; }
+    to { width: var(--home-typewriter-width); }
 }
 
 @keyframes typingOut {
@@ -58,5 +124,5 @@
 
 @keyframes blink-caret {
     from, to { border-color: transparent; }
-    50% { border-color: var(--sb-orange); }
+    50% { border-color: var(--sb-white); }
 }

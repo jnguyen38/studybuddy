@@ -7,10 +7,11 @@
     width: 100%;
     max-width: 100%;
     position: fixed;
-    z-index: 200;
+    z-index: 20;
     opacity: 1;
     box-shadow: 0 0 10px black;
-    background-color: inherit;
+    backdrop-filter: blur(5px);
+    background-color: var(--reg-bg-rgba-header);
 }
 
 .header-buffer {
@@ -25,9 +26,10 @@
 }
 
 #header-main h1 {
-    font-size: 2.1em;
+    font-size: 2.3em;
     font-family: Yellowtail, sans-serif;
     font-weight: 200;
+    color: var(--sb-yellow);
 }
 
 #header-logo {
@@ -42,26 +44,47 @@
     margin-right: 20px;
 }
 
-@media only screen and (max-width: 768px) {
-    #header-nav {
-        display: none;
-    }
-}
-
 #header-nav a{
     height: 100%;
+}
+
+#settings-icon {
+    --settings-width: 36px;
+    margin-left: 20px;
+    width: 40px;
+    cursor: pointer;
+    z-index: 50;
+}
+
+#settings-icon:hover {
+    --settings-width: 40px;
+    animation: rotate 2s linear infinite;
+}
+
+#settings-icon:active {
+    --settings-width: 48px;
+    animation: rotate 2s linear infinite;
+}
+
+.settings {
+    color: white;
+    width: var(--settings-width);
+    margin: 0;
+    transition: width .15s;
 }
 
 .nav-item {
     width: 150px;
     height: 100%;
     cursor: pointer;
-    transition: background-color .3s, color .3s;
+    box-shadow: 0 0 0 var(--inverted-bg-color);
+    transition: background-color .3s, color .3s, box-shadow .2s;
 }
 
 .nav-item:hover {
-    color: var(--sb-black);
-    background-color: var(--sb-white);
+    color: var(--inverted-text-color);
+    background-color: var(--inverted-bg-color);
+    box-shadow: 0 0 15px var(--sb-white);
 }
 
 .nav-item:active {
@@ -78,6 +101,7 @@
     transition: .5s ease-in-out;
     cursor: pointer;
     display: none;
+    z-index: 50;
 }
 
 #nav-menu span {
@@ -85,7 +109,7 @@
     position: absolute;
     height: 3px;
     width: 100%;
-    background: white;
+    background: var(--inverted-bg-color);
     border-radius: 4px;
     opacity: 1;
     left: 0;
@@ -107,3 +131,7 @@
     }
 }
 
+@keyframes rotate {
+    from {rotate: 0deg;}
+    to {rotate: 360deg;}
+}

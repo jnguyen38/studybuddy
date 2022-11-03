@@ -1,7 +1,10 @@
+import {useEffect} from "react";
+
 function Names() {
     return (
         <section>
-            <h1>Study Buddy</h1>
+            <h1>Study Buddy</h1><br/>
+            <div className={"line"}/><br/>
             <h2>Stage 2: Development Plan</h2>
             <h3>Team Members:</h3>
 
@@ -9,7 +12,7 @@ function Names() {
                 <li>Andrea Turner (aturne22)</li>
                 <li>Brooke Mackey (bmackey)</li>
                 <li>Thomas Mercurio (tmercuri)</li>
-                <li>Jon Nguyen (jngyen5)</li>
+                <li>Jon Nguyen (jnguyen5)</li>
             </ul>
 
         </section>
@@ -17,14 +20,19 @@ function Names() {
 }
 
 export default function Devplan() {
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
     return (
         <div id="devplan-container">
-          <Names/>
+            <Names/>
+            <div className={"line"}/>
 
           <h3>Relational Schema</h3>
-          <p>
-                <b>users</b>(<u>user_id</u>, name, latitude, longitude, current_time, day_of_week, current_task)<br/>
-                &emsp;   user_id → name, latitude, longitude<br/>
+              <p>
+                  <b>users</b>(<u>user_id</u>, name, latitude, longitude, current_time, day_of_week, current_task)<br/>
+                  &emsp;   user_id → name, latitude, longitude<br/>
                 <br/>
                 <b>closeToPeople</b>(<u>user_id</u>, user_friend_id, distance)<br/>
                 &emsp;   user_id, friend_id → distance<br/>
@@ -76,54 +84,56 @@ export default function Devplan() {
 
           <h3>Project Timeline</h3>
           <table>
-              <tr>
-                  <th>Deadline</th>
-                  <th>Goal</th>
-              </tr>
-              <tr>
-                  <td><b>Sunday, October 2nd</b></td>
-                  <td>Begin manually collecting data for the database.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, October 9th</b></td>
-                  <td>Finished collecting data for the database of study spots, and have investigated and begun use of the Google Maps API.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, October 16th</b></td>
-                  <td>Completed a working database for our data. Begin working on back-end interactions with the databases and continue working on scripts to interact with the Google Maps API.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, October 23rd</b></td>
-                  <td>Continue working on front-to-back-end interactions and scripts that interact with the Google Maps API.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, October 30th</b></td>
-                  <td>We will have our basic functionalities implemented, and we will have an initial stage of our website completed. We will also plan and practice for the presentation on Wednesday.</td>
-              </tr>
-              <tr>
-                  <td><b>Wednesday, November 2nd</b></td>
-                  <td>Demo initial project functionality.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, November 6th</b></td>
-                  <td>Continue to troubleshoot and debug basic functions as needed, but they should be largely finished at this point. Begin working on advanced functions and brainstorm additional improvements as necessary.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, November 13th</b></td>
-                  <td>Continue working on advanced functions.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, November 20th</b></td>
-                  <td>At this point, the advanced functions should be almost complete. Shift gears to focusing on the front-end aspect of the project to ensure best user experience.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, November 27th</b></td>
-                  <td>Final touches to the code, front-end, etc. This week will be used mostly for debugging.</td>
-              </tr>
-              <tr>
-                  <td><b>Sunday, December 4th</b></td>
-                  <td>Film video demonstration and submit project. Final meeting!</td>
-              </tr>
+              <tbody>
+                  <tr>
+                      <th>Deadline</th>
+                      <th>Goal</th>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, October 2nd</b></td>
+                      <td>Begin manually collecting data for the database.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, October 9th</b></td>
+                      <td>Finished collecting data for the database of study spots, and have investigated and begun use of the Google Maps API.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, October 16th</b></td>
+                      <td>Completed a working database for our data. Begin working on back-end interactions with the databases and continue working on scripts to interact with the Google Maps API.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, October 23rd</b></td>
+                      <td>Continue working on front-to-back-end interactions and scripts that interact with the Google Maps API.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, October 30th</b></td>
+                      <td>We will have our basic functionalities implemented, and we will have an initial stage of our website completed. We will also plan and practice for the presentation on Wednesday.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Wednesday, November 2nd</b></td>
+                      <td>Demo initial project functionality.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, November 6th</b></td>
+                      <td>Continue to troubleshoot and debug basic functions as needed, but they should be largely finished at this point. Begin working on advanced functions and brainstorm additional improvements as necessary.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, November 13th</b></td>
+                      <td>Continue working on advanced functions.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, November 20th</b></td>
+                      <td>At this point, the advanced functions should be almost complete. Shift gears to focusing on the front-end aspect of the project to ensure best user experience.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, November 27th</b></td>
+                      <td>Final touches to the code, front-end, etc. This week will be used mostly for debugging.</td>
+                  </tr>
+                  <tr>
+                      <td><b>Sunday, December 4th</b></td>
+                      <td>Film video demonstration and submit project. Final meeting!</td>
+                  </tr>
+              </tbody>
           </table>
       </div>  
     );
