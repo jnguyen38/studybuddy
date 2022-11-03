@@ -65,25 +65,25 @@ export default function Search(props) {
     const [results, setResults] = useState([])
 
     const optionList = [
-        { value: "hammes-notre-dame-bookstore", label: "Hammes Notre Dame Bookstore" },
+        { value: "Hammes Notre Dame Bookstore", label: "Hammes Notre Dame Bookstore" },
         { value: "Notre Dame Law School", label: "Notre Dame Law School" },
         { value: "Stinson-Remick Hall of Engineering", label: "Stinson-Remick Hall of Engineering" },
-        { value: "hesburgh-center", label: "Hesburgh Center" },
-        { value: "stayer-center", label: "Stayer Center" },
-        { value: "mendoza-college-of-business", label: "Mendoza College of Business" },
+        { value: "Hesburgh Center", label: "Hesburgh Center" },
+        { value: "Stayer Center", label: "Stayer Center" },
+        { value: "Mendoza College of Business", label: "Mendoza College of Business" },
         { value: "DeBartolo Hall", label: "DeBartolo Hall" },
         { value: "Fitzpatrick Hall of Engineering", label: "Fitzpatrick Hall of Engineering" },
-        { value: "cushing-hall-of-engineering", label: "Cushing Hall of Engineering" },
+        { value: "Cushing Hall of Engineering", label: "Cushing Hall of Engineering" },
         { value: "Duncan Student Center", label: "Duncan Student Center" },
         { value: "Bond Hall", label: "Bond Hall" },
         { value: "Coleman Morse Center", label: "Coleman-Morse Center" },
-        { value: "oshaughnessy-hall", label: "O'Shaughnessy Hall" },
+        { value: "O'Shaughnessy Hall", label: "O'Shaughnessy Hall" },
         { value: "Jordan Hall of Science", label: "Jordan Hall of Science" },
-        { value: "pasquerilla-center", label: "Pasquerilla Center" },
-        { value: "mccourtney-hall", label: "McCourtney Hall" },
+        { value: "Pasquerilla Center", label: "Pasquerilla Center" },
+        { value: "McCourtney Hall", label: "McCourtney Hall" },
         { value: "Hesburgh Library", label: "Hesburgh Library" },
-        { value: "nieuwland-hall-of-science", label: "Nieuwland Hall of Science" },
-        { value: "lafortune-student-center", label: "LaFortune Student Center" },
+        { value: "Nieuwland Hall of Science", label: "Nieuwland Hall of Science" },
+        { value: "LaFortune Student Center", label: "LaFortune Student Center" },
     ];
 
     function handleSubmit(event) {
