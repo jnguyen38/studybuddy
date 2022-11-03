@@ -26,7 +26,7 @@ export function Random(props) {
     );
 }
 
-function LocationHeader(props) {
+export function LocationHeader(props) {
     return (
         <div id={"location-header"}>
             <img src={props.image} alt="" className={"location-img"}/>
