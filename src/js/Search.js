@@ -60,7 +60,7 @@ export default function Search() {
     return (
         <div className={"search-container"}>
           <div className={"search-header"}>
-            <h1 style={{textAlign: 'left'}}>Find a study spot...</h1>
+            <h1>Find A Study Spot</h1>
           </div>
           <div className={"search-row"}>
             <div className={"filter-column"}>
@@ -92,6 +92,7 @@ export default function Search() {
               <h2>Seat Comfort</h2>
                 <Ratings class={"ratingSC"}/>
               <br/>
+
               <h2>Group Size</h2>
                 <div className="slide-containerGS">
                   <input type="range" min="1" max="20" onChange={(e) => setValueGS(e.target.value)} value={valueGS} className="sliderGS"></input>
@@ -102,15 +103,18 @@ export default function Search() {
               <input type="radio" id="less" name="less" value="less"></input>
               <label htmlFor="less">Less than</label>
 
+
               <input type="radio" id="more" name="more" value="more"></input>
               <label htmlFor="more">Greater than or equal to</label>
               <br></br>
               <br></br>
               <h2>Loudness</h2>
+
                 <Ratings class={"ratingL"}/>
               <br></br>
               <h2>Outlets</h2>
                 <Ratings class={"ratingO"}/>
+
               <br></br>
               <h2>Capacity</h2>
                 <div className="slide-containerC">
