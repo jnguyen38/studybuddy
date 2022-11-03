@@ -13,7 +13,11 @@ function Authenticate(props) {
            "password": hash.digest("hex").toString()
         }).then(data => {
             console.log(data)
-            props.setAdmin(data.data)
+            console.log(data.data)
+            console.log(!!(data.data))
+            props.setAdmin(() => data.data)
+        }).then(() => {
+            console.log(props.admin)
         });
     }
 
@@ -138,6 +142,9 @@ export function MenuModal(props) {
 
 export function SettingsModal(props) {
     if (!props.show) return;
+    function No() {
+        console.log("No")
+    }
 
     return (
         <div className={"modal"} onClick={props.close}>
@@ -156,7 +163,7 @@ export function SettingsModal(props) {
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
                     <h2>Admin</h2>
-                    <button onClick={(props.admin) ? props.logOutAdmin : "No"} className={"settings-button"}>
+                    <button onClick={(props.admin) ? props.logOutAdmin : No} className={"settings-button"}>
                         {(props.admin) ? "Log Out" : "Log In"}
                     </button>
                 </div>
