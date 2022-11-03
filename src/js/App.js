@@ -26,7 +26,7 @@ export default function App() {
 
     // Path variables
     const path = "";
-    const basePath = "http://db8.cse.nd.edu:5000";
+    const basePath = "http://db8.cse.nd.edu:5001";
     const homeRedirect = path + "/";
     const devRedirect = path + "/devplan";
     const overviewRedirect = path + "/overview";
@@ -97,7 +97,7 @@ export default function App() {
                                   hasPrinter={testSpot.printer} hasTables={testSpot.tables} overall={testSpot.overall_rating}
                                   description={testSpot.description} floor={testSpot.floor} notes={testSpot.notes} basePath={basePath}/>
                     }/>
-                    <Route path={path + "/search"} element={<Search UXMode={UXMode}/>}/>
+                    <Route path={path + "/search"} element={<Search UXMode={UXMode} basePath={basePath}/>}/>
                     <Route path={path + "/upload"} element={<Upload UXMode={UXMode}/>}/>
                     <Route path={path + "/random"} element={<Random rand={rand} spots={spots}
                                                                     basePath={basePath}
