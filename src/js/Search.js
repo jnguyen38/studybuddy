@@ -32,7 +32,7 @@ export default function Search() {
     return (
         <div className={"search-container"}>
           <div className={"search-header"}>
-            <h1 style={{textAlign: 'left'}}>Find a study spot...</h1>
+            <h1>Find A Study Spot</h1>
           </div>
           <div className={"search-row"}>
             <div className={"filter-column"}>
@@ -74,6 +74,13 @@ export default function Search() {
                   <input id="ratingSC5" type="radio" name="ratingSC" value="5"></input>
                   <label for="ratingSC5">5</label>
                 </div>
+
+                <input type="radio" id="less" name="less" value="less"></input>
+                <label htmlFor="less">Less than</label>
+
+                <input type="radio" id="more" name="more" value="more"></input>
+                <label htmlFor="more">Greater than</label>
+              <br/>
               <br></br>
               <h2>Group Size</h2>
                 <div class="slide-containerGS">
@@ -97,7 +104,7 @@ export default function Search() {
                 <label htmlFor="less">Less than</label>
 
                 <input type="radio" id="more" name="more" value="more"></input>
-                <label htmlFor="more">Greater than or equal to</label>
+                <label htmlFor="more">Greater than</label>
 
               <br></br>
               <br></br>
@@ -114,6 +121,12 @@ export default function Search() {
                   <input id="ratingL5" type="radio" name="ratingL" value="5"></input>
                 <label for="ratingL5">5</label>
                 </div>
+                <input type="radio" id="less" name="less" value="less"></input>
+                <label htmlFor="less">Less than</label>
+
+                <input type="radio" id="more" name="more" value="more"></input>
+                <label htmlFor="more">Greater than</label>
+              <br/>
               <br></br>
               <h2>Outlets</h2>
                 <div class="ratingO">
@@ -128,6 +141,13 @@ export default function Search() {
                   <input id="ratingO5" type="radio" name="ratingO" value="5"></input>
                   <label for="ratingO5">5</label>
                   </div>
+
+                <input type="radio" id="less" name="less" value="less"></input>
+                <label htmlFor="less">Less than</label>
+
+                <input type="radio" id="more" name="more" value="more"></input>
+                <label htmlFor="more">Greater than</label>
+              <br/>
               <br></br>
               <h2>Capacity</h2>
                 <div class="slide-containerC">
