@@ -48,7 +48,7 @@
     font-size: 2.1em;
 }
 
-#edit-desc, #admin-container, #write-review {
+#edit-container, #admin-container, #write-review {
     color: var(--sb-light-blue);
     align-items: center;
 }

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {RevModal, EditDescModal} from "./Modal";
+import {RevModal, EditModal} from "./Modal";
 
 import person from "../media/icons/person.svg";
 import star from "../media/icons/double_star.svg";
@@ -63,6 +63,9 @@ function LocationButtons(props) {
                 Add a Photo
             </button>
 
+            <button className={"btn d-flex-row-c"} onClick={() => props.handleShowEdit("building")}>Edit Building</button>
+            <button className={"btn d-flex-row-c"} onClick={() => props.handleShowEdit("location")}>Edit Location</button>
+
             <RevModal {...props} show={showRev} close={closeRev}
                       className={(showRev) ? "item-clicked" : 0}/>
         </div>
@@ -70,17 +73,6 @@ function LocationButtons(props) {
 }
 
 function LocationMain(props) {
-    const [showEditDesc, setShowEditDesc] = useState(false);
-    const [editSubmitted, setEditSubmitted] = useState(false);
-
-
-    function handleShowEditDesc() {
-        setShowEditDesc(() => !showEditDesc);
-        setEditSubmitted(false);
-    }
-    function closeShowEditDesc() {setShowEditDesc(false)}
-    function editSubmit() {setEditSubmitted(true)}
-
     return (
         <div id={"location-main"}>
             <LocationButtons {...props}/>
@@ -104,7 +96,7 @@ function LocationMain(props) {
                 <p>{props.description}</p><br/>
                 <div className={"d-flex jc-sb full-length"}>
                     <button className={"btn d-flex-row-c"}>Read More</button>
-                    <button className={"btn d-flex-row-c"} onClick={handleShowEditDesc}>Edit</button>
+                    <button className={"btn d-flex-row-c"} onClick={() => props.handleShowEdit("description")}>Edit</button>
                 </div>
 
                 <br/><div className={"thin full-length line"}></div>
@@ -123,8 +115,9 @@ function LocationMain(props) {
 
             </div>
 
-            <EditDescModal {...props} show={showEditDesc} close={closeShowEditDesc}
-                           editSubmitted={editSubmitted} editSubmit={editSubmit}/>
+            <EditModal {...props} show={props.showEdit} close={props.closeEdit}
+                       query={props.query}
+                       editSubmitted={props.editSubmitted} editSubmit={props.editSubmit}/>
         </div>
 
     );
@@ -141,6 +134,21 @@ function LocationAside() {
 export default function Location(props) {
     const image = "./media/locations/" + props.id + "-00.jpg";
     const root = document.querySelector(":root");
+
+    const [showEdit, setShowEdit] = useState(false);
+    const [editSubmitted, setEditSubmitted] = useState(false);
+    const [query, setQuery] = useState("");
+
+
+    function handleShowEdit(queryType) {
+        setQuery(queryType)
+        setShowEdit(() => !showEdit);
+        setEditSubmitted(false);
+    }
+
+    function closeEdit() {setShowEdit(false)}
+    function editSubmit() {setEditSubmitted(true)}
+
 
     function calcComf(comfRatings) {
         let avg = 0;
@@ -168,10 +176,13 @@ export default function Location(props) {
 
     return (
         <section id={"location-container"}>
-            <LocationHeader {...props} image={image}/>
+            <LocationHeader {...props} image={image} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
+                            handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted}/>
             <div className={"d-flex-row-l"}>
-                <LocationMain {...props}/>
-                <LocationAside {...props}/>
+                <LocationMain {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
+                              handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted}/>
+                <LocationAside {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
+                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted}/>
             </div>
         </section>
     );

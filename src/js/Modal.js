@@ -34,14 +34,17 @@ function Authenticate(props) {
     );
 }
 
-export function EditDescModal(props) {
+export function EditModal(props) {
     if (!props.show) return;
+
+    const title = props.query[0].toUpperCase() + props.query.substring(1)
 
     function handleSubmit(event) {
         event.preventDefault();
-        Axios.post(props.basePath + "/api/post/editDesc", {
+        Axios.post(props.basePath + "/api/post/edit", {
             "description": event.target.description.value,
-            "id": props.id
+            "id": props.id,
+            "query": props.query
         }).then((data) => {
             console.log(data)
         });
@@ -54,10 +57,10 @@ export function EditDescModal(props) {
             <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
                 {props.admin ?
                     (!props.editSubmitted) ?
-                        <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
-                            <h2>Edit the Description</h2>
+                        <form onSubmit={handleSubmit} id={"edit-container"} className={"form-container d-flex f-col"}>
+                            <h2>Edit the {title}</h2>
                             <div className={"light-blue line"}/>
-                            <textarea placeholder="Enter your description here..." name="description" maxLength="100" required/>
+                            <textarea placeholder={"Enter your " + props.query + " here..."} name="description" maxLength="100" required/>
                             <div className={"form-buttons d-flex jc-fe"}>
                                 <input type="reset" value="Clear" className={"btn"}/>
                                 <input type="submit" value="Submit" className={"btn submit-btn"}/>
@@ -79,13 +82,15 @@ export function RevModal(props) {
     if (!props.show) return;
 
     function handleSubmit(event) {
+        event.preventDefault()
         Axios.post(props.basePath + "/api/post/review", {
             "name": event.target.name.value,
-            "content": event.target.content.value,
+            "description": event.target.description.value,
             "rating": event.target.rating.value,
-            "space_id": props.id
+            "spot_id": props.id
         }).then((data) => {
             console.log(data)
+            props.close()
         });
     }
 
@@ -97,9 +102,9 @@ export function RevModal(props) {
                     <div className={"light-blue line"}/>
                     <div className={"d-flex jc-sb full-length"}>
                         <input type="text" placeholder="Name" name="name" required/>
-                        <input type="number" placeholder="Rating" name="rating" required/>
+                        <input type="number" placeholder="Rating" name="rating" min="1" max="5" required/>
                     </div>
-                    <textarea type="text" placeholder="Content" name="description" required/>
+                    <textarea placeholder="Content" name="description" required/>
                     <div className={"form-buttons d-flex jc-fe"}>
                         <input type="reset" value="Clear" className={"btn"}/>
                         <input type="submit" value="Submit" className={"btn submit-btn"}/>

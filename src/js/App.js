@@ -13,7 +13,6 @@ import Search from "./Search";
 import Upload from "./Upload";
 
 export default function App() {
-
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
     const [spots, setSpots] = useState("");
@@ -45,7 +44,7 @@ export default function App() {
     useEffect(() => {
         Axios.get(basePath + "/api/get").then((data) => {
             setSpots(data.data)
-            setTestSpot(data.data[81])
+            setTestSpot(data.data[100])
             console.log(data)
         });
     }, [basePath]);
