@@ -41,6 +41,12 @@ export default function Home(props) {
                             <h1>📤 Upload &rarr;</h1>
                             <p>Add your favorite study space!</p>
                         </div></Link>
+                        <Link to={props.path + "/collaborate"}><div className={"home-option"}>
+                            <div className={"collaborate-option"}>
+                            <h1>👩‍❤️‍👨 Collaborate &rarr;</h1>
+                            </div>
+                            <p>Find a convenient study space to meet your friends!</p>
+                        </div></Link>
                         <Link to={props.path + "/location"}><div className={"home-option"}>
                             <h1>🔬 Location &rarr;</h1>
                             <p>Location test page!</p>

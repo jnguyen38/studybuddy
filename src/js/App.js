@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import Location, {Random} from "./Location";
 import Search from "./Search";
 import Upload from "./Upload";
+import Collaborate from "./Collaborate";
 
 export default function App() {
 
@@ -25,7 +26,7 @@ export default function App() {
     const [admin, setAdmin] = useState(false);
 
     // Path variables
-    const path = "/cse30246/studybuddy/build";
+    const path = "";
     const basePath = "http://db8.cse.nd.edu:5000";
     const homeRedirect = path + "/";
     const devRedirect = path + "/devplan";
@@ -102,6 +103,7 @@ export default function App() {
                     <Route path={path + "/random"} element={<Random rand={rand} spots={spots}
                                                                     basePath={basePath}
                                                                     admin={admin} makeAdmin={makeAdmin}/>}/>
+                    <Route path={path + "/collaborate"} element={<Collaborate UXMode={UXMode}/>}/>
                 </Routes>
             </main>
             <Footer/>
