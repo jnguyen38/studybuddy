@@ -47,6 +47,10 @@
     transition: all .25s;
 }
 
+.collaborate-option {
+    font-size: 0.9em;
+}
+
 .home-option:hover {
     box-shadow: 0 0 20px var(--inverted-bg-color);
 }
