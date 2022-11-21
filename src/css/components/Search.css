@@ -1,12 +1,16 @@
+.filter-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
 .search-container {
-    padding-top: var(--header-height);
+    padding-top: calc(var(--header-height) * 1.5);
     padding-left: 20px;
     padding-right: 20px;
+    text-align: center;
 }
 
 .search-header {
-    padding-left: 29%;
-    padding-top: 50px;
     font-size: 2em;
 }
 
@@ -21,13 +25,12 @@
 .filter-column {
     width: 25%;
     position: sticky;
-    align-self: flex-start;
     top: var(--header-height);
     padding: 30px;
     text-align: left;
 }
 
-.results-column {
+.results-container {
     width: 75%;
     background-color: white;
     color: var(--sb-yellow);
@@ -35,6 +38,14 @@
     text-align: center;
 }
 
+.result-item:hover {
+    --result-margin-bottom: 80px !important;
+    cursor: pointer;
+}
+
+.result-item-header {
+    transition: margin-bottom .2s;
+}
 
 .results-list {
     display: flex;
@@ -48,175 +59,82 @@
 
 .dropdown-container {
     color: black;
-    padding-top: 15px;
 }
 
-.spotimg {
+.spot-img {
     max-width: 25%;
     display: flex;
 }
 
-.spotinfo {
+.spot-info {
     width: 75%;
     padding-left: 30px;
     padding-right: 30px;
     display: flex;
 }
 
-.ratingNL {
-  padding-top: 15px;
-  display: flex;
+.rating input {
+    position: absolute;
+    left: -100vw;
 }
 
-.ratingNL input {
-  position: absolute;
-  left: -100vw;
+.rating label {
+    width: 48px;
+    padding: 24px 0 0 0;
+    color: var(--inverted-text-color);
+    background: url('stars.svg') no-repeat top left;
+    cursor: pointer;
+    /*transition: all .1s;*/
 }
 
-.ratingNL label {
-  width: 48px;
-  padding: 24px 0 0 0;
-  color: var(--inverted-text-color);
-  background: url('stars.svg') no-repeat top left;
+.rating:not(:hover) input:indeterminate + label,
+.rating:not(:hover) input:checked ~ input + label,
+.rating input:hover ~ input + label {
+    background-position : -48px 0;
 }
 
-.ratingNL:not(:hover) input:indeterminate + label,
-.ratingNL:not(:hover) input:checked ~ input + label,
-.ratingNL input:hover ~ input + label{
-  background-position : -48px 0;
+.slider {
+    -webkit-appearance: none;
+    width: 70%;
+    height: 5px;
+    border-radius: 5px;
+    background: var(--inverted-bg-color);
 }
 
-.ratingNL:not(:hover) input:focus-visible + label{
-  background-position : -96px 0;
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    --slider-thumb-dim: 23px;
+    appearance: none;
+    width: var(--slider-thumb-dim);
+    height: var(--slider-thumb-dim);
+    border: 4px solid var(--sb-yellow);
+    border-radius: 5px;
+    background: var(--sb-white);
+    cursor: pointer;
+    transition: background-color .1s;
 }
 
-.ratingSC {
-  padding-top: 15px;
-  display: flex;
+.slider::-webkit-slider-thumb:active {
+    background-color: var(--sb-yellow);
 }
 
-.ratingSC input {
-  position: absolute;
-  left: -100vw;
+
+.slider-num {
+    margin-right: 10px;
+    width: 12%;
+    padding: 5px;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 800;
+    border: 2px var(--sb-yellow) solid;
+    border-radius: 5px;
+    background-color: var(--sb-white);
+    color: var(--sb-yellow);
 }
 
-.ratingSC label {
-  width: 48px;
-  padding: 24px 0 0 0;
-  color: var(--inverted-text-color);
-  background: url('stars.svg') no-repeat top left;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-.ratingSC:not(:hover) input:indeterminate + label,
-.ratingSC:not(:hover) input:checked ~ input + label,
-.ratingSC input:hover ~ input + label {
-  background-position : -48px 0;
-}
-
-.ratingL {
-  padding-top: 15px;
-  display: flex;
-}
-
-.ratingL input {
-  position: absolute;
-  left: -100vw;
-}
-
-.ratingL label {
-  width: 48px;
-  padding: 24px 0 0 0;
-  color: var(--inverted-text-color);
-  background: url('stars.svg') no-repeat top left;
-}
-
-.ratingL:not(:hover) input:indeterminate + label,
-.ratingL:not(:hover) input:checked ~ input + label,
-.ratingL input:hover ~ input + label{
-  background-position : -48px 0;
-}
-
-.ratingL:not(:hover) input:focus-visible + label{
-  background-position : -96px 0;
-}
-
-.ratingO {
-  padding-top: 15px;
-  display: flex;
-}
-
-.ratingO input {
-  position: absolute;
-  left: -100vw;
-}
-
-.ratingO label {
-  width: 48px;
-  padding: 24px 0 0 0;
-  color: var(--inverted-text-color);
-  background: url('stars.svg') no-repeat top left;
-}
-
-.ratingO:not(:hover) input:indeterminate + label,
-.ratingO:not(:hover) input:checked ~ input + label,
-.ratingO input:hover ~ input + label{
-  background-position : -48px 0;
-}
-
-.ratingO:not(:hover) input:focus-visible + label{
-  background-position : -96px 0;
-}
-
-.slide-containerGS {
-  padding-top: 15px;
-  display: flex;
-}
-
-.sliderGS {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 15px;
-  border-radius: 5px;
-  background: white;
-  outline: none;
-}
-
-.sliderGS::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: var(--sb-yellow);
-}
-
-.slide-containerC {
-  padding-top: 15px;
-}
-
-.sliderC {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 15px;
-  border-radius: 5px;
-  background: white;
-  outline: none;
-}
-
-.sliderC::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: var(--sb-yellow);
-}
-
-.basic-multi-select {
-  width: 100%;
-}
-
-.features-container {
-  padding-top: 15px;
-  padding-bottom: 15px;
-}

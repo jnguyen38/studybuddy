@@ -17,7 +17,6 @@ export default function App() {
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
     const [spots, setSpots] = useState("");
-    const [testSpot, setTestSpot] = useState([]);
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [rand, setRand] = useState({});
@@ -45,7 +44,6 @@ export default function App() {
     useEffect(() => {
         Axios.get(basePath + "/api/get").then((data) => {
             setSpots(data.data)
-            setTestSpot(data.data[81])
             console.log(data)
         });
     }, [basePath]);
@@ -89,7 +87,7 @@ export default function App() {
                                                              basePath={basePath}/>}/>
                     <Route path={path + "/overview"} element={<Overview/>}/>
                     <Route path={path + "/location/:spot_id"} element={spots &&
-                        <Location spots={spots} admin={admin} setAdmin={makeAdmin}/>
+                        <Location spots={spots} admin={admin} setAdmin={makeAdmin} basePath={basePath}/>
                     }/>
                     <Route path={path + "/search"} element={<Search UXMode={UXMode} basePath={basePath}/>}/>
                     <Route path={path + "/upload"} element={<Upload UXMode={UXMode}/>}/>

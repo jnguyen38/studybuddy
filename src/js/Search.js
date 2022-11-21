@@ -45,7 +45,7 @@ function Results(props) {
                     const image = "./media/locations/" + result.spot_id + "-00.jpg";
 
                     return (
-                        <Link to={`/location/${result.spot_id}`}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                        <Link to={`${props.basePath}/${result.spot_id}`}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
                             <img src={image} alt="" className={"location-img"}/>
                             <div className={"location-header-info full-length result-item-header"}>
                                 <h2>{result.building}</h2>
@@ -166,7 +166,7 @@ export default function Search(props) {
                     </div>
                 </form>
 
-                <Results results={results}/>
+                <Results results={results} {...props}/>
 
             </div>
         </div>

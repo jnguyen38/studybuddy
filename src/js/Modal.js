@@ -91,14 +91,13 @@ export function RevModal(props) {
         <div className={"modal"} onClick={props.close}>
             <div className={"modal-form"} onClick={e => e.stopPropagation()}>
                 <form onSubmit={handleSubmit}>
-                    <input type="text" placeholder="Name" name="name"/>
-                    <input type="text" placeholder="Content" name="content"/>
+                    <input type={"text"} placeholder={"Name"} name={"name"}/>
+                    <input type={"text"} placeholder={"Content"} name={"content"}/>
                     <input type="number" placeholder="Rating" name="rating"/>
                     <input type="reset" value="Clear"/>
                     <input type="submit" value="Submit"/>
                 </form>
                 <button id={"write-review-btn"} className={"btn d-flex-row-c"} onClick={handleSubmit}>Submit</button>
-
             </div>
         </div>
     );
@@ -145,8 +144,6 @@ export function SettingsModal(props) {
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
                     <h2>UX Mode</h2>
-                    {/*<img src={light} alt=""/>*/}
-                    {/*<img src={dark} alt=""/>*/}
                     <button onClick={props.changeUXMode} className={"settings-button"}>
                         {(props.UXMode) ? "Set to Dark" : "Set to Light"}
                     </button>

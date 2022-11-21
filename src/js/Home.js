@@ -41,7 +41,7 @@ export default function Home(props) {
                             <h1>📤 Upload &rarr;</h1>
                             <p>Add your favorite study space!</p>
                         </div></Link>
-                        <Link to={props.path + "/location"}><div className={"home-option"}>
+                        <Link to={props.path + "/location/040101"}><div className={"home-option"}>
                             <h1>🔬 Location &rarr;</h1>
                             <p>Location test page!</p>
                         </div></Link>

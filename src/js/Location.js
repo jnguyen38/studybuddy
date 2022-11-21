@@ -75,11 +75,11 @@ function LocationMain(props) {
     const [showEditDesc, setShowEditDesc] = useState(false);
     const [editSubmitted, setEditSubmitted] = useState(false);
 
-
     function handleShowEditDesc() {
         setShowEditDesc(() => !showEditDesc);
         setEditSubmitted(false);
     }
+
     function closeShowEditDesc() {setShowEditDesc(false)}
     function editSubmit() {setEditSubmitted(true)}
 
@@ -93,7 +93,7 @@ function LocationMain(props) {
                     <h3>Maximum Capacity</h3>
                     <div className={"d-flex"}>
                         <img src={person} alt="" className={"person icon"}/>
-                        <p>{props.capacity}</p>
+                        <p>{props.max_capacity}</p>
                     </div>
                 </div>
                 <div className="stat-line"><h3>Loudness</h3><div id="loudness-bar" className="stat-bar"></div></div>
@@ -115,11 +115,11 @@ function LocationMain(props) {
                 <br/><div className={"thin full-length line"}></div>
                 <h4>Amenities</h4>
                 <div className={"d-flex"}>
-                    {(props.hasPrinter) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
+                    {(props.printer) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
                     <p>Printer</p>
                 </div>
                 <div className={"d-flex"}>
-                    {(props.hasTables) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
+                    {(props.tables) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
                     <p>Tables</p>
                 </div>
 
@@ -141,44 +141,43 @@ function LocationAside() {
 }
 
 export default function Location(props) {
-    const image = "./media/locations/" + props.id + "-00.jpg";
-    const root = document.querySelector(":root");
+    const [spotData, setSpotData] = useState([]);
+    const [image, setImage] = useState("");
 
+    const root = document.querySelector(":root");
     const params = useParams()
 
-    function getSpotData(spot_id) {
-        axios.post(props.basePath + "/api/post/location", {
-            "spot_id": spot_id
-        }).then(data => {
-           return data.data
-        });
-    }
-
-    const spotData = getSpotData(params.spot_id)
-    console.log(spotData)
-
     function calcComf(comfRatings) {
-        /* let avg = 0;
-        let count = 0;
+        let avg = 0, count = 0;
         for (const rating of comfRatings) {
             if (rating < 1) continue;
             avg += rating;
             count++;
         }
-        return avg/count; */
-        return 1
+        return avg/count;
     }
 
     useEffect(() => {
-        root.style.setProperty('--loudness-width', props.loudness/5 * 100 + "%")
-        root.style.setProperty('--comfort-width', calcComf(props.comfortability)/5 * 100 + "%")
-        root.style.setProperty('--natlight-width', props.naturalLight/5 * 100 + "%")
-        root.style.setProperty('--outlet-width', props.outlets/5 * 100 + "%")
-    }, [root.style, props.loudness, props.comfortability, props.naturalLight, props.outlets])
+        axios.post(props.basePath + "/api/post/location", {
+            "spot_id": params.spot_id
+        }).then(data => {
+            console.log(data);
+            setSpotData(data.data[0]);
+        });
+    }, [params.spot_id, props.basePath]);
+
+    useEffect(() => {
+        root.style.setProperty('--loudness-width', spotData.loudness_rating/5 * 100 + "%");
+        root.style.setProperty('--comfort-width', calcComf([spotData.couch_comfort, spotData.table_seat_comfort, spotData.nontable_seat_comfort])/5 * 100 + "%");
+        root.style.setProperty('--natlight-width', spotData.natural_light_rating/5 * 100 + "%");
+        root.style.setProperty('--outlet-width', spotData.outlets_rating/5 * 100 + "%");
+        setImage("../media/locations/" + spotData.spot_id + "-00.jpg");
+        console.log(spotData)
+    }, [root.style, spotData]);
 
     useEffect(() => {
         window.scrollTo(0, 0)
-    }, [props.id, props.spots]);
+    }, []);
 
     return (
         <section id={"location-container"}>
