@@ -1,0 +1,187 @@
+spot_id,building,location,floor,description,tables,table_seat_comfort,nontable_seat_comfort,couch_comfort,max_group_size,natural_light_rating,printer,loudness_rating,overall_rating,outlets_rating,max_capacity,notes
+000100,Fitzpatrick Hall of Engineering,CSE Commons,1,Desk pods,1,2,-1,-1,1,1,1,3,,4,14,Must scan in as CS or CPEG student
+000101,Fitzpatrick Hall of Engineering,CSE Commons,1,Sitting area,0,-1,4,4,4,1,1,3,,2,4,Must scan in as CS or CPEG student
+000102,Fitzpatrick Hall of Engineering,CSE Commons,1,Work rooms,1,2,-1,-1,8,1,1,2,,1,16,Must scan in as CS or CPEG student
+000300,Fitzpatrick Hall of Engineering,CSE Office,3,Tables,1,3,-1,-1,3,1,0,1,,2,9,
+000301,Fitzpatrick Hall of Engineering,Hallway,3,Enclosed seating area with whiteboards and chairs with attached desks,1,5,-1,-1,4,1,0,1,,2,4,
+000302,Fitzpatrick Hall of Engineering,AME Office,3,Table and chairs,1,3,-1,-1,4,1,0,1,,3,4,
+000200,Fitzpatrick Hall of Engineering,Hallway,2,Many tables and chairs (normal and high-top) and booths,1,3,-1,-1,8,2,0,1,,3,50,
+000201,Fitzpatrick Hall of Engineering,EE Office,2,Tables,1,3,-1,-1,3,1,0,1,,3,5,
+000202,Fitzpatrick Hall of Engineering,Dean's Office,2,Tables,1,3,-1,-1,3,1,0,1,,3,6,
+000203,Fitzpatrick Hall of Engineering,Stained-Glass Window,2,"Various tables and chairs, including high-tops, swivel chairs, and chairs paired facing each other with no table",1,4,5,-1,2,2,0,1,,2,13,
+000204,Fitzpatrick Hall of Engineering,East-Side Staircase,2,Tables and large booth,1,3,-1,-1,10,5,0,1,,2,18,
+000103,Fitzpatrick Hall of Engineering,CEES Office,1,Tables,1,3,-1,-1,3,1,1,1,,2,3,
+000104,Fitzpatrick Hall of Engineering,West Entrance,1,Tables,1,3,-1,-1,2,1,1,1,,2,4,
+130100,O'Shaughnessy Hall,Charron Family Commons,1,"Booths, tables, couches, and chairs",1,2,3,5,4,4,0,3,,3,48,
+130101,O'Shaughnessy Hall,West entryway,1,"Benches, chairs, large table",1,1,3,2,6,2,0,1,,1,28,
+130200,O'Shaughnessy Hall,Technology and Digital Studies Programs,2,"Tables, chairs, and couches",1,3,2,1,10,4,1,1,,2,30,"Tea/coffee, snacks, TV"
+080000,Geddes Hall,Basement Sitting Area,0,Couches/chairs,0,-1,4,5,8,0,No,0,,0,8,
+080300,Geddes Hall,Sitting Area,3,Couches/chairs,0,-1,3,5,8,0,No,1,,1,8,
+080301,Geddes Hall,Library,3,"Tables, couches, chairs",1,2,5,5,6,4,No,1,,2,20,
+080100,Geddes Hall,Library,1,"Couches, chairs, beanbags",0,-1,4,5,1,0,No,1,,1,17,
+080101,Geddes Hall,Sitting Area,1,Couches/chairs,0,-1,3,5,8,4,No,3,,1,8,
+080102,Geddes Hall,Coffee House,1,Tables/booths,1,3,-1,-1,8,4,No,2,,3,56,Puzzles and games
+080200,Geddes Hall,Sitting Area,2,Couches/chairs,0,,,,,,,,,,,
+080201,Geddes Hall,Lounge,2,"Couches, chairs, beanbags",0,,,,,,,,,,,
+090100,Jordan Hall of Science,,1,Large circle tables,1,0,-1,-1,10,5,No,1,,1,100,Whiteboards
+090101,Jordan Hall of Science,Near South entrance,1,High top circular tables,1,2,-1,-1,4,5,No,2,,4,15,
+090102,Jordan Hall of Science,Near South entrance,1,Square tables,1,3,-1,-1,4,4,No,2,,1,24,
+090200,Jordan Hall of Science,South stair landing,2,Tables/booths,1,2,-1,-1,4,3,No,2,,3,20,
+090201,Jordan Hall of Science,South side overlooking hall,2,Square table and couches,1,2,-1,5,4,2,No,2,,0,10,Piano
+090300,Jordan Hall of Science,South stair landing,3,Square table with rolling chairs,1,2,-1,-1,4,4,No,2,,1,12,Rolling chairs
+090301,Jordan Hall of Science,South stair landing,3,Desks with ThinkCentre computers,1,5,-1,-1,4,5,Yes,2,,1,6,Computers
+090400,Jordan Hall of Science,South stair landing,4,Squares tables,1,2,-1,-1,4,5,No,1,,1,20,
+090103,Jordan Hall of Science,Main entryway,1,Square tables,,,,,,,,,,,,
+040100,Coleman Morse Center,St. Andre Room,1,"Tables with chairs, couches, fireplace",1,2,2,3,6,4,No,1,,1,16,fireplace
+040101,Coleman Morse Center,Hammes Student Lounge,1,"Tables with chairs, couches, booths, fireplace",1,2,2,3,8,4,No,1,,1,60,"fireplace, piano"
+040200,Coleman Morse Center,"Near fountain overlook, across from Writing Center",2,"Many chairs and a couch, a couple tables",1,2,3,3,8,0,No,1,,1,12,
+030100,Cushing Hall of Engineering,Next to north entrance,1,Various chairs and small tables as well as couches and ottomans,1,4,-1,2,6,1,No,1,,1,20,very dark and honestly very creepy
+030200,Cushing Hall of Engineering,Engineering Student Center,2,"Tables and chairs, window seating",1,3,3,-1,14,2,No,1,,2,34,
+030300,Cushing Hall of Engineering,West hallway between Cushing and Fitzpatrick,3,Tables and chairs along hallway,1,2,4,-1,4,2,Yes,1,,1,22,there's a printer but it looks very out of order currently 
+050000,LaFortune Student Center,Brother Gorch Pool Hall,0,"Chairs and couches, pool and other games",0,-1,4,4,7,1,Yes,2,,2,13,"Pool table, air hockey table, shuffleboard, ping pong table, fuzball"
+050001,LaFortune Student Center,"Bottom of stairs, by FedEx office",0,Tables and chairs,1,1,-1,-1,2,1,Yes,3,,1,14,
+050002,LaFortune Student Center,"Bottom of stairs, by University Hair Stylists",0,Tables and chairs,1,1,-1,-1,3,1,Yes,2,,1,6,
+050003,LaFortune Student Center,Near west entrance,0,"Tables and chairs, booths",1,1,3,-1,6,1,Yes,2,,3,86,Irish Gardens inside
+050100,LaFortune Student Center,Near west entrance,1,"Large open seating area with couches, chairs, chairs with tablet arms, and tables",1,2,4,4,7,2,No,2,,3,51,
+050101,LaFortune Student Center,Across from Flip Kitchen,1,"Tables and chairs, booths",1,2,-1,-1,4,1,No,2,,2,88,
+050102,LaFortune Student Center,Across from Smashburger,1,"Tables and chairs, booths",1,2,-1,-1,10,3,No,3,,2,117,
+050103,LaFortune Student Center,Next to the Huddle,1,Booths,1,2,-1,-1,4,3,No,3,,2,12,Microwave
+021000,Hesburgh Library,Reading Room,10,Long tables,1,4,-1,-1,1,1,1,1,,4,16,
+021001,Hesburgh Library,Main area,10,Long tables,1,3,-1,-1,1,1,1,1,,4,24,
+020100,Hesburgh Library,Northeast corner,1,Private Rooms,1,3,-1,-1,8,2,1,1,,5,80,Reservation necessary
+020101,Hesburgh Library,Northeast corner,1,Pods,1,4,-1,-1,1,1,1,2,,5,4,
+020102,Hesburgh Library,Northeast corner,1,Tables,1,2,-1,-1,4,3,1,3,,2,140,
+020103,Hesburgh Library,Northeast corner,1,Chairs,0,-1,3,-1,1,3,1,3,,2,40,
+020104,Hesburgh Library,Research Commons,1,Tables,1,2,-1,-1,4,4,1,2,,4,52,
+020105,Hesburgh Library,Research Commons,1,Chairs,0,-1,4,-1,4,4,1,3,,2,24,
+020106,Hesburgh Library,Research Commons,1,Booths,1,2,-1,-1,4,3,1,2,,5,16,
+020107,Hesburgh Library,Entry Way,1,Chairs/Couches,0,-1,3,2,12,3,1,4,,4,52,
+020108,Hesburgh Library,Entry Way,1,Tables,1,2,-1,-1,4,3,1,4,,3,20,
+020109,Hesburgh Library,Computer Lab,1,Single desks,1,2,-1,-1,1,2,1,4,,4,30,
+020110,Hesburgh Library,West-side seating area,1,Tables/Chairs,1,2,3,-1,4,2,1,3,,2,22,
+020111,Hesburgh Library,Scholars Lounge,1,Low Tables,1,3,-1,-1,4,4,1,3,,3,40,
+020112,Hesburgh Library,Scholars Lounge,1,High Tables,1,2,-1,-1,12,4,1,3,,4,24,
+020113,Hesburgh Library,Scholars Lounge,1,Sitting Area,0,-1,4,5,10,4,1,3,,1,15,
+020114,Hesburgh Library,South-side Entry Way,1,Sitting Area,0,-1,3,-1,2,5,1,4,,2,12,
+020115,Hesburgh Library,South-side Entry Way,1,Tables,1,2,-1,-1,6,5,1,4,,5,24,
+020200,Hesburgh Library,Central area,2,Various comfortable seats with tables,0,-1,5,-1,4,2,1,3,,1,33,Color printer on second floor
+020201,Hesburgh Library,Slightly east of central area,2,Chairs with computers,1,4,-1,-1,3,2,1,3,,5,36,
+020202,Hesburgh Library,Slightly west of central area,2,Room-like setup with one open wall,1,4,-1,-1,5,2,1,3,,4,30,Whiteboards and markers
+020203,Hesburgh Library,Northwest side,2,Somewhat sheltered chairs,1,4,-1,-1,2,1,1,2,,2,6,
+020204,Hesburgh Library,North side,2,Reading Room,1,4,4,-1,6,5,1,1,,5,60,
+020205,Hesburgh Library,Northeast side,2,High-top Tables,1,2,-1,-1,2,2,1,2,,3,5,Chess board
+020206,Hesburgh Library,Northeast side,2,Egg-like chairs,0,-1,3,-1,4,2,1,2,,5,6,
+020207,Hesburgh Library,Northeast side,2,Tables half with computers,1,4,-1,-1,8,3,1,3,,3,34,Mix of Macs and Lenovo
+020208,Hesburgh Library,Northeast side,2,Peninsula tables with TVs,1,4,-1,-1,5,2,1,3,,5,35,TVs at each table
+020209,Hesburgh Library,Northeast side,2,Rectangular table with chairs and booth-like side,1,3,-1,2,12,2,1,3,,2,12,Adorned by Paradise Lost notes and maps
+020210,Hesburgh Library,Northeast side,2,Rectangular tables,1,4,-1,-1,8,4,1,3,,2,27,
+020211,Hesburgh Library,Southeast side,2,Tables with computers,1,4,-1,-1,3,2,1,2,,5,36,Mix of Macs and Lenovos
+020212,Hesburgh Library,Southeast side,2,High-top bar-like seating,1,2,-1,-1,3,2,1,2,,5,7,Interesting pattern above seats
+020213,Hesburgh Library,Above south-side entrance,2,Seats around long coffee table,0,-1,2,-1,4,4,1,4,,4,4,
+020214,Hesburgh Library,Above south-side entrance,2,Brown saucer-shaped chairs,0,-1,1,-1,4,4,1,4,,4,8,Next to bust of Lethans (muse)
+020215,Hesburgh Library,Above south-side entrance,2,High-top tables,1,2,-1,-1,4,4,1,4,,2,14,
+020216,Hesburgh Library,Above south-side entrance,2,Dog-ear chairs,0,-1,4,-1,2,4,1,4,,2,3,Chairs lean back and spin
+020217,Hesburgh Library,Jungle Room,2,Group tables,1,2,-1,-1,12,3,1,5,,2,363,
+020218,Hesburgh Library,Jungle Room,2,Individual wooden desks,1,2,-1,-1,1,4,1,5,,1,16,Sides of desks to block out noise
+020219,Hesburgh Library,Jungle Room,2,Individual two-level desks,1,2,-1,-1,1,3,1,5,,5,6,"Two levels to desks, large"
+020220,Hesburgh Library,Southwest side,2,One-arm chairs,1,4,-1,-1,2,1,1,3,,5,2,
+020221,Hesburgh Library,West side,2,High-top long table,1,2,-1,-1,7,2,1,3,,3,7,
+020222,Hesburgh Library,West side,2,Wide individual desks,1,5,-1,-1,1,4,1,2,,5,12,
+020223,Hesburgh Library,Northwest side,2,One-arm chairs,0,-1,4,-1,4,4,1,2,,5,8,
+020224,Hesburgh Library,Northwest side,2,Long tables,1,1,-1,-1,8,4,1,2,,5,36,
+020225,Hesburgh Library,Northwest side,2,Egg-like chairs,1,3,-1,-1,2,4,1,3,,3,2,
+021300,Hesburgh Library,"Northeast, northwest, and southwest corner ",13,Tables,1,1,-1,-1,1,5,0,1,,3,6,
+021301,Hesburgh Library,"north, east, and south side",13,Desks,1,1,-1,-1,2,1,0,1,,1,19,
+021200,Hesburgh Library,southwest and northwest corner ,12,Tables,1,1,-1,-1,1,5,0,1,,3,3,
+021201,Hesburgh Library,"north and south side, middle of the floor",12,Desks,1,1,-1,-1,2,1,0,1,,1,47,
+021100,Hesburgh Library,"southwest, northeast, northwest corner ",11,Tables,1,1,-1,-1,1,5,0,1,,3,5,
+021101,Hesburgh Library,"middle of the floor, north and east side, northeast corner",11,Desks,1,1,-1,-1,2,1,0,1,,1,29,
+021102,Hesburgh Library,South side,11,Large Tables,1,1,-1,-1,2,1,0,1,,2,4,
+020900,Hesburgh Library,"southeast, southwest, northwest, and northeast corner",9,Tables,1,1,-1,-1,1,5,0,1,,3,5,
+020901,Hesburgh Library,"south and north side, middle of the floor",9,Desks,1,1,-1,-1,1,1,0,1,,1,36,
+020902,Hesburgh Library,middle of the floor,9,Large Tables,1,1,-1,-1,4,1,0,1,,1,4,
+020800,Hesburgh Library,"northwest, southwest, southeast, and northeast corner",8,Tables,1,1,-1,-1,1,5,0,1,,3,5,
+020801,Hesburgh Library,"middle of the floor, east side",8,Desks,1,1,-1,-1,1,1,0,1,,1,28,
+020700,Hesburgh Library,Medieval Institute,7,Tables,1,2,-1,-1,4,3,1,1,,4,46,
+020701,Hesburgh Library,Medieval Institute,7,Desks,1,2,-1,-1,1,3,1,1,,5,4,
+020702,Hesburgh Library,Medieval Institute,7,Chairs,0,-1,2,-1,1,2,1,1,,1,2,
+020703,Hesburgh Library,Medieval Institute - Paleography Room,7,Long tables,1,3,-1,-1,1,1,1,1,,1,8,
+020704,Hesburgh Library,North side,7,Tables,1,2,-1,-1,2,1,1,1,,3,2,
+020500,Hesburgh Library,"southeast, southwest, northwest, and northeast corner",5,Large tables,1,1,-1,-1,4,5,0,1,,3,20,
+020501,Hesburgh Library,"northwest and northeast corner, north side ",5,Desks,1,1,-1,-1,1,5,0,1,,1,4,
+021003,Hesburgh Library,"northwest, southwest, southeast, and northeast corner",10,Small tables,1,3,-1,-1,2,4,0,1,,3,40,
+060200,Nieuwland Hall of Science,Second Floor Study Lounge,2,Sitting area,1,3,4,4,8,1,Yes,1,,4,20,
+060201,Nieuwland Hall of Science,Second Floor Study Lounge,2,Booths,1,5,-1,-1,6,1,Yes,1,,5,18,
+010100,Duncan Student Center,Next to stairs,1,Open area tables,1,1,-1,-1,12,5,1,4,,1,93,
+010101,Duncan Student Center,By windows/steps,1,Circular tables,1,3,-1,-1,-1,5,1,4,,4,16,
+010102,Duncan Student Center,Between Modern Market and Chick-Fil-A,1,"Square tables, circular tables, couches with tables",1,3,-1,4,12,3,1,4,,3,147,
+010103,Duncan Student Center,Duncan Student Center Stairs,1,Wide steps,0,-1,2,-1,5,5,1,4,,5,100,
+010104,Duncan Student Center,North Entrance to right,1,Various couches,1,2,-1,4,6,5,1,3,,5,61,Shuffleboard
+010105,Duncan Student Center,West Entrance ,1,Chairs with coffee table,1,-1,5,-1,4,3,1,3,,2,8,
+010106,Duncan Student Center,South side of Duncan Student Center,1,Long white table with barstools,1,2,-1,-1,18,5,1,2,,4,18,
+010107,Duncan Student Center,North Entrance to left (by Hagerty),1,Mostly 4-8 person tables with three booths,1,3,-1,4,8,5,1,3,,1,101,Right below rock climbing wall
+010108,Duncan Student Center,Near South Entrance,1,High-backed couches and chairs,0,-1,-1,3,10,3,1,3,,3,40,
+010109,Duncan Student Center,Near South Entrance,1,Couches with tables,1,3,-1,-1,4,4,1,3,,1,8,
+010110,Duncan Student Center,Near South entrance,1,Couches with individual whiteboard-tables,1,4,-1,-1,6,4,1,3,,1,6,Whiteboard tables
+010111,Duncan Student Center,Near South entrance,1,Barstools with wooden table,1,2,-1,-1,2,4,1,3,,1,2,
+010112,Duncan Student Center,Near South entrance (Innovation Lounge) ,1,Triangular whiteboard tables,1,4,-1,-1,3,3,1,2,,1,18,Whiteboard tables
+010113,Duncan Student Center,Near South entrance (Innovation Lounge) ,1,High top tables,1,2,-1,-1,7,3,1,2,,2,11,
+010200,Duncan Student Center,Above screen by NDTV studio,2,Couches (mostly 1 seat) with tables,1,3,-1,4,12,3,0,4,,3,51,Right under Smith Center
+010201,Duncan Student Center,Next to hanging Golden Dome,2,Enclosed seat with desk,1,5,-1,-1,1,2,0,3,,5,4,
+010202,Duncan Student Center,Above steps,2,Mostly bar-like seating with some tables,1,2,-1,4,4,3,0,4,,4,32,Pool table
+010203,Duncan Student Center,Next to rock wall,2,"Comfy chairs with arm rests, desks",1,5,-1,-1,1,5,0,2,,5,4,"Desks are adjustable, lots of space"
+010204,Duncan Student Center,By radio studio ,2,Comfy chairs with low table,0,-1,5,-1,4,1,0,2,,4,4,Notre Dame Radio playing
+100000,Mendoza College of Business,Bottom of spiral stairs,0,Tables and chairs,1,2,-1,2,3,0,1,3,,1,20,
+100001,Mendoza College of Business,By north stairs,0,"Tables and chairs, high-top tables and chairs",1,3,-1,-1,5,0,1,1,,1,33,
+100002,Mendoza College of Business,Giovanni commons,0,Tables and chairs,1,3,4,-1,2,0,1,2,,2,8,
+100003,Mendoza College of Business,Wide hallway near bottom of the spiral stairs,0,"Booths, chairs",1,3,1,2,6,0,1,2,,4,30,
+100005,Mendoza College of Business,Library,come back!!,,,,,,,,,,,,,
+100004,Mendoza College of Business,South side,0,"Booths and tables, individual desk pods",1,3,-1,3,6,0,1,1,,4,28,
+100008,Mendoza College of Business,Near south stairs,come back!!,,,,,,,,,,,,,
+100100,Mendoza College of Business,Near north entrance,1,Chairs,0,-1,3,-1,1,2,0,1,,0,7,
+100101,Mendoza College of Business,"Main area, near top of spiral stairs",1,"Tables and chairs, high-top tables and chairs",1,3,3,-1,6,3,0,2,,1,56,
+100102,Mendoza College of Business,Near west entrance,1,Tables and chairs,1,3,3,-1,4,2,0,2,,1,9,
+100200,Mendoza College of Business,Near top of spiral stairs,2,Tables and chairs,1,3,-1,-1,2,3,0,2,,1,6,
+100201,Mendoza College of Business,Along main hallway,2,Chairs,0,-1,4,-1,1,4,0,2,,3,8,
+100300,Mendoza College of Business,Top of spiral stairs,3,Tables and chairs,1,3,-1,-1,2,1,0,2,,0,6,
+100301,Mendoza College of Business,Along main hallway,3,"Booths, chairs with attached desks",1,3,-1,2,6,2,0,1,,3,14,
+110200,Notre Dame Law School,"Eck Commons, near cafe",2,Many tables and chairs,1,4,-1,-1,10,5,0,5,,1,138,
+110201,Notre Dame Law School,"Eck Commons, above arch",2,Couches and chairs,0,-1,5,5,9,5,0,4,,1,27,
+110202,Notre Dame Law School,"Around main hallway, overlooking first floor",2,Chairs placed around main hallway area,0,-1,4,4,2,5,0,1,,1,7,
+110100,Notre Dame Law School,Near elevator,1,Chairs and benches,0,-1,4,2,3,3,0,2,,1,9,
+110203,Notre Dame Law School,Kresge Library Entryway,2,Rectangular Tables,1,4,-1,-1,5,3,1,1,,5,24,
+110204,Notre Dame Law School,South Reading Room (Kresge Library),2,Armchairs with small tables,1,2,-1,3,4,4,1,1,,2,21,
+110205,Notre Dame Law School,South Reading Room (Kresge Library),2,Armchairs with small table and beautiful window,1,2,-1,-1,2,5,1,1,,5,2,View of main circle
+110206,Notre Dame Law School,Grand Hall (Kresge Library),2,Rectangular Tables with lamps,1,4,-1,-1,4,3,1,1,,5,72,
+110207,Notre Dame Law School,Alcoves (Kresge Library),2,Circular Tables with lamps,1,4,-1,-1,4,3,1,1,,5,44,
+120300,Debartolo Hall,Top of south stairs,3,Benches and chairs with tablet arm desks,0,-1,4,2,3,4,0,1,,1,8,
+120301,Debartolo Hall,Across from room 332,3,Booth and chairs with tablet arm desks,1,-1,4,2,4,5,0,1,,4,8,Whiteboard
+120302,Debartolo Hall,Across from room 330,3,Booth and chairs with tablet arm desks,1,-1,4,2,4,5,0,1,,4,8,Whiteboard
+120303,Debartolo Hall,Top of north stairs,3,Benches and chairs with tablet arm desks,0,-1,4,2,3,4,0,1,,1,5,
+120304,Debartolo Hall,Main area next to north stairs,3,Benches and chairs with tablet arm desks,0,-1,4,2,3,4,0,2,,1,15,
+120305,Debartolo Hall,Top of east stairs,3,Benches and chairs with tablet arm desks,0,-1,4,2,3,4,0,1,,1,5,
+120200,Debartolo Hall,Top of east stairs,2,Chairs with tablet arm desks,0,-1,4,-1,1,4,0,2,,1,3,
+120201,Debartolo Hall,Main area next to north stairs,2,Benches and chairs with tablet arm desks,0,-1,4,2,3,4,0,2,,1,14,
+120202,Debartolo Hall,Top of north stairs,2,Benches and chairs with tablet arm desks,0,-1,4,2,3,4,0,1,,1,5,
+120203,Debartolo Hall,Across from Computer Classroom room 228,2,Booth and chairs with tablet arm desks,1,4,-1,2,4,2,0,2,,4,8,Whiteboard
+120204,Debartolo Hall,Across from room 231,2,Booth and chairs with tablet arm desks,1,4,-1,2,4,2,0,2,,4,8,Whiteboard
+120205,Debartolo Hall,Top of south stairs,2,Benches and chairs with tablet arm desks,0,-1,4,2,3,4,0,1,,1,5,
+120100,Debartolo Hall,Lounge,1,"Bean bag chairs, benches, booths, tables and chairs, high-top tables and chairs, chairs with tablet arm desks",1,2,3,3,6,5,1,1,,2,66,
+120101,Debartolo Hall,Computer Lab,1,"Many pods of double-monitor computers and chairs, tables and chairs, high-top tables and chairs",1,3,-1,-1,7,1,1,1,,5,80,"Double-monitor computers, printers"
+120102,Debartolo Hall,Across from room 155,1,Booth and chairs with tablet arm desks,1,-1,4,2,4,5,1,1,,4,8,
+120103,Debartolo Hall,Near west entrance,1,Booth and chairs with tablet arm desks,1,-1,4,2,4,5,1,1,,4,8,
+120104,Debartolo Hall,Main area next to north stairs,1,Chairs with tablet arm desks,0,-1,4,-1,1,3,1,2,,1,4,
+070100,Stinson-Remick Hall of Engineering,Alcove by west entrance,1,Booths and chairs with tables,1,4,-1,-1,7,1,0,1,,3,15,TV screen
+070101,Stinson-Remick Hall of Engineering,South side of main hallway,1,Tables and chairs,1,3,-1,-1,4,3,0,1,,3,8,TV screen
+070102,Stinson-Remick Hall of Engineering,South side of atrium,1,"Couches, chairs, and coffee tables",1,-1,3,2,8,5,0,1,,3,15,
+070103,Stinson-Remick Hall of Engineering,Atrium,1,"Tables and chairs in large, open atrium",1,3,3,-1,5,5,0,2,,1,18,
+070104,Stinson-Remick Hall of Engineering,South side of main hallway,1,Large table and chairs in private room,1,2,-1,-1,5,5,0,1,,4,5,"TV screen, whiteboard"
+070105,Stinson-Remick Hall of Engineering,South side of main hallway,1,"Large, high-top table and chairs in private room",1,1,-1,-1,7,5,0,1,,4,7,"TV screen, whiteboard"
+070106,Stinson-Remick Hall of Engineering,Near east entrance,1,Modular seating,0,-1,3,2,18,3,0,1,,3,26,
+070200,Stinson-Remick Hall of Engineering,"At top of stairs, overlooking atrium",2,"Tables, chairs, and benches",1,2,4,-1,2,4,0,2,,1,34,
+070201,Stinson-Remick Hall of Engineering,South side of main hallway,2,"Large, high-top table and chairs in private room",1,3,-1,-1,5,5,0,1,,4,5,"TV screen, whiteboard"
+070202,Stinson-Remick Hall of Engineering,South side of main hallway,2,"Large, high-top table and chairs in private room",1,3,-1,-1,6,5,0,1,,4,6,"TV screen, whiteboard"
+070203,Stinson-Remick Hall of Engineering,Near top of east staircase,2,High-top tables and chairs,1,3,-1,-1,4,3,0,1,,3,11,
+070204,Stinson-Remick Hall of Engineering,South side of main hallway,2,High-top table and chairs,1,3,-1,-1,6,1,0,1,,4,6,
+070205,Stinson-Remick Hall of Engineering,South side of main hallway,2,Tables and chairs in private room,1,4,4,-1,6,3,0,1,,3,6,"TV screen, whiteboard"
+070206,Stinson-Remick Hall of Engineering,South side of main hallway,2,Tables and chairs in private room,1,4,4,-1,6,3,0,1,,3,6,"TV screen, whiteboard"
