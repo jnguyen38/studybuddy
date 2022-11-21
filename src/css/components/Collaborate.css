@@ -18,48 +18,85 @@
 }
 
 .initial-questions {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-rows: auto;
 }
 
 .self-input {
-    flex: 1;
+    grid-column-start: 1;
+    grid-column-end: 2;
 }
 
-.number-input {
-    flex: 3;
+.self-input input[type="text"] {
+    display: block;
+    width: 75%;
 }
 
 .enter-button {
-    flex: 2;
     padding-top: 20px;
 }
 
 .friends-info {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-rows: auto 1fr;
     padding-top: 20px;
 }
 
 .display-friends {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
     display: flex;
-    flex-direction: row;
-    padding-top: 20px;
 }
 
 .friends-names {
-    display: flex;
-    flex-direction: column;
+    flex: 1;
 }
 
 .friends-buildings {
-    display: flex;
-    flex-direction: column;
-    padding-left: 8%;
+    flex: 1;
 }
 
 .another-button {
-    display: flex;
-    flex-direction: column;
+    padding-top: 20px;
+}
+
+.another-btn {
+    background-color: var(--sb-light-blue) !important;
+    color: var(--sb-white) !important;
+    border-color: var(--sb-light-blue) !important;
+    font-size: 1em !important;
+}
+
+.friend-user-input {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+.friend-user-input input[type="text"]{
+    display: block;
+    width: 75%;
+}
+
+.friend-building-input {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+.friend-building-input input[type="text"]{
+    display: block;
+    width: 75%;
+}
+
+.note {
+    font-size: 0.7em;
 }
 
 .submit-button {
