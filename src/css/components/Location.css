@@ -30,7 +30,7 @@
 
 .location-header-info {
     z-index: 15;
-    margin: 20px;
+    margin: 20px 20px var(--result-margin-bottom) 20px;
 }
 .location-header-info > h2 {font-size: 1.2em;}
 .location-header-info > h3 {font-size: 2em;}

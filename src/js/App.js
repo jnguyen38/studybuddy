@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import Location, {Random} from "./Location";
 import Search from "./Search";
 import Upload from "./Upload";
+import Collaborate from "./Collaborate";
 
 export default function App() {
 
@@ -94,6 +95,7 @@ export default function App() {
                     <Route path={path + "/random"} element={<Random rand={rand} spots={spots}
                                                                     basePath={basePath}
                                                                     admin={admin} makeAdmin={makeAdmin}/>}/>
+                    <Route path={path + "/collaborate"} element={<Collaborate UXMode={UXMode}/>}/>
                 </Routes>
             </main>
             <Footer/>

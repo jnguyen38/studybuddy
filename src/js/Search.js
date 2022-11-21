@@ -165,9 +165,7 @@ export default function Search(props) {
                         <input type="submit" value="Submit" className={"btn submit-btn"}/>
                     </div>
                 </form>
-
                 <Results results={results} {...props}/>
-
             </div>
         </div>
     );

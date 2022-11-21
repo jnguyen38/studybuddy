@@ -46,6 +46,7 @@ export default function Header(props) {
 
             <SettingsModal show={props.showSettings} close={props.closeSettings}
                            changeUXMode={props.handleUXMode} UXMode={props.UXMode}
+                           admin={props.admin} logInAdmin={props.logInAdmin} logOutAdmin={props.logOutAdmin}
                            className={(props.showSettings) ? "item-clicked" : 0}/>
             <MenuModal show={props.showMenu} close={props.closeMenu}
                        homeRd={props.homeRedirect} devRd={props.devRedirect} overviewRd={props.overviewRedirect}
