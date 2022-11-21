@@ -154,8 +154,6 @@ export function SettingsModal(props) {
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
                     <h2>UX Mode</h2>
-                    {/*<img src={light} alt=""/>*/}
-                    {/*<img src={dark} alt=""/>*/}
                     <button onClick={props.changeUXMode} className={"settings-button"}>
                         {(props.UXMode) ? "Set to Dark" : "Set to Light"}
                     </button>

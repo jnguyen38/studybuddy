@@ -1,4 +1,5 @@
 import Select from "react-select";
+import {Link} from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
 
@@ -44,14 +45,14 @@ function Results(props) {
                     const image = "./media/locations/" + result.spot_id + "-00.jpg";
 
                     return (
-                        <div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                        <Link to={`${props.basePath}/${result.spot_id}`}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
                             <img src={image} alt="" className={"location-img"}/>
                             <div className={"location-header-info full-length result-item-header"}>
                                 <h2>{result.building}</h2>
                                 <h3>{result.location}</h3>
                                 <p className={"rating"}>★★★★☆</p>
                             </div>
-                        </div>
+                        </div></Link>
                     );
                 })
             }
@@ -164,9 +165,7 @@ export default function Search(props) {
                         <input type="submit" value="Submit" className={"btn submit-btn"}/>
                     </div>
                 </form>
-
-                <Results results={results}/>
-
+                <Results results={results} {...props}/>
             </div>
         </div>
     );
