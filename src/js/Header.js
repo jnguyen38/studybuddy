@@ -19,38 +19,37 @@ export default function Header(props) {
 
     return (
         <div className="header">
-            <Link to={props.homeRedirect} id="header-main" className="d-flex-row-c">
+            <Link to={props.redirect.home} id="header-main" className="d-flex-row-c">
                 {/*<img src="" alt="" id="header-logo"/>*/}
                 <h1>StudyBuddy</h1>
             </Link>
 
             <nav id="header-nav" className="d-flex-row-c">
-                <Link to={props.homeRedirect}>
+                <Link to={props.redirect.home}>
                     <div className="nav-item d-flex-row-c"><h2>Home</h2></div>
                 </Link>
-                <Link to={props.devRedirect}>
+                <Link to={props.redirect.dev}>
                     <div className="nav-item d-flex-row-c"><h2>Devplan</h2></div>
                 </Link>
-                <Link to={props.overviewRedirect}>
+                <Link to={props.redirect.overview}>
                     <div className="nav-item d-flex-row-c"><h2>Overview</h2></div>
                 </Link>
-                <div id={"settings-icon"} className={"d-flex-row-c"} onClick={props.handleSettings}>
+                <div id={"settings-icon"} className={"d-flex-row-c"} onClick={props.handler.handleSettings}>
                     <img src={settings} alt="" className={"icon settings"}/>
                 </div>
             </nav>
 
-            <div id="nav-menu" className={(props.showMenu) ? "open" : ""} onClick={props.handleMenu}>
+            <div id="nav-menu" className={(props.showMenu) ? "open" : ""} onClick={props.handler.handleMenu}>
                 <span/> <span/> <span/> <span/>
             </div>
 
 
-            <SettingsModal show={props.showSettings} close={props.closeSettings}
-                           changeUXMode={props.handleUXMode} UXMode={props.UXMode}
-                           admin={props.admin} logInAdmin={props.logInAdmin} logOutAdmin={props.logOutAdmin}
+            <SettingsModal show={props.showSettings} close={props.handler.closeSettings}
+                           {...props}
                            className={(props.showSettings) ? "item-clicked" : 0}/>
-            <MenuModal show={props.showMenu} close={props.closeMenu}
-                       homeRd={props.homeRedirect} devRd={props.devRedirect} overviewRd={props.overviewRedirect}
-                       handleSettings={props.handleSettings}
+            <MenuModal show={props.showMenu} close={props.handler.closeMenu}
+                       redirect={props.redirect}
+                       handleSettings={props.handler.handleSettings}
                        className={(props.showMenu) ? "item-clicked" : 0}/>
         </div>
     );

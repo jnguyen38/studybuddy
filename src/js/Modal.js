@@ -99,7 +99,7 @@ export function RevModal(props) {
                         <input type="text" placeholder="Name" name="name" required/>
                         <input type="number" placeholder="Rating" name="rating" required/>
                     </div>
-                    <textarea type="text" placeholder="Content" name="description" required/>
+                    <textarea placeholder="Content" name="description" required/>
                     <div className={"form-buttons d-flex jc-fe"}>
                         <input type="reset" value="Clear" className={"btn"}/>
                         <input type="submit" value="Submit" className={"btn submit-btn"}/>
@@ -120,13 +120,13 @@ export function MenuModal(props) {
                 <h1 className={"modal-title"}>Menu</h1>
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
-                    <Link to={props.homeRd}><div className="modal-nav-item" onClick={props.close}>
+                    <Link to={props.redirect.home}><div className="modal-nav-item" onClick={props.close}>
                         <h2>Home</h2>
                     </div></Link>
-                    <Link to={props.devRd}><div className="modal-nav-item" onClick={props.close}>
+                    <Link to={props.redirect.dev}><div className="modal-nav-item" onClick={props.close}>
                         <h2>Devplan</h2>
                     </div></Link>
-                    <Link to={props.overviewRd}><div className="modal-nav-item" onClick={props.close}>
+                    <Link to={props.redirect.overview}><div className="modal-nav-item" onClick={props.close}>
                         <h2>Overview</h2>
                     </div></Link>
                     <div className={"modal-nav-item"} onClick={props.handleSettings}>
@@ -142,8 +142,10 @@ export function MenuModal(props) {
 
 export function SettingsModal(props) {
     if (!props.show) return;
+
     function No() {
         console.log("No")
+
     }
 
     return (
@@ -153,18 +155,19 @@ export function SettingsModal(props) {
                 <h1 className={"modal-title"}>Settings</h1>
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
-                    <h2>UX Mode</h2>
-                    <button onClick={props.changeUXMode} className={"settings-button"}>
-                        {(props.UXMode) ? "Set to Dark" : "Set to Light"}
+                    <h2>User</h2>
+                    <button onClick={(props.user.isSignedIn) ? props.handler.dropAdmin : No} className={"settings-button"}>
+                        {(props.user.isSignedIn) ? "Log Out" : "Log In"}
                     </button>
                 </div>
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
-                    <h2>Admin</h2>
-                    <button onClick={(props.admin) ? props.logOutAdmin : No} className={"settings-button"}>
-                        {(props.admin) ? "Log Out" : "Log In"}
+                    <h2>UX Mode</h2>
+                    <button onClick={props.handler.handleUXMode} className={"settings-button"}>
+                        {(props.UXMode) ? "Set to Dark" : "Set to Light"}
                     </button>
                 </div>
+                <div className={"line thick yellow"}/>
             </div>
         </div>
     );

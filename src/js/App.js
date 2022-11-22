@@ -22,23 +22,27 @@ export default function App() {
     const [showMenu, setShowMenu] = useState(false);
     const [rand, setRand] = useState({});
     const [pageLoaded, setPageLoaded] = useState(false);
-    const [admin, setAdmin] = useState(false);
+    const [user, setUser] = useState({isSignedIn: false, isAdmin: false});
 
     // Path variables
     const path = "";
     const basePath = "http://db8.cse.nd.edu:5000";
-    const homeRedirect = path + "/";
-    const devRedirect = path + "/devplan";
-    const overviewRedirect = path + "/overview";
+    const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions
-    function closeMenu() {setShowMenu(false)}
-    function closeSettings() {setShowSettings(false)}
-    function handleUXMode() {setUXMode(!UXMode);closeSettings();}
-    function handleMenu() {setShowMenu(() => !showMenu);closeSettings();}
-    function handleSettings() {setShowSettings(() => !showSettings);closeMenu();}
-    function makeAdmin() {setAdmin(true)}
-    function dropAdmin() {setAdmin(false)}
+    class handler {
+        static closeMenu() {setShowMenu(false)}
+        static closeSettings() {setShowSettings(false)}
+        static handleUXMode() {setUXMode(!UXMode);}
+        static handleMenu() {setShowMenu(() => !showMenu); handler.closeSettings();}
+        static handleSettings() {setShowSettings(() => !showSettings); handler.closeMenu();}
+        static makeAdmin() {setUser({isSignedIn: user.isSignedIn, isAdmin: true});}
+        static dropAdmin() {setUser({isSignedIn: user.isSignedIn, isAdmin: false});}
+        static userSignIn() {setUser({isSignedIn: true, isAdmin: user.isAdmin});}
+        static userSignOut() {setUser({isSignedIn: false, isAdmin: user.isAdmin});}
+    }
+
+
     function randomize(n) {return Math.floor(Math.random() * n);}
 
     // useEffect Hooks
@@ -55,7 +59,8 @@ export default function App() {
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
-        setAdmin(JSON.parse(window.localStorage.getItem("admin")));
+        let userLocal = JSON.parse(window.localStorage.getItem("user"));
+        if (userLocal) setUser(userLocal);
         function onPageLoad() {setPageLoaded(true);}
         if (document.readyState === "complete") {
             onPageLoad()
@@ -68,34 +73,32 @@ export default function App() {
 
     useEffect(() => {
         window.localStorage.setItem("UXMode", JSON.stringify(UXMode));
-        window.localStorage.setItem("admin", JSON.stringify(admin));
-    }, [UXMode, admin]);
+        window.localStorage.setItem("user", JSON.stringify(user));
+    }, [UXMode, user]);
 
     return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
-            <Header handleMenu={handleMenu} handleSettings={handleSettings}
-                    closeMenu={closeMenu} closeSettings={closeSettings}
-                    handleUXMode={handleUXMode} UXMode={UXMode}
-                    homeRedirect={homeRedirect} devRedirect={devRedirect}
-                    overviewRedirect={overviewRedirect} spots={spots}
-                    admin={admin} logInAdmin={makeAdmin} logOutAdmin={dropAdmin}
+            <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user}
                     showSettings={showSettings} showMenu={showMenu}/>
+
             <main>
                 <Routes>
-                    <Route path={path + "/devplan"} element={<Devplan UXMode={UXMode}/>}/>
-                    <Route path={path + "/*"} element={<Home UXMode={UXMode}
-                                                             spots={spots} path={path}
-                                                             basePath={basePath}/>}/>
-                    <Route path={path + "/overview"} element={<Overview/>}/>
-                    <Route path={path + "/location/:spot_id"} element={spots &&
-                        <Location spots={spots} admin={admin} setAdmin={makeAdmin} basePath={basePath}/>
-                    }/>
-                    <Route path={path + "/search"} element={<Search UXMode={UXMode} basePath={basePath}/>}/>
-                    <Route path={path + "/upload"} element={<Upload UXMode={UXMode}/>}/>
-                    <Route path={path + "/random"} element={<Random rand={rand} spots={spots}
-                                                                    basePath={basePath}
-                                                                    admin={admin} makeAdmin={makeAdmin}/>}/>
-                    <Route path={path + "/collaborate"} element={<Collaborate UXMode={UXMode}/>}/>
+                    <Route path={path + "/*"} element={
+                        <Home UXMode={UXMode} path={path} basePath={basePath}/>}/>
+                    <Route path={path + "/devplan"} element={
+                        <Devplan/>}/>
+                    <Route path={path + "/overview"} element={
+                        <Overview/>}/>
+                    <Route path={path + "/location/:spot_id"} element={
+                        <Location user={user} setAdmin={handler.makeAdmin} basePath={basePath}/>}/>
+                    <Route path={path + "/search"} element={
+                        <Search basePath={basePath}/>}/>
+                    <Route path={path + "/upload"} element={
+                        <Upload/>}/>
+                    <Route path={path + "/random"} element={
+                        <Random rand={rand} spots={spots} basePath={basePath} user={user} makeAdmin={handler.makeAdmin}/>}/>
+                    <Route path={path + "/collaborate"} element={
+                        <Collaborate/>}/>
                 </Routes>
             </main>
             <Footer/>
