@@ -25,7 +25,7 @@ export default function App() {
 
     // Path variables
     const path = "";
-    const basePath = "http://db8.cse.nd.edu:5001";
+    const basePath = "http://db8.cse.nd.edu:5000";
     const homeRedirect = path + "/";
     const devRedirect = path + "/devplan";
     const overviewRedirect = path + "/overview";
