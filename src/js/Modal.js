@@ -11,11 +11,11 @@ export function Authenticate(props) {
     }
 
     function handleSignIn(res) {
-        document.getElementById("sign-out-notification").classList.remove("notification-animation");
-        document.getElementById("sign-in-notification").classList.add("notification-animation");
         props.handler.signIn();
         props.handler.handleAdmin(res.data.isAdmin);
         props.close();
+        document.getElementById("sign-out-notification").classList.remove("notification-animation");
+        document.getElementById("sign-in-notification").classList.add("notification-animation");
         window.localStorage.setItem("user", JSON.stringify(props.user));
     }
 
@@ -180,9 +180,10 @@ export function SettingsModal(props) {
     }
 
     function handleSignOut() {
+        props.handler.signOut();
         document.getElementById("sign-in-notification").classList.remove("notification-animation");
         document.getElementById("sign-out-notification").classList.add("notification-animation");
-        props.handler.signOut();
+        window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
     }
 
     return (
