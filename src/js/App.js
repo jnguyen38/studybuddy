@@ -12,6 +12,7 @@ import Location, {Random} from "./Location";
 import Search from "./Search";
 import Upload from "./Upload";
 import Collaborate from "./Collaborate";
+import {Authenticate} from "./Modal";
 
 export default function App() {
 
@@ -20,9 +21,12 @@ export default function App() {
     const [spots, setSpots] = useState("");
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+    const [showAuthenticate, setShowAuthenticate] = useState(false);
     const [rand, setRand] = useState({});
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false});
+    const [location, setLocation] = useState({latitude: NaN, longitude: NaN});
+
 
     // Path variables
     const path = "";
@@ -36,14 +40,39 @@ export default function App() {
         static handleUXMode() {setUXMode(!UXMode);}
         static handleMenu() {setShowMenu(() => !showMenu); handler.closeSettings();}
         static handleSettings() {setShowSettings(() => !showSettings); handler.closeMenu();}
-        static makeAdmin() {setUser({isSignedIn: user.isSignedIn, isAdmin: true});}
-        static dropAdmin() {setUser({isSignedIn: user.isSignedIn, isAdmin: false});}
-        static userSignIn() {setUser({isSignedIn: true, isAdmin: user.isAdmin});}
-        static userSignOut() {setUser({isSignedIn: false, isAdmin: user.isAdmin});}
+        static handleAdmin(input) {
+            let tempUser = user;
+            tempUser.isAdmin = input;
+            setUser(tempUser);
+        }
+        static dropAdmin() {
+            let tempUser = user;
+            tempUser.isAdmin = false;
+            setUser(tempUser);
+        }
+        static signIn() {
+            let tempUser = user;
+            tempUser.isSignedIn = true;
+            setUser(tempUser);
+        }
+        static signOut() {
+            setUser({isSignedIn: false, isAdmin: false});
+        }
+        static handleShowAuthenticate() {setShowAuthenticate(()=> !showAuthenticate)}
+        static closeAuthenticate() {setShowAuthenticate(false)}
     }
 
-
     function randomize(n) {return Math.floor(Math.random() * n);}
+    function getMyLocation() {
+        const location = window.navigator && window.navigator.geolocation
+        if (location) {
+            location.getCurrentPosition((position) => {
+                setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude});
+            }, (error) => {
+                setLocation({ latitude: NaN, longitude: NaN})
+            }, {maximumAge:10000, timeout:5000, enableHighAccuracy: true});
+        }
+    }
 
     // useEffect Hooks
     useEffect(() => {
@@ -55,12 +84,14 @@ export default function App() {
 
     useEffect(() => {
         setRand(spots[randomize(spots.length)])
-    }, [spots]);
+        console.log(location)
+    }, [location, spots]);
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
         let userLocal = JSON.parse(window.localStorage.getItem("user"));
         if (userLocal) setUser(userLocal);
+        getMyLocation();
         function onPageLoad() {setPageLoaded(true);}
         if (document.readyState === "complete") {
             onPageLoad()
@@ -68,7 +99,6 @@ export default function App() {
             window.addEventListener("load", onPageLoad);
             return () => window.removeEventListener("load", onPageLoad);
         }
-
     }, []);
 
     useEffect(() => {
@@ -79,9 +109,13 @@ export default function App() {
     return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
             <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user}
-                    showSettings={showSettings} showMenu={showMenu}/>
+                    showSettings={showSettings} showMenu={showMenu} showAuthenticate={showAuthenticate}/>
 
             <main>
+                <Authenticate basePath={basePath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate} location={location}/>
+                <div id={"sign-in-notification"} className={"d-flex-row-c"}>You have been signed in!</div>
+                <div id={"sign-out-notification"} className={"d-flex-row-c"}>You have been signed out!</div>
+
                 <Routes>
                     <Route path={path + "/*"} element={
                         <Home UXMode={UXMode} path={path} basePath={basePath}/>}/>
@@ -90,13 +124,13 @@ export default function App() {
                     <Route path={path + "/overview"} element={
                         <Overview/>}/>
                     <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} setAdmin={handler.makeAdmin} basePath={basePath}/>}/>
+                        <Location user={user} handler={handler} basePath={basePath} showAuthenticate={showAuthenticate}/>}/>
                     <Route path={path + "/search"} element={
-                        <Search basePath={basePath}/>}/>
+                        <Search basePath={basePath} path={path}/>}/>
                     <Route path={path + "/upload"} element={
                         <Upload/>}/>
                     <Route path={path + "/random"} element={
-                        <Random rand={rand} spots={spots} basePath={basePath} user={user} makeAdmin={handler.makeAdmin}/>}/>
+                        <Random rand={rand} spots={spots} basePath={basePath} user={user} makeAdmin={handler.handleAdmin}/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate/>}/>
                 </Routes>

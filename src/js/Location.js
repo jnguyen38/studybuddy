@@ -105,7 +105,7 @@ function LocationMain(props) {
                 <p>{props.description}</p><br/>
                 <div className={"d-flex jc-sb full-length"}>
                     <button className={"btn d-flex-row-c"}>Read More</button>
-                    <button className={"btn d-flex-row-c"} onClick={handleShowEditDesc}>Edit</button>
+                    <button className={"btn d-flex-row-c"} onClick={(props.user.isSignedIn) ? handleShowEditDesc : props.handler.handleShowAuthenticate}>Edit</button>
                 </div>
 
                 <br/><div className={"thin full-length line"}></div>
@@ -160,7 +160,6 @@ export default function Location(props) {
         axios.post(props.basePath + "/api/post/location", {
             "spot_id": params.spot_id
         }).then(data => {
-            console.log(data);
             setSpotData(data.data[0]);
         });
     }, [params.spot_id, props.basePath]);

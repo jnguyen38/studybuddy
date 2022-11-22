@@ -2,35 +2,51 @@ import {Link} from "react-router-dom";
 import Axios from "axios";
 import SHA3 from "sha3";
 
-function Authenticate(props) {
+export function Authenticate(props) {
+    if (!props.show) return;
+
+    function handleSignIn(res) {
+        document.getElementById("sign-out-notification").classList.remove("notification-animation");
+        document.getElementById("sign-in-notification").classList.add("notification-animation");
+        props.handler.signIn();
+        props.handler.handleAdmin(res.data.isAdmin);
+        props.close();
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
+        
         let hash = new SHA3(512);
         hash.update(event.target.password.value)
-        Axios.post(props.basePath + "/api/post/admin", {
-           "user": event.target.user.value,
-           "password": hash.digest("hex").toString()
-        }).then(data => {
-            console.log(data)
-            console.log(data.data)
-            console.log(!!(data.data))
-            props.setAdmin(() => data.data)
-        }).then(() => {
-            console.log(props.admin)
+        
+        Axios.post(props.basePath + "/api/post/signin", {
+            "user": event.target.user.value,
+            "password": hash.digest("hex").toString(),
+            "latitude": props.location.latitude,
+            "longitude": props.location.longitude
+        }).then(res => {
+            if (res.data.isSignedIn) {
+                handleSignIn(res);
+            } else {
+                console.log("Incorrect");
+            }
         });
     }
 
     return (
-        <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
-            <h2>Admin Portal</h2>
-            <div className={"light-blue line"}/>
-            <input type="text" placeholder="Username" name="user" required/>
-            <input type="password" placeholder="Password" name="password" required/>
-            <div className={"form-buttons d-flex jc-c"}>
-                <input type="submit" value="Log In" className={"btn submit-btn"}/>
+        <div className={"modal"} onMouseDown={props.close}>
+            <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
+                <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
+                    <h2>Sign In</h2>
+                    <div className={"light-blue line"}/>
+                    <input type="text" placeholder="Username" name="user" autoComplete={"username"} required/>
+                    <input type="password" placeholder="Password" name="password" autoComplete={"current-password"} required/>
+                    <div className={"form-buttons d-flex jc-c"}>
+                        <input type="submit" value="Log In" className={"btn submit-btn"}/>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     );
 }
 
@@ -52,23 +68,20 @@ export function EditDescModal(props) {
     return (
         <div className={"modal"} onMouseDown={props.close}>
             <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
-                {props.admin ?
-                    (!props.editSubmitted) ?
-                        <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
-                            <h2>Edit the Description</h2>
-                            <div className={"light-blue line"}/>
-                            <textarea placeholder="Enter your description here..." name="description" maxLength="100" required/>
-                            <div className={"form-buttons d-flex jc-fe"}>
-                                <input type="reset" value="Clear" className={"btn"}/>
-                                <input type="submit" value="Submit" className={"btn submit-btn"}/>
-                            </div>
-                        </form>
-                        :
-                        <div>
-                            <h1 style={{color:"black"}}>Thank You!</h1>
+                {(!props.editSubmitted) ?
+                    <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
+                        <h2>Edit the Description</h2>
+                        <div className={"light-blue line"}/>
+                        <textarea placeholder="Enter your description here..." name="description" maxLength="100" required/>
+                        <div className={"form-buttons d-flex jc-fe"}>
+                            <input type="reset" value="Clear" className={"btn"}/>
+                            <input type="submit" value="Submit" className={"btn submit-btn"}/>
                         </div>
+                    </form>
                     :
-                    <Authenticate {...props}/>
+                    <div>
+                        <h1 style={{color:"black"}}>Thank You!</h1>
+                    </div>
                 }
             </div>
         </div>
@@ -143,9 +156,14 @@ export function MenuModal(props) {
 export function SettingsModal(props) {
     if (!props.show) return;
 
-    function No() {
-        console.log("No")
+    function handleSignIn() {
+        props.handler.handleShowAuthenticate();
+    }
 
+    function handleSignOut() {
+        document.getElementById("sign-in-notification").classList.remove("notification-animation");
+        document.getElementById("sign-out-notification").classList.add("notification-animation");
+        props.handler.signOut();
     }
 
     return (
@@ -156,7 +174,7 @@ export function SettingsModal(props) {
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
                     <h2>User</h2>
-                    <button onClick={(props.user.isSignedIn) ? props.handler.dropAdmin : No} className={"settings-button"}>
+                    <button onClick={(props.user.isSignedIn) ? handleSignOut : handleSignIn} className={"settings-button"}>
                         {(props.user.isSignedIn) ? "Log Out" : "Log In"}
                     </button>
                 </div>
