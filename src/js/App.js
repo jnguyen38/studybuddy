@@ -15,7 +15,6 @@ import Collaborate from "./Collaborate";
 import {Authenticate} from "./Modal";
 
 export default function App() {
-
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
     const [spots, setSpots] = useState("");
@@ -68,7 +67,7 @@ export default function App() {
         if (location) {
             location.getCurrentPosition((position) => {
                 setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude});
-            }, (error) => {
+            }, () => {
                 setLocation({ latitude: NaN, longitude: NaN})
             }, {maximumAge:10000, timeout:5000, enableHighAccuracy: true});
         }
@@ -103,8 +102,7 @@ export default function App() {
 
     useEffect(() => {
         window.localStorage.setItem("UXMode", JSON.stringify(UXMode));
-        window.localStorage.setItem("user", JSON.stringify(user));
-    }, [UXMode, user]);
+    }, [UXMode]);
 
     return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>

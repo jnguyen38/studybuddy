@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
-import {RevModal, EditDescModal} from "./Modal";
+import {RevModal, EditModal} from "./Modal";
 import {useParams} from "react-router-dom";
 import axios from "axios";
+
 import person from "../media/icons/person.svg";
 import star from "../media/icons/double_star.svg";
 import share from "../media/icons/share.svg";
@@ -64,6 +65,8 @@ function LocationButtons(props) {
                 Add a Photo
             </button>
 
+            {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("building")}>Edit Building</button>}
+            {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("location")}>Edit Location</button>}
             <RevModal {...props} show={showRev} close={closeRev}
                       className={(showRev) ? "item-clicked" : 0}/>
         </div>
@@ -71,17 +74,6 @@ function LocationButtons(props) {
 }
 
 function LocationMain(props) {
-    const [showEditDesc, setShowEditDesc] = useState(false);
-    const [editSubmitted, setEditSubmitted] = useState(false);
-
-    function handleShowEditDesc() {
-        setShowEditDesc(() => !showEditDesc);
-        setEditSubmitted(false);
-    }
-
-    function closeShowEditDesc() {setShowEditDesc(false)}
-    function editSubmit() {setEditSubmitted(true)}
-
     return (
         <div id={"location-main"}>
             <LocationButtons {...props}/>
@@ -105,7 +97,7 @@ function LocationMain(props) {
                 <p>{props.description}</p><br/>
                 <div className={"d-flex jc-sb full-length"}>
                     <button className={"btn d-flex-row-c"}>Read More</button>
-                    <button className={"btn d-flex-row-c"} onClick={(props.user.isSignedIn) ? handleShowEditDesc : props.handler.handleShowAuthenticate}>Edit</button>
+                    {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("description")}>Edit</button>}
                 </div>
 
                 <br/><div className={"thin full-length line"}></div>
@@ -123,8 +115,9 @@ function LocationMain(props) {
                 </div>
             </div>
 
-            <EditDescModal {...props} show={showEditDesc} close={closeShowEditDesc}
-                           editSubmitted={editSubmitted} editSubmit={editSubmit}/>
+            <EditModal {...props} show={props.showEdit} close={props.closeEdit}
+                       query={props.query}
+                       editSubmitted={props.editSubmitted} editSubmit={props.editSubmit}/>
         </div>
     );
 }
@@ -143,6 +136,28 @@ export default function Location(props) {
 
     const root = document.querySelector(":root");
     const params = useParams()
+
+    const [showEdit, setShowEdit] = useState(false);
+    const [editSubmitted, setEditSubmitted] = useState(false);
+    const [query, setQuery] = useState("");
+
+
+    function handleShowEdit(queryType) {
+        setQuery(queryType)
+        setShowEdit(() => !showEdit);
+        setEditSubmitted(false);
+    }
+
+    function handleEditAuth(query) {
+        if (props.user.isAdmin)
+            handleShowEdit(query);
+        else
+            props.handler.handleShowAuthenticate();
+    }
+
+    function closeEdit() {setShowEdit(false)}
+    function editSubmit() {setEditSubmitted(true)}
+
 
     function calcComf(comfRatings) {
         let avg = 0, count = 0;
@@ -177,10 +192,13 @@ export default function Location(props) {
 
     return (
         <section id={"location-container"}>
-            <LocationHeader {...spotData} image={image}/>
+            <LocationHeader {...spotData} {...props} image={image} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
+                            handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
             <div className={"d-flex-row-l"}>
-                <LocationMain {...spotData} {...props}/>
-                <LocationAside {...spotData} {...props}/>
+                <LocationMain {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
+                              handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
+                <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
+                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
             </div>
         </section>
     );
