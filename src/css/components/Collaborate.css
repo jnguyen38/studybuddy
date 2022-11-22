@@ -19,7 +19,7 @@
 
 .initial-questions {
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-columns: 1fr 1fr 3fr;
     grid-template-rows: auto;
 }
 
@@ -31,6 +31,7 @@
 .self-input input[type="text"] {
     display: block;
     width: 75%;
+    padding: 2px;
 }
 
 .enter-button {
@@ -39,7 +40,7 @@
 
 .friends-info {
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-columns: 1fr 1fr 3fr;
     grid-template-rows: auto 1fr;
     padding-top: 20px;
 }
@@ -65,10 +66,20 @@
 }
 
 .another-btn {
-    background-color: var(--sb-light-blue) !important;
-    color: var(--sb-white) !important;
-    border-color: var(--sb-light-blue) !important;
-    font-size: 1em !important;
+    background-color: var(--inverted-bg-color);
+    color: var(--inverted-text-color);
+    border-color: var(--inverted-bg-color);
+    font-size: 1em;
+    width: 11%;
+}
+
+.delete-btn {
+    background-color: var(--inverted-bg-color);
+    color: var(--inverted-text-color);
+    border-color: var(--inverted-bg-color);
+    font-size: 1em;
+    margin-left: 20px;
+    width: 11%;
 }
 
 .friend-user-input {
@@ -81,6 +92,8 @@
 .friend-user-input input[type="text"]{
     display: block;
     width: 75%;
+    padding: 2px;
+    margin-bottom: 3px;
 }
 
 .friend-building-input {
@@ -93,10 +106,16 @@
 .friend-building-input input[type="text"]{
     display: block;
     width: 75%;
+    padding: 2px;
+    margin-bottom: 3px;
 }
 
 .note {
-    font-size: 0.7em;
+    font-size: 0.8em;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    display: block;
+    width: 75%;
 }
 
 .submit-button {
