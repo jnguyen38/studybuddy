@@ -23,7 +23,7 @@ export default function App() {
     const [showAuthenticate, setShowAuthenticate] = useState(false);
     const [rand, setRand] = useState({});
     const [pageLoaded, setPageLoaded] = useState(false);
-    const [user, setUser] = useState({isSignedIn: false, isAdmin: false});
+    const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
     const [location, setLocation] = useState({latitude: NaN, longitude: NaN});
 
 
@@ -39,23 +39,17 @@ export default function App() {
         static handleUXMode() {setUXMode(!UXMode);}
         static handleMenu() {setShowMenu(() => !showMenu); handler.closeSettings();}
         static handleSettings() {setShowSettings(() => !showSettings); handler.closeMenu();}
-        static handleAdmin(input) {
-            let tempUser = user;
-            tempUser.isAdmin = input;
-            setUser(tempUser);
-        }
-        static dropAdmin() {
-            let tempUser = user;
-            tempUser.isAdmin = false;
-            setUser(tempUser);
-        }
-        static signIn() {
+        static signIn(data) {
             let tempUser = user;
             tempUser.isSignedIn = true;
+            tempUser.isAdmin = data.isAdmin;
+            tempUser.firstName = data.firstName;
+            tempUser.lastName = data.lastName;
+            tempUser.username = data.username;
             setUser(tempUser);
         }
         static signOut() {
-            setUser({isSignedIn: false, isAdmin: false});
+            setUser({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
         }
         static handleShowAuthenticate() {setShowAuthenticate(()=> !showAuthenticate)}
         static closeAuthenticate() {setShowAuthenticate(false)}

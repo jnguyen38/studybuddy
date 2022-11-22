@@ -134,3 +134,10 @@
 .sign-up a {
     text-decoration: underline;
 }
+
+#incorrect-sign-in {
+    background-color: #ffb9c0;
+    color: var(--sb-red);
+    padding: 5px;
+    border-radius: 5px;
+}

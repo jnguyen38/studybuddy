@@ -1,5 +1,5 @@
 :root {
-    --sb-red: #98111E;
+    --sb-red: #98111e;
     --sb-black: #564e58;
     --sb-dark-blue: #0b2141;
     --sb-light-blue: #6494aa;
@@ -81,6 +81,7 @@ a:link { text-decoration: none; }
 .text-right {text-align: right;}
 .text-center {text-align: center;}
 
+.d-none {display: none;}
 .d-flex {display: flex; align-items: center;}
 .f-col {flex-flow: column;}
 .jc-sb {justify-content: space-between;}
@@ -161,8 +162,10 @@ textarea:focus, input:focus{
     margin-right: 5px;
 }
 
+.warning-icon {filter: invert(18%) sepia(28%) saturate(6256%) hue-rotate(336deg) brightness(87%) contrast(108%);}
 .invert-icon {filter: var(--inverted-filter) !important;}
 .white-icon {--icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%) !important;}
+.xxs-icon {width: 18px;}
 .xs-icon {width: 22px;}
 .sm-icon {width: 26px;}
 .md-icon {width: 32px;}
@@ -177,6 +180,10 @@ textarea {
 
 input {
     font-family: Outfit, sans-serif;
+}
+
+input[readonly] {
+    pointer-events: none;
 }
 
 @media only screen and (max-width: 768px) {

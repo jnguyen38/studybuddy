@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import Axios from "axios";
 import SHA3 from "sha3";
+import info from "../media/icons/info.svg";
 
 export function Authenticate(props) {
     if (!props.show) return;
@@ -11,12 +12,16 @@ export function Authenticate(props) {
     }
 
     function handleSignIn(res) {
-        props.handler.signIn();
-        props.handler.handleAdmin(res.data.isAdmin);
+        props.handler.signIn(res.data);
         props.close();
         document.getElementById("sign-out-notification").classList.remove("notification-animation");
         document.getElementById("sign-in-notification").classList.add("notification-animation");
         window.localStorage.setItem("user", JSON.stringify(props.user));
+    }
+
+    function handleIncorrectSignIn() {
+        document.getElementById("incorrect-sign-in").classList.remove("d-none");
+        document.getElementById("incorrect-sign-in").classList.add("d-flex-row-c");
     }
 
     function handleSubmit(event) {
@@ -34,7 +39,7 @@ export function Authenticate(props) {
             if (res.data.isSignedIn) {
                 handleSignIn(res);
             } else {
-                console.log("Incorrect");
+                handleIncorrectSignIn();
             }
         });
     }
@@ -45,6 +50,10 @@ export function Authenticate(props) {
                 <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
                     <h2>Sign In</h2>
                     <div className={"light-blue line"}/>
+                    <div id={"incorrect-sign-in"} className={"d-none"}>
+                        <img src={info} alt="" className={"icon warning-icon xxs-icon"}/>
+                        <p>Incorrect username or password</p>
+                    </div>
                     <input type="text" placeholder="Username" name="user" autoComplete={"username"} required/>
                     <input type="password" placeholder="Password" name="password" autoComplete={"current-password"} required/>
                     <div className={"form-buttons d-flex jc-c"}>
@@ -114,7 +123,7 @@ export function RevModal(props) {
             "name": event.target.name.value,
             "description": event.target.description.value,
             "rating": event.target.rating.value,
-            "spot_id": props.id
+            "spot_id": props.spot_id
         }).then((data) => {
             console.log(data)
             props.close()
@@ -128,7 +137,7 @@ export function RevModal(props) {
                     <h2>Write a Review</h2>
                     <div className={"light-blue line"}/>
                     <div className={"d-flex jc-sb full-length"}>
-                        <input type="text" placeholder="Name" name="name" required/>
+                        <input type="text" value={`${props.user.firstName} ${props.user.lastName}`} name="name" readOnly/>
                         <input type="number" placeholder="Rating" name="rating" min="1" max="5" required/>
                     </div>
                     <textarea placeholder="Content" name="description" required/>

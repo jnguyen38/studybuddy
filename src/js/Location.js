@@ -47,7 +47,7 @@ export function LocationHeader(props) {
 function LocationButtons(props) {
     const [showRev, setShowRev] = useState(false);
 
-    function handleRev() {setShowRev(() => !showRev);}
+    function handleRev() {(props.user.isSignedIn) ? setShowRev(() => !showRev) : props.handler.handleShowAuthenticate();}
     function closeRev() {setShowRev(false);}
 
     return (
