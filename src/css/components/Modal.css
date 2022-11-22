@@ -127,4 +127,10 @@
     animation: notify 2.5s ease-in-out;
 }
 
+.sign-up {
+    color: var(--sb-light-blue);
+}
 
+.sign-up a {
+    text-decoration: underline;
+}

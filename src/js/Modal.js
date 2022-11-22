@@ -5,6 +5,11 @@ import SHA3 from "sha3";
 export function Authenticate(props) {
     if (!props.show) return;
 
+    function handleSignUp() {
+        props.handler.closeSettings();
+        props.close();
+    }
+
     function handleSignIn(res) {
         document.getElementById("sign-out-notification").classList.remove("notification-animation");
         document.getElementById("sign-in-notification").classList.add("notification-animation");
@@ -44,6 +49,10 @@ export function Authenticate(props) {
                     <div className={"form-buttons d-flex jc-c"}>
                         <input type="submit" value="Log In" className={"btn submit-btn"}/>
                     </div>
+                    <div className={"sign-up d-flex-col-c"}>
+                        <p>Don't have an account yet?</p>
+                        <Link to={props.path + "/signup"} onClick={handleSignUp}>Sign up here!</Link>
+                    </div>
                 </form>
             </div>
         </div>
@@ -68,7 +77,7 @@ export function EditDescModal(props) {
     return (
         <div className={"modal"} onMouseDown={props.close}>
             <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
-                {(!props.editSubmitted) ?
+                {(props.user.isAdmin) ? (!props.editSubmitted) ?
                     <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
                         <h2>Edit the Description</h2>
                         <div className={"light-blue line"}/>
@@ -81,6 +90,10 @@ export function EditDescModal(props) {
                     :
                     <div>
                         <h1 style={{color:"black"}}>Thank You!</h1>
+                    </div>
+                    :
+                    <div>
+                        <h1 style={{color:"black"}}>No, no, no. Naughty, naughty!</h1>
                     </div>
                 }
             </div>

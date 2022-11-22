@@ -121,13 +121,11 @@ function LocationMain(props) {
                     {(props.tables) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
                     <p>Tables</p>
                 </div>
-
             </div>
 
             <EditDescModal {...props} show={showEditDesc} close={closeShowEditDesc}
                            editSubmitted={editSubmitted} editSubmit={editSubmit}/>
         </div>
-
     );
 }
 

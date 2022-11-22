@@ -112,7 +112,7 @@ export default function App() {
                     showSettings={showSettings} showMenu={showMenu} showAuthenticate={showAuthenticate}/>
 
             <main>
-                <Authenticate basePath={basePath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate} location={location}/>
+                <Authenticate path={path} basePath={basePath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate} location={location}/>
                 <div id={"sign-in-notification"} className={"d-flex-row-c"}>You have been signed in!</div>
                 <div id={"sign-out-notification"} className={"d-flex-row-c"}>You have been signed out!</div>
 
