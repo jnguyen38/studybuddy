@@ -26,14 +26,11 @@ export default function Collaborate(props) {
         console.log(count);
     }
 
-    /*let friendsNames = [];
-    let i = 0;
-    friendsNames.push(<input key={i} name={'friendsNames' + i} placeholder="Enter a friend's username" onChange={handleChange}/>);
-
-    let friendsBuildings = [];
-    let j = 0;
-    friendsBuildings.push(<input key={i} name={'friendsBuildings' + j} placeholder="Enter a building name" onChange={handleChange}/>);
- */
+    function removeFriend(event) {
+        setCount(count - 1);
+        console.log(count);
+    }
+    
     return (
         <div className={"collab-container"}>
             <div className={"collab-header d-flex-col-c"}>
@@ -62,27 +59,32 @@ export default function Collaborate(props) {
                     }
                     <div className={"friend-user-input"}>
                         {Array.from(Array(count)).map((c, index) => {
-                            return <input key={c} name={'friendUsername' + index} type="text" placeholder="Enter a username"></input>;
+                            return <input key={index} name={'friendUsername' + index} type="text" placeholder="Enter a username"></input>;
                         })}
                     </div>
                     <div className={"friend-building-input"}>
                         {Array.from(Array(count)).map((c, index) => {
-                            return <input key={c} name={'friendBuilding' + index} type="text" placeholder="Enter a building name"></input>;
+                            return <input key={index} name={'friendBuilding' + index} type="text" placeholder="Enter a building name"></input>;
                         })}
                     </div>
+                    {(count > 0) ?
+                        <div className={"note"}>
+                            <p>Note: If your friend does not have an existing username, please enter any name.</p>
+                        </div>
+                        :
+                        <div/>
+                    }
                 </div>
-                {(count > 0) ?
-                    <div className={"note"}>
-                    <p>Note: If your friend does not have an existing username, please enter any name.</p>
-                    </div>
-                    :
-                    <div/>
-                }
                 <div className={"another-button"}>
                     {(count > 0) ?
                         <button onClick={addAnother} className={"btn another-btn"}>Add another friend!</button>
                         :
                         <button onClick={addAnother} className={"btn another-btn"}>Add a friend!</button>
+                    }
+                    {(count > 0) ?
+                        <button onClick={removeFriend} className={"btn delete-btn"}>Remove friend</button>
+                        :
+                        <div/>
                     }
                 </div>
                 <div className={"submit-button"}>
