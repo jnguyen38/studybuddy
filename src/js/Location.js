@@ -182,8 +182,8 @@ export default function Location(props) {
         <section id={"location-container"}>
             <LocationHeader {...spotData} image={image}/>
             <div className={"d-flex-row-l"}>
-                <LocationMain {...spotData}/>
-                <LocationAside {...spotData}/>
+                <LocationMain {...spotData} {...props}/>
+                <LocationAside {...spotData} {...props}/>
             </div>
         </section>
     );
