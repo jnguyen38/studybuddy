@@ -2,46 +2,75 @@ import {Link} from "react-router-dom";
 import Axios from "axios";
 import SHA3 from "sha3";
 
-function Authenticate(props) {
+export function Authenticate(props) {
+    if (!props.show) return;
+
+    function handleSignUp() {
+        props.handler.closeSettings();
+        props.close();
+    }
+
+    function handleSignIn(res) {
+        document.getElementById("sign-out-notification").classList.remove("notification-animation");
+        document.getElementById("sign-in-notification").classList.add("notification-animation");
+        props.handler.signIn();
+        props.handler.handleAdmin(res.data.isAdmin);
+        props.close();
+        window.localStorage.setItem("user", JSON.stringify(props.user));
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
+        
         let hash = new SHA3(512);
         hash.update(event.target.password.value)
-        Axios.post(props.basePath + "/api/post/admin", {
-           "user": event.target.user.value,
-           "password": hash.digest("hex").toString()
-        }).then(data => {
-            console.log(data)
-            console.log(data.data)
-            console.log(!!(data.data))
-            props.setAdmin(() => data.data)
-        }).then(() => {
-            console.log(props.admin)
+        
+        Axios.post(props.basePath + "/api/post/signin", {
+            "user": event.target.user.value,
+            "password": hash.digest("hex").toString(),
+            "latitude": props.location.latitude,
+            "longitude": props.location.longitude
+        }).then(res => {
+            if (res.data.isSignedIn) {
+                handleSignIn(res);
+            } else {
+                console.log("Incorrect");
+            }
         });
     }
 
     return (
-        <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
-            <h2>Admin Portal</h2>
-            <div className={"light-blue line"}/>
-            <input type="text" placeholder="Username" name="user" required/>
-            <input type="password" placeholder="Password" name="password" required/>
-            <div className={"form-buttons d-flex jc-c"}>
-                <input type="submit" value="Log In" className={"btn submit-btn"}/>
+        <div className={"modal"} onMouseDown={props.close}>
+            <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
+                <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
+                    <h2>Sign In</h2>
+                    <div className={"light-blue line"}/>
+                    <input type="text" placeholder="Username" name="user" autoComplete={"username"} required/>
+                    <input type="password" placeholder="Password" name="password" autoComplete={"current-password"} required/>
+                    <div className={"form-buttons d-flex jc-c"}>
+                        <input type="submit" value="Log In" className={"btn submit-btn"}/>
+                    </div>
+                    <div className={"sign-up d-flex-col-c"}>
+                        <p>Don't have an account yet?</p>
+                        <Link to={props.path + "/signup"} onClick={handleSignUp}>Sign up here!</Link>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     );
 }
 
-export function EditDescModal(props) {
+export function EditModal(props) {
     if (!props.show) return;
+
+    const title = props.query[0].toUpperCase() + props.query.substring(1)
 
     function handleSubmit(event) {
         event.preventDefault();
-        Axios.post(props.basePath + "/api/post/editDesc", {
+        Axios.post(props.basePath + "/api/post/edit", {
             "description": event.target.description.value,
-            "id": props.id
+            "id": props.id,
+            "query": props.query
         }).then((data) => {
             console.log(data)
         });
@@ -52,23 +81,24 @@ export function EditDescModal(props) {
     return (
         <div className={"modal"} onMouseDown={props.close}>
             <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
-                {props.admin ?
-                    (!props.editSubmitted) ?
-                        <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
-                            <h2>Edit the Description</h2>
-                            <div className={"light-blue line"}/>
-                            <textarea placeholder="Enter your description here..." name="description" maxLength="100" required/>
-                            <div className={"form-buttons d-flex jc-fe"}>
-                                <input type="reset" value="Clear" className={"btn"}/>
-                                <input type="submit" value="Submit" className={"btn submit-btn"}/>
-                            </div>
-                        </form>
-                        :
-                        <div>
-                            <h1 style={{color:"black"}}>Thank You!</h1>
+                {(props.user.isAdmin) ? (!props.editSubmitted) ?
+                    <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
+                        <h2>Edit the {title}</h2>
+                        <div className={"light-blue line"}/>
+                        <textarea placeholder={`Enter your ${props.query} here...`} name="description" maxLength="100" required/>
+                        <div className={"form-buttons d-flex jc-fe"}>
+                            <input type="reset" value="Clear" className={"btn"}/>
+                            <input type="submit" value="Submit" className={"btn submit-btn"}/>
                         </div>
+                    </form>
                     :
-                    <Authenticate {...props}/>
+                    <div>
+                        <h1 style={{color:"black"}}>Thank You!</h1>
+                    </div>
+                    :
+                    <div>
+                        <h1 style={{color:"black"}}>No, no, no. Naughty, naughty!</h1>
+                    </div>
                 }
             </div>
         </div>
@@ -79,13 +109,15 @@ export function RevModal(props) {
     if (!props.show) return;
 
     function handleSubmit(event) {
+        event.preventDefault()
         Axios.post(props.basePath + "/api/post/review", {
             "name": event.target.name.value,
-            "content": event.target.content.value,
+            "description": event.target.description.value,
             "rating": event.target.rating.value,
-            "space_id": props.id
+            "spot_id": props.id
         }).then((data) => {
             console.log(data)
+            props.close()
         });
     }
 
@@ -97,9 +129,9 @@ export function RevModal(props) {
                     <div className={"light-blue line"}/>
                     <div className={"d-flex jc-sb full-length"}>
                         <input type="text" placeholder="Name" name="name" required/>
-                        <input type="number" placeholder="Rating" name="rating" required/>
+                        <input type="number" placeholder="Rating" name="rating" min="1" max="5" required/>
                     </div>
-                    <textarea type="text" placeholder="Content" name="description" required/>
+                    <textarea placeholder="Content" name="description" required/>
                     <div className={"form-buttons d-flex jc-fe"}>
                         <input type="reset" value="Clear" className={"btn"}/>
                         <input type="submit" value="Submit" className={"btn submit-btn"}/>
@@ -120,13 +152,13 @@ export function MenuModal(props) {
                 <h1 className={"modal-title"}>Menu</h1>
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
-                    <Link to={props.homeRd}><div className="modal-nav-item" onClick={props.close}>
+                    <Link to={props.redirect.home}><div className="modal-nav-item" onClick={props.close}>
                         <h2>Home</h2>
                     </div></Link>
-                    <Link to={props.devRd}><div className="modal-nav-item" onClick={props.close}>
+                    <Link to={props.redirect.dev}><div className="modal-nav-item" onClick={props.close}>
                         <h2>Devplan</h2>
                     </div></Link>
-                    <Link to={props.overviewRd}><div className="modal-nav-item" onClick={props.close}>
+                    <Link to={props.redirect.overview}><div className="modal-nav-item" onClick={props.close}>
                         <h2>Overview</h2>
                     </div></Link>
                     <div className={"modal-nav-item"} onClick={props.handleSettings}>
@@ -142,8 +174,15 @@ export function MenuModal(props) {
 
 export function SettingsModal(props) {
     if (!props.show) return;
-    function No() {
-        console.log("No")
+
+    function handleSignIn() {
+        props.handler.handleShowAuthenticate();
+    }
+
+    function handleSignOut() {
+        document.getElementById("sign-in-notification").classList.remove("notification-animation");
+        document.getElementById("sign-out-notification").classList.add("notification-animation");
+        props.handler.signOut();
     }
 
     return (
@@ -153,18 +192,19 @@ export function SettingsModal(props) {
                 <h1 className={"modal-title"}>Settings</h1>
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
-                    <h2>UX Mode</h2>
-                    <button onClick={props.changeUXMode} className={"settings-button"}>
-                        {(props.UXMode) ? "Set to Dark" : "Set to Light"}
+                    <h2>User</h2>
+                    <button onClick={(props.user.isSignedIn) ? handleSignOut : handleSignIn} className={"settings-button"}>
+                        {(props.user.isSignedIn) ? "Log Out" : "Log In"}
                     </button>
                 </div>
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
-                    <h2>Admin</h2>
-                    <button onClick={(props.admin) ? props.logOutAdmin : No} className={"settings-button"}>
-                        {(props.admin) ? "Log Out" : "Log In"}
+                    <h2>UX Mode</h2>
+                    <button onClick={props.handler.handleUXMode} className={"settings-button"}>
+                        {(props.UXMode) ? "Set to Dark" : "Set to Light"}
                     </button>
                 </div>
+                <div className={"line thick yellow"}/>
             </div>
         </div>
     );

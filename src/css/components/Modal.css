@@ -20,6 +20,13 @@
     to {width: min(400px, 68%); height: 60%; padding: 40px;}
 }
 
+@keyframes notify {
+    from {top: -400px;}
+    20% {top: 35px;}
+    80% {top: 35px;}
+    to {top: -400px;}
+}
+
 .modal {
     position: fixed;
     left: 0;
@@ -77,6 +84,15 @@
     padding: 10px;
     margin: 10px 0;
     cursor: pointer;
+    box-shadow: 0 0 0 var(--inverted-bg-color);
+    transition: all .2s;
+}
+
+.settings-button:hover{
+    box-shadow: 0 0 5px var(--inverted-bg-color);
+}
+.settings-button:active{
+    transform: scale(110%);
 }
 
 .modal-nav-item {
@@ -91,4 +107,30 @@
     animation: modalOpacity 1s;
 }
 
+#sign-out-notification, #sign-in-notification {
+    display: none;
+    position: fixed;
+    top: -400px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background-color: var(--sb-yellow);
+    color: var(--sb-white);
+    width: 220px;
+    height: 50px;
+    border-radius: 25px;
+    box-shadow: 0 0 10px var(--sb-yellow);
+}
 
+.notification-animation {
+    display: flex !important;
+    animation: notify 2.5s ease-in-out;
+}
+
+.sign-up {
+    color: var(--sb-light-blue);
+}
+
+.sign-up a {
+    text-decoration: underline;
+}
