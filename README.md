@@ -6,23 +6,23 @@ StudyBuddy uses a MySQL, Express.js, ReactJS, Node.js (MySQL MERN variation) tec
 
 Access our app at: http://db8.cse.nd.edu/cse30246/studybuddy/
 
-## Using StudyBuddy Locally
+## Running StudyBuddy Locally
 
 In order to run our repository locally, you can clone our repository with the HTTPS clone url:
 ```
 git clone https://github.com/jnguyen38/studybuddy.git
 ```
 
-Once the repository has been cloned successfully you can run a local development server on localhost by running:
+Once the repository has been cloned successfully you can run a local development server on localhost:3000 by running:
 ```
 npm start
 ```
 
-## Documentation
+# Documentation
 
 Below, you can find an extensive list of some of StudyBuddy's main technical functionalities. Additionally, we have taken time to document challenges we encountered along the way and how we resolved those issues. 
 
-### React Routing on an Apache Server
+## React Routing on an Apache Server
 
 One of the first main issues we ran into was figuring out how to route between React components on the Notre Dame student machine server. ReactJS's `react-router-dom` uses dynamic routing to render specific components on the user's screen. Using `BrowserRouter, Routes, Route` components, the dynamic routing functionality acts similar to a switch statement, taking the url path as a parameter and supplying a specified component as an output. The specified url path and the output component are determined by the `path` and `element` attributes of each `<Route/>` component, respectively.
 
@@ -67,7 +67,7 @@ ErrorDocument 404 /cse30246/studybuddy/build/index.html
 
 This allowed our app to redirect 404 errors back our index.html file so that React could work its dynamic routing magic.
 
-### MySQL Querying in Express.js
+## MySQL Querying in Express.js
 
 In order to query our MySQL database in Express.js and send data back to our frontend, we decided to use the `mysql` node package. The package allowed us to make MySQL queries directly from our Express.js server, given a database configuration file:
 
@@ -107,7 +107,7 @@ if(!query.match(onlyLettersPattern)){
 }
 ```
 
-### User Authentication Flow
+## User Authentication Flow
 
 Another main challenge we faced was designing a relatively secure and intuitive user authentication flow. This authentication flow includes user registration, user login, and admin authentication. We started with a useState hook containing the following user information:
 
@@ -117,7 +117,7 @@ const [user, setUser] = useState({
 });
 ```
 
-In order to keep the user logged in persistently after browser refresh, we utilized React useEffect hooks and the browser localStorage to automatically retrieve and store user information.
+In order to keep the user logged in persistently after browser refresh, we utilized React useEffect hooks and the browser localStorage to automatically retrieve and store user information. The user state is defined in the top component of the DOM passed down to child components so that it can be easily accessed with `props.user.isSignedIn`.
 
 ```javascript
 useEffect(() => {
@@ -129,6 +129,7 @@ useEffect(() => {
 }, []);  
 ```
 
+Passwords are stored in the database after being hashed on the client side with the SHA3-512 hashing algorithm. While this ensures that passwords cannot be accessed in plaintext directly, it would lead to potentially security risks if the database information was leaked. The code below demonstrates how we would send the hashed password as a PUT request parameter to a user sign in API endpoint. 
 
 ```javascript
 function handleSubmit(event) {
@@ -140,8 +141,7 @@ function handleSubmit(event) {
     Axios.put(props.basePath + "/api/put/signin", {
         "user": event.target.user.value,
         "password": hash.digest("hex").toString(),
-        "latitude": props.location.latitude,
-        "longitude": props.location.longitude
+        ...
     }).then(res => {
         if (res.data.isSignedIn)
             handleSignIn(res);
@@ -151,26 +151,6 @@ function handleSubmit(event) {
 }
 ```
 
-
-```
-mysql> desc users;
-+------------+---------------+------+-----+---------+----------------+
-| Field      | Type          | Null | Key | Default | Extra          |
-+------------+---------------+------+-----+---------+----------------+
-| id         | int           | NO   | PRI | NULL    | auto_increment |
-| first_name | varchar(20)   | YES  |     | NULL    |                |
-| last_name  | varchar(20)   | YES  |     | NULL    |                |
-| email      | varchar(100)  | YES  |     | NULL    |                |
-| major      | varchar(100)  | YES  |     | NULL    |                |
-| latitude   | decimal(8,6)  | YES  |     | NULL    |                |
-| longitude  | decimal(9,6)  | YES  |     | NULL    |                |
-| created    | datetime      | YES  |     | NULL    |                |
-| last_login | datetime      | YES  |     | NULL    |                |
-| username   | varchar(32)   | YES  |     | NULL    |                |
-| password   | varchar(1024) | YES  |     | NULL    |                |
-| admin      | tinyint(1)    | YES  |     | NULL    |                |
-+------------+---------------+------+-----+---------+----------------+
-```
 
 ## Future Updates 
 1. Sending hashed password through an encryption tunnel to the server to further protect password storage security
