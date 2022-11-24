@@ -1,4 +1,34 @@
 import {useState} from "react";
+import axios from "axios";
+import {Link} from "react-router-dom";
+
+function Results(props) {
+    return (
+        <div className={"results-container d-flex-col-c gap-20"}>
+            {(props.results.length === 0) ?
+                <div>Hello</div>
+                :
+                props.results.map(result => {
+                    const image = "./media/locations/" + result.spot_id + "-00.jpg";
+
+                    return (
+                        <Link to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}}>
+                            <div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                                <img src={image} alt="" className={"location-img"}/>
+                                <div className={"location-header-info full-length result-item-header"}>
+                                    <h2>{result.building}</h2>
+                                    <h3>{result.location}</h3>
+                                </div>
+                            </div>
+                        </Link>
+                    );
+                })
+            }
+        </div>
+    );
+}
+
+
 
 export default function Collaborate(props) {
     const [state, setState] = useState({
@@ -6,10 +36,17 @@ export default function Collaborate(props) {
     });
 
     const [count, setCount] = useState(0);
+    const [results, setResults] = useState([])
 
     function handleSubmit(event) {
         event.preventDefault()
-        console.log(event)
+        console.log(count)
+        axios.post(props.basePath + "/api/post/groupRec", {
+            "groupSize": count
+        }).then(data => {
+            console.log(data)
+            setResults(data.data)
+        });
     }
 
     function handleChange(event) {
@@ -91,6 +128,7 @@ export default function Collaborate(props) {
                     <input type="submit" value="Submit" className={"btn submit-btn"} />
                 </div>
             </form>
+            <Results results = {results} {...props}/>
         </div>
     );
 };
