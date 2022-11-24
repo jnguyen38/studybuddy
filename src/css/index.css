@@ -1,11 +1,16 @@
+/* Components */
 @import "components/root.css";
-@import "components/Home.css";
 @import "components/Header.css";
 @import "components/App.css";
 @import "components/Modal.css";
 @import "components/Footer.css";
-@import "components/Search.css";
-@import "components/Upload.css";
-@import "components/Location.css";
 @import "components/Form.css";
-@import "components/Collaborate.css";
+@import "components/Input.css";
+
+/* Pages */
+@import "pages/Home.css";
+@import "pages/Search.css";
+@import "pages/Upload.css";
+@import "pages/Location.css";
+@import "pages/Collaborate.css";
+@import "pages/SignUp.css";

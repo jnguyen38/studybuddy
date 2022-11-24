@@ -107,7 +107,7 @@
     animation: modalOpacity 1s;
 }
 
-#sign-out-notification, #sign-in-notification {
+.notification {
     display: none;
     position: fixed;
     top: -400px;
@@ -133,4 +133,16 @@
 
 .sign-up a {
     text-decoration: underline;
+}
+
+.warning {
+    background-color: var(--sb-warning-bg);
+    box-shadow: 0 0 5px var(--sb-warning-bg);
+    color: var(--sb-red);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.warning .warning {
+    padding: 2px;
 }

@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import Axios from "axios";
 import SHA3 from "sha3";
+import info from "../media/icons/info.svg";
 
 export function Authenticate(props) {
     if (!props.show) return;
@@ -11,31 +12,31 @@ export function Authenticate(props) {
     }
 
     function handleSignIn(res) {
-        document.getElementById("sign-out-notification").classList.remove("notification-animation");
-        document.getElementById("sign-in-notification").classList.add("notification-animation");
-        props.handler.signIn();
-        props.handler.handleAdmin(res.data.isAdmin);
+        props.handler.signIn(res.data);
         props.close();
-        window.localStorage.setItem("user", JSON.stringify(props.user));
+    }
+
+    function handleIncorrectSignIn() {
+        document.getElementById("err-incorrect-sign-in").classList.remove("d-none");
+        document.getElementById("err-incorrect-sign-in").classList.add("d-flex-row-c");
     }
 
     function handleSubmit(event) {
         event.preventDefault();
         
         let hash = new SHA3(512);
-        hash.update(event.target.password.value)
+        hash.update(event.target.password.value);
         
-        Axios.post(props.basePath + "/api/post/signin", {
+        Axios.put(props.basePath + "/api/put/signin", {
             "user": event.target.user.value,
             "password": hash.digest("hex").toString(),
             "latitude": props.location.latitude,
             "longitude": props.location.longitude
         }).then(res => {
-            if (res.data.isSignedIn) {
+            if (res.data.isSignedIn)
                 handleSignIn(res);
-            } else {
-                console.log("Incorrect");
-            }
+            else
+                handleIncorrectSignIn();
         });
     }
 
@@ -45,6 +46,10 @@ export function Authenticate(props) {
                 <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
                     <h2>Sign In</h2>
                     <div className={"light-blue line"}/>
+                    <div id={"err-incorrect-sign-in"} className={"warning d-none"}>
+                        <img src={info} alt="" className={"icon warning-icon xxs-icon"}/>
+                        <p>Incorrect username or password</p>
+                    </div>
                     <input type="text" placeholder="Username" name="user" autoComplete={"username"} required/>
                     <input type="password" placeholder="Password" name="password" autoComplete={"current-password"} required/>
                     <div className={"form-buttons d-flex jc-c"}>
@@ -67,7 +72,7 @@ export function EditModal(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        Axios.post(props.basePath + "/api/post/edit", {
+        Axios.put(props.basePath + "/api/put/edit", {
             "description": event.target.description.value,
             "id": props.id,
             "query": props.query
@@ -114,7 +119,7 @@ export function RevModal(props) {
             "name": event.target.name.value,
             "description": event.target.description.value,
             "rating": event.target.rating.value,
-            "spot_id": props.id
+            "spot_id": props.spot_id
         }).then((data) => {
             console.log(data)
             props.close()
@@ -128,7 +133,7 @@ export function RevModal(props) {
                     <h2>Write a Review</h2>
                     <div className={"light-blue line"}/>
                     <div className={"d-flex jc-sb full-length"}>
-                        <input type="text" placeholder="Name" name="name" required/>
+                        <input type="text" value={`${props.user.firstName} ${props.user.lastName}`} name="name" readOnly/>
                         <input type="number" placeholder="Rating" name="rating" min="1" max="5" required/>
                     </div>
                     <textarea placeholder="Content" name="description" required/>
@@ -175,16 +180,6 @@ export function MenuModal(props) {
 export function SettingsModal(props) {
     if (!props.show) return;
 
-    function handleSignIn() {
-        props.handler.handleShowAuthenticate();
-    }
-
-    function handleSignOut() {
-        document.getElementById("sign-in-notification").classList.remove("notification-animation");
-        document.getElementById("sign-out-notification").classList.add("notification-animation");
-        props.handler.signOut();
-    }
-
     return (
         <div className={"modal"} onClick={props.close}>
             <div className={"modal-effect"} onClick={e => {e.stopPropagation()}}/>
@@ -193,7 +188,7 @@ export function SettingsModal(props) {
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
                     <h2>User</h2>
-                    <button onClick={(props.user.isSignedIn) ? handleSignOut : handleSignIn} className={"settings-button"}>
+                    <button onClick={(props.user.isSignedIn) ? props.handler.signOut : props.handler.handleShowAuthenticate} className={"settings-button"}>
                         {(props.user.isSignedIn) ? "Log Out" : "Log In"}
                     </button>
                 </div>

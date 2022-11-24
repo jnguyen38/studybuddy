@@ -8,10 +8,13 @@ export default function Home(props) {
 
 
     return (
-        <div id={"home-bg"}>
-            <div id={"home-container"}>
+        <div id={"map-bg"}>
+            <div id={"home-container"} className={"d-flex-col-c"}>
                 <div className={"home-intro fs-buffer d-flex-col-l"}>
-                    <h1>Welcome to</h1>
+                    <div className={"welcome-text"}>
+                        {(props.user.isSignedIn) ? <p>Hi {props.user.firstName},</p> : null}
+                        <h1>Welcome to</h1>
+                    </div>
                     <div className={"typewriter"}>
                         <h1>StudyBuddy.
                             {/*<span>dyBuddy</span>*/}

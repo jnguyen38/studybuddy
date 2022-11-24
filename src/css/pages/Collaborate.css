@@ -1,0 +1,123 @@
+.collab-container {
+    padding-top: calc(var(--header-height) * 1.5);
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+}
+
+.collab-header {
+    font-size: 2em;
+}
+
+.filter-row {
+    width: 100%;
+    position: sticky;
+    top: var(--header-height);
+    padding: 30px;
+    text-align: left;
+}
+
+.initial-questions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+    grid-template-rows: auto;
+}
+
+.self-input {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.self-input input[type="text"] {
+    display: block;
+    width: 75%;
+    padding: 2px;
+}
+
+.enter-button {
+    padding-top: 20px;
+}
+
+.friends-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+    grid-template-rows: auto 1fr;
+    padding-top: 20px;
+}
+
+.display-friends {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    display: flex;
+}
+
+.friends-names {
+    flex: 1;
+}
+
+.friends-buildings {
+    flex: 1;
+}
+
+.another-button {
+    padding-top: 20px;
+}
+
+.another-btn {
+    background-color: var(--inverted-bg-color);
+    color: var(--inverted-text-color);
+    border-color: var(--inverted-bg-color);
+    font-size: 1em;
+    width: 11%;
+}
+
+.delete-btn {
+    background-color: var(--inverted-bg-color);
+    color: var(--inverted-text-color);
+    border-color: var(--inverted-bg-color);
+    font-size: 1em;
+    margin-left: 20px;
+    width: 11%;
+}
+
+.friend-user-input {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+.friend-user-input input[type="text"]{
+    display: block;
+    width: 75%;
+    padding: 2px;
+    margin-bottom: 3px;
+}
+
+.friend-building-input {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+.friend-building-input input[type="text"]{
+    display: block;
+    width: 75%;
+    padding: 2px;
+    margin-bottom: 3px;
+}
+
+.note {
+    font-size: 0.8em;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    display: block;
+    width: 75%;
+}
+
+.submit-button {
+    padding-top: 20px;
+}
