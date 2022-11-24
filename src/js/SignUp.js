@@ -5,6 +5,12 @@ import info from "../media/icons/info.svg";
 import {useEffect, useState} from "react";
 import Axios from "axios";
 
+import study from "../media/icons/study.svg";
+import user from "../media/icons/user.svg";
+import lock from "../media/icons/lock.svg";
+import mail from "../media/icons/mail.svg";
+import name from "../media/icons/name.svg";
+
 function Warnings(props) {
     if (!props.usernameTaken && !props.emailTaken && props.passwordsMatch) return;
 
@@ -30,8 +36,10 @@ function PersonalInfo(props) {
                 <input type={"text"} placeholder={"First Name"} name={"firstName"} autoComplete={"first-name"} required/>
                 <input type={"text"} placeholder={"Last Name"} name={"lastName"} autoComplete={"last-name"} required/>
             </div>
-
-            <Select name={"major"} options={props.majors} className={"dropdown"} classNamePrefix="select" required/>
+            <div className={"d-flex-row-c full-length"}>
+                <img src={study} alt="" className={"icon light-blue-icon xs-icon"}/>
+                <Select name={"major"} options={props.majors} className={"dropdown"} classNamePrefix={"Select"} placeholder={"Major"} required/>
+            </div>
 
         </div>
     );
@@ -44,13 +52,25 @@ function AccountInfo(props) {
             <Warnings usernameTaken={props.usernameTaken} emailTaken={props.emailTaken} passwordsMatch={props.passwordsMatch}/>
 
             <div className={"f-responsive-row"}>
-                <input type={"text"} placeholder={"Username"} name={"username"} onChange={props.handler.handleUsernameChange} required/>
-                <input type={"text"} placeholder={"Email"} name={"email"} autoComplete={"username"} onChange={props.handler.handleEmailChange} required/>
+                <div className={"d-flex-row-c"}>
+                    <img src={user} alt="" className={"icon light-blue-icon xs-icon"}/>
+                    <input type={"text"} placeholder={"Username"} name={"username"} onChange={props.handler.handleUsernameChange} required/>
+                </div>
+                <div className={"d-flex-row-c"}>
+                    <img src={mail} alt="" className={"icon light-blue-icon xs-icon"}/>
+                    <input type={"text"} placeholder={"Email"} name={"email"} autoComplete={"username"} onChange={props.handler.handleEmailChange} required/>
+                </div>
             </div>
 
             <div className={"f-responsive-row"}>
-                <input type={"password"} placeholder={"Password"} name={"password"} autoComplete={"new-password"} value={props.password} onChange={props.handler.handlePasswordChange} required/>
-                <input type={"password"} placeholder={"Confirm Password"} name={"confirm"} autoComplete={"new-password"} value={props.confirm} onChange={props.handler.handleConfirmChange} required/>
+                <div className={"d-flex-row-c"}>
+                    <img src={lock} alt="" className={"icon light-blue-icon xs-icon"}/>
+                    <input type={"password"} placeholder={"Password"} name={"password"} autoComplete={"new-password"} value={props.password} onChange={props.handler.handlePasswordChange} required/>
+                </div>
+                <div className={"d-flex-row-c"}>
+                    <img src={lock} alt="" className={"icon light-blue-icon xs-icon"}/>
+                    <input type={"password"} placeholder={"Confirm Password"} name={"confirm"} autoComplete={"new-password"} value={props.confirm} onChange={props.handler.handleConfirmChange} required/>
+                </div>
             </div>
         </div>
     );

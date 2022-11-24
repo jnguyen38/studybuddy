@@ -39,7 +39,7 @@ code {
     --reg-bg-color: var(--sb-dark-blue);
     --reg-bg-rgba: rgba(11, 33, 65, .4);
     --reg-bg-rgba-header: rgba(11, 33, 65, .8);
-    --icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);;
+    --icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);
     --inverted-filter: invert(10%) sepia(34%) saturate(2988%) hue-rotate(194deg) brightness(88%) contrast(96%);
     background-color: var(--sb-dark-blue);
     color: var(--sb-white);
@@ -53,7 +53,7 @@ code {
     --reg-bg-rgba: rgba(242, 239, 233, .6);
     --reg-bg-rgba-header: rgba(242, 239, 233, .8);
     --icon-filter: invert(39%) sepia(27%) saturate(540%) hue-rotate(153deg) brightness(96%) contrast(86%);
-    --inverted-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);;;
+    --inverted-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);
     background-color: var(--sb-white);
     color: var(--sb-blue);
 }
@@ -175,6 +175,7 @@ a:link { text-decoration: none; }
     margin-right: 5px;
 }
 
+.light-blue-icon {filter: invert(39%) sepia(27%) saturate(540%) hue-rotate(153deg) brightness(96%) contrast(86%);}
 .warning-icon {filter: invert(18%) sepia(28%) saturate(6256%) hue-rotate(336deg) brightness(87%) contrast(108%);}
 .invert-icon {filter: var(--inverted-filter) !important;}
 .white-icon {--icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%) !important;}
