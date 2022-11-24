@@ -13,6 +13,7 @@ import Search from "./Search";
 import Upload from "./Upload";
 import Collaborate from "./Collaborate";
 import {Authenticate} from "./Modal";
+import SignUp from "./SignUp";
 
 export default function App() {
     // useState Hooks
@@ -25,6 +26,7 @@ export default function App() {
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
     const [location, setLocation] = useState({latitude: NaN, longitude: NaN});
+    const [majors, setMajors] = useState({});
 
 
     // Path variables
@@ -47,12 +49,27 @@ export default function App() {
             tempUser.lastName = data.lastName;
             tempUser.username = data.username;
             setUser(tempUser);
+            handler.notifySignIn();
+            window.localStorage.setItem("user", JSON.stringify(user));
         }
         static signOut() {
             setUser({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
+            handler.notifySignOut();
+            window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
         }
         static handleShowAuthenticate() {setShowAuthenticate(()=> !showAuthenticate)}
         static closeAuthenticate() {setShowAuthenticate(false)}
+        static notifySignOut() {
+            document.getElementById("sign-in-notification").classList.remove("notification-animation");
+            document.getElementById("sign-out-notification").classList.add("notification-animation");
+        }
+        static notifySignIn() {
+            document.getElementById("sign-out-notification").classList.remove("notification-animation");
+            document.getElementById("sign-in-notification").classList.add("notification-animation");
+        }
+        static notifyError() {
+            document.getElementById("error-notification").classList.add("notification-animation");
+        }
     }
 
     function randomize(n) {return Math.floor(Math.random() * n);}
@@ -69,9 +86,16 @@ export default function App() {
 
     // useEffect Hooks
     useEffect(() => {
-        Axios.get(basePath + "/api/get").then((data) => {
-            setSpots(data.data)
-            console.log(data)
+        Axios.get(basePath + "/api/get").then(data => {
+            setSpots(data.data);
+            console.log(data);
+        });
+        Axios.get(basePath + "/api/get/majors").then(data => {
+            let tempMajors = [];
+            for (const major of data.data) {
+                tempMajors.push({value: major.major, label: major.major})
+            }
+            setMajors(tempMajors)
         });
     }, [basePath]);
 
@@ -105,12 +129,13 @@ export default function App() {
 
             <main>
                 <Authenticate path={path} basePath={basePath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate} location={location}/>
-                <div id={"sign-in-notification"} className={"d-flex-row-c"}>You have been signed in!</div>
-                <div id={"sign-out-notification"} className={"d-flex-row-c"}>You have been signed out!</div>
+                <div id={"sign-in-notification"} className={"d-flex-row-c notification"}>You have been signed in!</div>
+                <div id={"sign-out-notification"} className={"d-flex-row-c notification"}>You have been signed out!</div>
+                <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
 
                 <Routes>
                     <Route path={path + "/*"} element={
-                        <Home UXMode={UXMode} path={path} basePath={basePath}/>}/>
+                        <Home user={user} UXMode={UXMode} path={path} basePath={basePath}/>}/>
                     <Route path={path + "/devplan"} element={
                         <Devplan/>}/>
                     <Route path={path + "/overview"} element={
@@ -122,9 +147,11 @@ export default function App() {
                     <Route path={path + "/upload"} element={
                         <Upload/>}/>
                     <Route path={path + "/random"} element={
-                        <Random rand={rand} spots={spots} basePath={basePath} user={user} makeAdmin={handler.handleAdmin}/>}/>
+                        <Random rand={rand} spots={spots} basePath={basePath} user={user}/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate/>}/>
+                    <Route path={path + "/signup"} element={
+                        <SignUp user={user} redirect={redirect} path={path} basePath={basePath} majors={majors} location={location} handler={handler}/>}/>
                 </Routes>
             </main>
             <Footer/>

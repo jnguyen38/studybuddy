@@ -14,33 +14,29 @@ export function Authenticate(props) {
     function handleSignIn(res) {
         props.handler.signIn(res.data);
         props.close();
-        document.getElementById("sign-out-notification").classList.remove("notification-animation");
-        document.getElementById("sign-in-notification").classList.add("notification-animation");
-        window.localStorage.setItem("user", JSON.stringify(props.user));
     }
 
     function handleIncorrectSignIn() {
-        document.getElementById("incorrect-sign-in").classList.remove("d-none");
-        document.getElementById("incorrect-sign-in").classList.add("d-flex-row-c");
+        document.getElementById("err-incorrect-sign-in").classList.remove("d-none");
+        document.getElementById("err-incorrect-sign-in").classList.add("d-flex-row-c");
     }
 
     function handleSubmit(event) {
         event.preventDefault();
         
         let hash = new SHA3(512);
-        hash.update(event.target.password.value)
+        hash.update(event.target.password.value);
         
-        Axios.post(props.basePath + "/api/post/signin", {
+        Axios.put(props.basePath + "/api/put/signin", {
             "user": event.target.user.value,
             "password": hash.digest("hex").toString(),
             "latitude": props.location.latitude,
             "longitude": props.location.longitude
         }).then(res => {
-            if (res.data.isSignedIn) {
+            if (res.data.isSignedIn)
                 handleSignIn(res);
-            } else {
+            else
                 handleIncorrectSignIn();
-            }
         });
     }
 
@@ -50,7 +46,7 @@ export function Authenticate(props) {
                 <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
                     <h2>Sign In</h2>
                     <div className={"light-blue line"}/>
-                    <div id={"incorrect-sign-in"} className={"d-none"}>
+                    <div id={"err-incorrect-sign-in"} className={"warning d-none"}>
                         <img src={info} alt="" className={"icon warning-icon xxs-icon"}/>
                         <p>Incorrect username or password</p>
                     </div>
@@ -76,7 +72,7 @@ export function EditModal(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        Axios.post(props.basePath + "/api/post/edit", {
+        Axios.put(props.basePath + "/api/put/edit", {
             "description": event.target.description.value,
             "id": props.id,
             "query": props.query
@@ -184,17 +180,6 @@ export function MenuModal(props) {
 export function SettingsModal(props) {
     if (!props.show) return;
 
-    function handleSignIn() {
-        props.handler.handleShowAuthenticate();
-    }
-
-    function handleSignOut() {
-        props.handler.signOut();
-        document.getElementById("sign-in-notification").classList.remove("notification-animation");
-        document.getElementById("sign-out-notification").classList.add("notification-animation");
-        window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
-    }
-
     return (
         <div className={"modal"} onClick={props.close}>
             <div className={"modal-effect"} onClick={e => {e.stopPropagation()}}/>
@@ -203,7 +188,7 @@ export function SettingsModal(props) {
                 <div className={"line thick yellow"}/>
                 <div className={"options-display"}>
                     <h2>User</h2>
-                    <button onClick={(props.user.isSignedIn) ? handleSignOut : handleSignIn} className={"settings-button"}>
+                    <button onClick={(props.user.isSignedIn) ? props.handler.signOut : props.handler.handleShowAuthenticate} className={"settings-button"}>
                         {(props.user.isSignedIn) ? "Log Out" : "Log In"}
                     </button>
                 </div>

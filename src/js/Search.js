@@ -144,7 +144,7 @@ export default function Search(props) {
                     <Ratings class={"ratingO"}/>
 
                     <FilterTitle title={"Group Size"}/>
-                    <div className={"d-flex jc-sb"}>
+                    <div className={"d-flex jc-sb gap-20"}>
                         <input type="range" min="1" max="20" className="slider"
                                onChange={(e) => setSliderGroup(parseInt(e.target.value))} value={sliderGroup}/>
                         <input type="number" className={"slider-num"} min="1" max="20" name="group"
@@ -152,7 +152,7 @@ export default function Search(props) {
                     </div>
 
                     <FilterTitle title={"Capacity"}/>
-                    <div className={"d-flex jc-sb"}>
+                    <div className={"d-flex jc-sb gap-20"}>
                         <input type="range" min="1" max="100" className="slider"
                            onChange={(e) => setSliderCapacity(parseInt(e.target.value))} value={sliderCapacity}/>
                         <input type="number" className={"slider-num"} min="1" max="100" name="capacity"

@@ -8,6 +8,8 @@
     --sb-yellow: #c99601;
     --sb-orange: #e24e1b;
     --sb-white: #f2efe9;
+    --border-color: #cbcbcb;
+    --sb-warning-bg: #ffb9c0;
     --header-height: 60px;
     --loudness-width: 0;
     --comfort-width: 0;
@@ -56,11 +58,6 @@ code {
     color: var(--sb-blue);
 }
 
-.blur {
-    backdrop-filter: blur(2px);
-    background-color: var(--inverted-bg-rgba);
-}
-
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     font-family: Outfit, sans-serif;
@@ -81,13 +78,19 @@ a:link { text-decoration: none; }
 .text-right {text-align: right;}
 .text-center {text-align: center;}
 
-.d-none {display: none;}
+ /* Flexbox Classes */
+.d-none {display: none !important;}
 .d-flex {display: flex; align-items: center;}
-.f-col {flex-flow: column;}
+.f-wrap {flex-wrap: wrap;}
+.f-col {flex-direction: column;}
 .jc-sb {justify-content: space-between;}
+.jc-sa {justify-content: space-around;}
 .jc-fs {justify-content: flex-start;}
 .jc-fe {justify-content: flex-end;}
 .jc-c {justify-content: center;}
+.as-c {align-self: center;}
+.as-fs {align-self: flex-start;}
+.as-fe {align-self: flex-end;}
 .gap-20{gap:20px;}
 
 .d-flex-row-l {
@@ -106,19 +109,23 @@ a:link { text-decoration: none; }
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    flex-flow: column;
+    flex-direction: column;
 }
 
 .d-flex-col-c {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-flow: column;
+    flex-direction: column;
 }
 
-textarea:focus, input:focus{
-    outline: none;
+.f-responsive-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
+
 
 .btn {
     min-width: 90px;
@@ -133,10 +140,14 @@ textarea:focus, input:focus{
     font-size: 1em;
 }
 
+/* Grid Classes */
+
 .grid-4 {grid-column: span 4;}
 .grid-6 {grid-column: span 6;}
 .grid-8 {grid-column: span 8;}
 .grid-12 {grid-column: span 12;}
+
+/* Line Classes */
 
 .line {
     width: 50px;
@@ -157,6 +168,8 @@ textarea:focus, input:focus{
     width: 80%;
 }
 
+/* Icon Classes */
+
 .icon {
     filter: var(--icon-filter);
     margin-right: 5px;
@@ -172,21 +185,7 @@ textarea:focus, input:focus{
 .lg-icon {width: 40px;}
 .xl-icon {width: 48px;}
 
-textarea {
-    max-width: 100%;
-    max-height: 100%;
-    font-family: Outfit, sans-serif;
-}
-
-input {
-    font-family: Outfit, sans-serif;
-}
-
-input[readonly] {
-    pointer-events: none;
-}
-
-@media only screen and (max-width: 768px) {
+@media (max-width: 768px) {
     #header-nav {
         display: none !important;
     }
@@ -195,34 +194,34 @@ input[readonly] {
         text-align: center;
     }
 
-    .home-intro h1 {
-        font-size: 3em !important;
-    }
-
-    .typewriter {
+    .home-intro {
         --home-typewriter-width: 290px !important;
         --carat-width: 5px !important;
         --carat-padding: 10px !important;
-        height: 40px !important;
     }
+
+    .home-intro h1 {font-size: 3em !important;}
+    .home-intro p {font-size: 1.5em !important;}
+    .typewriter {height: 40px !important;}
 
     #location-header {height: calc(100vw) !important;}
     #location-aside {display: none !important;}
 
     .form-container h2 {font-size: 1.5em !important;}
+
+    .warning {font-size: .85em !important;}
 }
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {
-    .home-intro h1 {
-        font-size: 6em !important;
-    }
-
-    .typewriter {
+    .home-intro {
         --home-typewriter-width: 560px !important;
         --carat-width: 10px !important;
         --carat-padding: 15px !important;
-        height: 90px !important;
     }
+
+    .home-intro h1 {font-size: 6em !important;}
+    .home-intro p {font-size: 3em !important;}
+    .typewriter {height: 90px !important;}
 }
 
 

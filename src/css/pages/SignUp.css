@@ -1,0 +1,18 @@
+#sign-up-container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--reg-bg-rgba);
+    padding: var(--header-height) 0;
+}
+
+.sign-up-form {
+    background-color: var(--sb-white);
+    display: flex;
+    flex-flow: column;
+    border-radius: 5px;
+    width: min(600px, 60%);
+    padding: 40px;
+    overflow: visible;
+    box-shadow: 0 0 20px gray;
+    transition: all .25s;
+}
