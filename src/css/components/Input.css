@@ -6,7 +6,6 @@ input {
     border-style: solid;
     border-width: 1px;
     font-size: 1em;
-    max-width: calc(100% - 20px);
     transition: all .15s;
 }
 

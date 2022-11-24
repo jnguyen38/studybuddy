@@ -9,7 +9,6 @@ import study from "../media/icons/study.svg";
 import user from "../media/icons/user.svg";
 import lock from "../media/icons/lock.svg";
 import mail from "../media/icons/mail.svg";
-import name from "../media/icons/name.svg";
 
 function Warnings(props) {
     if (!props.usernameTaken && !props.emailTaken && props.passwordsMatch) return;
