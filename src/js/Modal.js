@@ -74,7 +74,7 @@ export function EditModal(props) {
         event.preventDefault();
         Axios.put(props.basePath + "/api/put/edit", {
             "description": event.target.description.value,
-            "id": props.id,
+            "id": props.spot_id,
             "query": props.query
         }).then((data) => {
             console.log(data)
