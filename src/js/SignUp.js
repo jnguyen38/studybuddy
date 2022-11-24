@@ -82,6 +82,10 @@ export default function SignUp(props) {
         setPasswordsMatch(confirm === password);
     }, [confirm, password]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
     class signUpHandler {
         static handleUsernameChange(event) {setUsernameTaken((usernames.has(event.target.value.toLowerCase())));}
         static handleEmailChange(event) {setEmailTaken((emails.has(event.target.value.toLowerCase())));}
