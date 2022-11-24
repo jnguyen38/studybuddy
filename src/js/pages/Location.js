@@ -1,14 +1,14 @@
 import {useEffect, useState} from "react";
-import {RevModal, EditModal} from "./Modal";
+import {RevModal, EditModal} from "../components/Modal";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 
-import person from "../media/icons/person.svg";
-import star from "../media/icons/double_star.svg";
-import share from "../media/icons/share.svg";
-import camera from "../media/icons/camera.svg";
-import wrong from "../media/icons/close.svg";
-import check from "../media/icons/check.svg";
+import person from "../../media/icons/person.svg";
+import star from "../../media/icons/double_star.svg";
+import share from "../../media/icons/share.svg";
+import camera from "../../media/icons/camera.svg";
+import wrong from "../../media/icons/close.svg";
+import check from "../../media/icons/check.svg";
 
 export function Random(props) {
     if (!(props.rand && props.spots)) return;
@@ -80,30 +80,30 @@ function LocationMain(props) {
             <div className={"location-info"}>
                 <div className={"line thin full-length"}/>
                 <h4>Space Statistics</h4>
-                <div className={"d-flex jc-sb full-length"}>
+                <div className={"stat-line d-flex jc-sb full-length"}>
                     <h3>Maximum Capacity</h3>
                     <div className={"d-flex"}>
-                        <img src={person} alt="" className={"person icon"}/>
+                        <img src={person} alt="" className={"icon sm-icon"}/>
                         <p>{props.max_capacity}</p>
                     </div>
                 </div>
-                <div className="stat-line"><h3>Loudness</h3><div id="loudness-bar" className="stat-bar"></div></div>
-                <div className="stat-line"><h3>Comfortability</h3><div id="comfort-bar" className="stat-bar"></div></div>
-                <div className="stat-line"><h3>Natural Light</h3><div id="natlight-bar" className="stat-bar"></div></div>
-                <div className="stat-line"><h3>Outlet Availability</h3><div id="outlet-bar" className="stat-bar"></div></div>
+                <div className={"stat-line"}><h3>Loudness</h3><div id="loudness-bar" className="stat-bar"></div></div>
+                <div className={"stat-line"}><h3>Comfortability</h3><div id="comfort-bar" className="stat-bar"></div></div>
+                <div className={"stat-line"}><h3>Natural Light</h3><div id="natlight-bar" className="stat-bar"></div></div>
+                <div className={"stat-line"}><h3>Outlet Availability</h3><div id="outlet-bar" className="stat-bar"></div></div>
 
-                <br/><div className={"thin full-length line"}></div>
+                <br/><div className={"thin full-length line"}/>
                 <h4>About</h4>
-                <p>{props.description}</p><br/>
+                <p className={"fw-300"}>{props.description}</p><br/>
                 <div className={"d-flex jc-sb full-length"}>
                     <button className={"btn d-flex-row-c"}>Read More</button>
                     {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("description")}>Edit</button>}
                 </div>
 
-                <br/><div className={"thin full-length line"}></div>
+                <br/><div className={"thin full-length line"}/>
                 <h4>More Spaces Like This</h4>
 
-                <br/><div className={"thin full-length line"}></div>
+                <br/><div className={"thin full-length line"}/>
                 <h4>Amenities</h4>
                 <div className={"d-flex"}>
                     {(props.printer) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}

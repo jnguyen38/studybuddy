@@ -3,17 +3,17 @@ import {useEffect, useState} from "react";
 
 
 import Axios from "axios";
-import Devplan from "./Devplan";
-import Home from "./Home";
-import Header from "./Header";
-import Overview from "./Overview";
-import Footer from "./Footer";
-import Location, {Random} from "./Location";
-import Search from "./Search";
-import Upload from "./Upload";
-import Collaborate from "./Collaborate";
-import {Authenticate} from "./Modal";
-import SignUp from "./SignUp";
+import Devplan from "./pages/Devplan";
+import Home from "./pages/Home";
+import Header from "./components/Header";
+import Overview from "./pages/Overview";
+import Footer from "./components/Footer";
+import Location, {Random} from "./pages/Location";
+import Search from "./pages/Search";
+import Upload from "./pages/Upload";
+import Collaborate from "./pages/Collaborate";
+import {Authenticate} from "./components/Modal";
+import SignUp from "./pages/SignUp";
 
 export default function App() {
     // useState Hooks

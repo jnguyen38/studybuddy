@@ -86,10 +86,6 @@
     width: 100%;
 }
 
-.person {
-    width: 36px;
-}
-
 .location-info {
     position: relative;
     display: flex;
@@ -110,6 +106,7 @@
 
 .stat-line > h3 {
     margin-right: 10px;
+    font-weight: 300;
 }
 
 .stat-bar {

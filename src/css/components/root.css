@@ -74,6 +74,13 @@ a:visited {
 }
 a:link { text-decoration: none; }
 
+/* Text Classes */
+.fw-100 {font-weight: 100;}
+.fw-300 {font-weight: 300;}
+.fw-500 {font-weight: 500;}
+.fw-700 {font-weight: 700;}
+.fw-900 {font-weight: 900;}
+
 .text-left {text-align: left;}
 .text-right {text-align: right;}
 .text-center {text-align: center;}

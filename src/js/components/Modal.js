@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import Axios from "axios";
 import SHA3 from "sha3";
-import info from "../media/icons/info.svg";
+import info from "../../media/icons/info.svg";
 
 export function Authenticate(props) {
     if (!props.show) return;

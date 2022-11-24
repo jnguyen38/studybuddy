@@ -1,4 +1,4 @@
-import ERDiagram from "../media/initial_ER.jpg";
+import ERDiagram from "../../media/initial_ER.jpg";
 import {useEffect} from "react";
 
 export default function Overview() {

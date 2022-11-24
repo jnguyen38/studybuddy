@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 import {useEffect} from "react";
-import settings from "../media/icons/settings.svg";
+import settings from "../../media/icons/settings.svg";
 import {SettingsModal, MenuModal} from "./Modal";
 
 

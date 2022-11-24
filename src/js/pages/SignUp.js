@@ -1,14 +1,14 @@
 import {Link, Navigate} from 'react-router-dom';
 import Select from "react-select";
 import SHA3 from "sha3";
-import info from "../media/icons/info.svg";
+import info from "../../media/icons/info.svg";
 import {useEffect, useState} from "react";
 import Axios from "axios";
 
-import study from "../media/icons/study.svg";
-import user from "../media/icons/user.svg";
-import lock from "../media/icons/lock.svg";
-import mail from "../media/icons/mail.svg";
+import study from "../../media/icons/study.svg";
+import user from "../../media/icons/user.svg";
+import lock from "../../media/icons/lock.svg";
+import mail from "../../media/icons/mail.svg";
 
 function Warnings(props) {
     if (!props.usernameTaken && !props.emailTaken && props.passwordsMatch) return;

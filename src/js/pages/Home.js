@@ -25,7 +25,7 @@ export default function Home(props) {
 
                 <div id={"home-menu"} className={"d-flex-col-c"}>
                     <h1>Explore Our Page</h1><br/>
-                    <div className={"line thick"}/>
+                    <div className={"line thin full-length"}/>
                     <div id={"home-op-display"}>
                         <Link to={props.path + "/search"}><div className={"home-option"}>
                             <h1>🔍 Search &rarr;</h1>
