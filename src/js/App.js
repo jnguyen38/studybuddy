@@ -15,6 +15,13 @@ import Collaborate from "./Collaborate";
 import {Authenticate} from "./Modal";
 import SignUp from "./SignUp";
 
+import person from "../media/icons/person.svg";
+import star from "../media/icons/double_star.svg";
+import share from "../media/icons/share.svg";
+import camera from "../media/icons/camera.svg";
+import wrong from "../media/icons/close.svg";
+import check from "../media/icons/check.svg";
+
 export default function App() {
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
@@ -30,9 +37,10 @@ export default function App() {
 
 
     // Path variables
-    const path = "";
+    const path = "/cse30246/studybuddy/build";
     const basePath = "http://db8.cse.nd.edu:5000";
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
+    const icons = {person: person, wrong: wrong, camera: camera, star: star, share: share, check: check};
 
     // Handler Functions
     class handler {
@@ -141,7 +149,7 @@ export default function App() {
                     <Route path={path + "/overview"} element={
                         <Overview/>}/>
                     <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} handler={handler} basePath={basePath} showAuthenticate={showAuthenticate}/>}/>
+                        <Location user={user} handler={handler} basePath={basePath} showAuthenticate={showAuthenticate} icons={icons}/>}/>
                     <Route path={path + "/search"} element={
                         <Search basePath={basePath} path={path}/>}/>
                     <Route path={path + "/upload"} element={

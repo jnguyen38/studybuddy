@@ -3,12 +3,6 @@ import {RevModal, EditModal} from "./Modal";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 
-import person from "../media/icons/person.svg";
-import star from "../media/icons/double_star.svg";
-import share from "../media/icons/share.svg";
-import camera from "../media/icons/camera.svg";
-import wrong from "../media/icons/close.svg";
-import check from "../media/icons/check.svg";
 
 export function Random(props) {
     if (!(props.rand && props.spots)) return;
@@ -53,15 +47,15 @@ function LocationButtons(props) {
     return (
         <div className={"location-buttons"}>
             <button className={"btn d-flex-row-c"} id={"write-review-btn"} onClick={handleRev}>
-                <img src={star} alt="" className={"icon white-icon sm-icon"}/>
+                <img src={props.icons.star} alt="" className={"icon white-icon sm-icon"}/>
                 Write a Review
             </button>
             <button className={"btn d-flex-row-c"}>
-                <img src={share} alt="" className={"icon invert-icon xs-icon"}/>
+                <img src={props.icons.share} alt="" className={"icon invert-icon xs-icon"}/>
                 Share
             </button>
             <button className={"btn d-flex-row-c"}>
-                <img src={camera} alt="" className={"icon invert-icon sm-icon"}/>
+                <img src={props.icons.camera} alt="" className={"icon invert-icon sm-icon"}/>
                 Add a Photo
             </button>
 
@@ -83,7 +77,7 @@ function LocationMain(props) {
                 <div className={"d-flex jc-sb full-length"}>
                     <h3>Maximum Capacity</h3>
                     <div className={"d-flex"}>
-                        <img src={person} alt="" className={"person icon"}/>
+                        <img src={props.icons.person} alt="" className={"person icon"}/>
                         <p>{props.max_capacity}</p>
                     </div>
                 </div>
@@ -106,11 +100,11 @@ function LocationMain(props) {
                 <br/><div className={"thin full-length line"}></div>
                 <h4>Amenities</h4>
                 <div className={"d-flex"}>
-                    {(props.printer) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
+                    {(props.printer) ? <img src={props.icons.check} alt="" className={"icon sm-icon"}/> : <img src={props.icons.wrong} alt="" className={"icon sm-icon"}/>}
                     <p>Printer</p>
                 </div>
                 <div className={"d-flex"}>
-                    {(props.tables) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
+                    {(props.tables) ? <img src={props.icons.check} alt="" className={"icon sm-icon"}/> : <img src={props.icons.wrong} alt="" className={"icon sm-icon"}/>}
                     <p>Tables</p>
                 </div>
             </div>

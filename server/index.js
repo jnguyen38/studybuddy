@@ -1,7 +1,6 @@
 const express = require('express');
 const db = require('./config/db');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
 
 const app = express();
 const  PORT = 5000;
@@ -43,12 +42,21 @@ app.get("/api/get/emails", (req, res) => {
     });
 });
 
+app.get("/api/get/buildings", (req, res) => {
+    db.query("SELECT DISTINCT building \
+                FROM buildings \
+                ORDER BY building;", (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
 /* PUT API ENDPOINTS */
 
 app.put("/api/put/edit", (req, res) => {
     db.query(`UPDATE study_spots \
-                SET ${req.body.query}=\"${req.body.description}\" \
-                WHERE spot_id=\"${req.body.id}\"`,(err, result) => {
+                SET ${req.body.query} = ? \
+                WHERE spot_id = ?`, [req.body.description, req.body.id], (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
@@ -105,7 +113,7 @@ app.post("/api/post/search", (req, res) => {
 app.post("/api/post/location", (req, res) => {
     db.query(`SELECT * \
                 FROM study_spots \
-                WHERE spot_id="${req.body.spot_id}"`, (err, result) => {
+                WHERE spot_id = ?`, [req.body.spot_id], (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
