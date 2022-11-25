@@ -18,6 +18,10 @@
     --result-margin-bottom: 20px;
 }
 
+main {
+    overflow: hidden;
+}
+
 body {
     margin: 0;
     font-family: "Outfit", "Yellowtail", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -98,7 +102,12 @@ a:link { text-decoration: none; }
 .as-c {align-self: center;}
 .as-fs {align-self: flex-start;}
 .as-fe {align-self: flex-end;}
-.gap-20{gap:20px;}
+.gap-20{gap: 20px; grid-gap: 20px;}
+.gap-40{gap: 40px; grid-gap: 40px;}
+.gap-2_5p{gap: 2.5%; grid-gap: 2.5%;}
+.gap-4p{gap: 4vw; grid-gap: 4vw;}
+.gap-5p{gap: 5%; grid-gap: 5%;}
+
 
 .d-flex-row-l {
     display: flex;
@@ -148,7 +157,8 @@ a:link { text-decoration: none; }
 }
 
 /* Grid Classes */
-
+.d-grid {display: grid;}
+.grid-col-12 {grid-template-columns: repeat(12, 1fr);}
 .grid-4 {grid-column: span 4;}
 .grid-6 {grid-column: span 6;}
 .grid-8 {grid-column: span 8;}
@@ -218,6 +228,8 @@ a:link { text-decoration: none; }
     .form-container h2 {font-size: 1.5em !important;}
 
     .warning {font-size: .85em !important;}
+
+    .explore-spot {grid-column: span 12 !important;}
 }
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {
@@ -230,6 +242,7 @@ a:link { text-decoration: none; }
     .home-intro h1 {font-size: 6em !important;}
     .home-intro p {font-size: 3em !important;}
     .typewriter {height: 90px !important;}
+    .explore-spot {grid-column: span 6 !important;}
 }
 
 

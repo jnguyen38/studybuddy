@@ -137,6 +137,8 @@ export default function App() {
 
     return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
+            <div id={"map-bg"}></div>
+
             <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user}
                     showSettings={showSettings} showMenu={showMenu} showAuthenticate={showAuthenticate}/>
 
@@ -166,7 +168,7 @@ export default function App() {
                     <Route path={path + "/signup"} element={
                         <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} location={location} handler={handler}/>}/>
                     <Route path={path + "/explore"} element={buildings &&
-                        <Explore buildings={buildings}/>}/>
+                        <Explore buildings={buildings} path={path}/>}/>
                 </Routes>
             </main>
             <Footer/>
