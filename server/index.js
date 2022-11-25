@@ -4,7 +4,7 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 
 const app = express();
-const  PORT = 5000;
+const  PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
@@ -119,17 +119,17 @@ app.post("/api/post/signup", (req, res) => {
     });
 });
 
-app.post("/api/post/groupRec", (req, res) => {
-    let group = `max_group_size >= ${req.body.groupSize}`
-    let loudness = `loudness_rating > 1`
-    console.log(group)
+app.get("/api/get/groupRec", (req, res) => {
+    let group = `max_group_size >= ${req.query.groupSize}`;
+    let loudness = `loudness_rating > 1`;
+    console.log(group);
 
     db.query(`SELECT * \
                 FROM study_spots \
                 WHERE ${group} and ${loudness}`, (err, result) => {
-        if (err) console.log(err)
-        res.send(result)
-    })
+        if (err) console.log(err);
+        res.send(result);
+    });
 });
 
 /* LISTENER */
