@@ -154,7 +154,7 @@ function handleSubmit(event) {
 
 ## Future Updates 
 1. Sending hashed password through an encryption tunnel to the server to further protect password storage security
-2. Integrating Postman API access/authorization tokens with an expiration time to ensure only authorized users are able to access our data via RESTFUL HTTP requests.
+2. Integrating Postman API access/authorization tokens with an expiration time to ensure only authorized users are able to access our data via HTTP requests.
 
 
 
