@@ -182,7 +182,7 @@ export default function Location(props) {
         root.style.setProperty('--comfort-width', calcComf([spotData.couch_comfort, spotData.table_seat_comfort, spotData.nontable_seat_comfort])/5 * 100 + "%");
         root.style.setProperty('--natlight-width', spotData.natural_light_rating/5 * 100 + "%");
         root.style.setProperty('--outlet-width', spotData.outlets_rating/5 * 100 + "%");
-        setImage("../media/webp/" + spotData.spot_id + "-00.webp");
+        setImage("../media/locationsHD/" + spotData.spot_id + "-00.webp");
         console.log(spotData)
     }, [root.style, spotData]);
 

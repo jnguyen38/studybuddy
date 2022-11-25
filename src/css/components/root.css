@@ -203,6 +203,11 @@ a:link { text-decoration: none; }
 .lg-icon {width: 40px;}
 .xl-icon {width: 48px;}
 
+.fill {
+    width: 100%;
+    height: 100%;
+}
+
 @media (max-width: 768px) {
     #header-nav {
         display: none !important;

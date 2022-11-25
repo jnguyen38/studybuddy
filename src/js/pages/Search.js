@@ -42,7 +42,7 @@ function Results(props) {
                 <div>Hello</div>
                 :
                 props.results.map(result => {
-                    const image = "./media/webp/" + result.spot_id + "-00.webp";
+                    const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
 
                     return (
                         <Link to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}} key={result.spot_id}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
