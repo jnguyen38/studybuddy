@@ -27,7 +27,7 @@ export function Authenticate(props) {
         let hash = new SHA3(512);
         hash.update(event.target.password.value);
         
-        Axios.put(props.basePath + "/api/put/signin", {
+        Axios.put(props.apiPath + "/api/put/signin", {
             "user": event.target.user.value,
             "password": hash.digest("hex").toString(),
             "latitude": props.location.latitude,
@@ -45,7 +45,7 @@ export function Authenticate(props) {
             <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
                 <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
                     <h2>Sign In</h2>
-                    <div className={"light-blue line"}/>
+                    <div className={"thin light-blue line"}/>
                     <div id={"err-incorrect-sign-in"} className={"warning d-none"}>
                         <img src={info} alt="" className={"icon warning-icon xxs-icon"}/>
                         <p>Incorrect username or password</p>
@@ -57,7 +57,7 @@ export function Authenticate(props) {
                     </div>
                     <div className={"sign-up d-flex-col-c"}>
                         <p>Don't have an account yet?</p>
-                        <Link to={props.path + "/signup"} onClick={handleSignUp}>Sign up here!</Link>
+                        <p><Link to={props.path + "/signup"} onClick={handleSignUp}>Sign up here!</Link></p>
                     </div>
                 </form>
             </div>
@@ -72,7 +72,7 @@ export function EditModal(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        Axios.put(props.basePath + "/api/put/edit", {
+        Axios.put(props.apiPath + "/api/put/edit", {
             "description": event.target.description.value,
             "id": props.spot_id,
             "query": props.query
@@ -115,7 +115,7 @@ export function RevModal(props) {
 
     function handleSubmit(event) {
         event.preventDefault()
-        Axios.post(props.basePath + "/api/post/review", {
+        Axios.post(props.apiPath + "/api/post/review", {
             "name": event.target.name.value,
             "description": event.target.description.value,
             "rating": event.target.rating.value,

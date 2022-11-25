@@ -42,11 +42,11 @@ function Results(props) {
                 <div>Hello</div>
                 :
                 props.results.map(result => {
-                    const image = "./media/locations/" + result.spot_id + "-00.jpg";
+                    const image = "./media/webp/" + result.spot_id + "-00.webp";
 
                     return (
-                        <Link to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
-                            <img src={image} alt="" className={"location-img"}/>
+                        <Link to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}} key={result.spot_id}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                            <img src={image} alt="" className={"location-img"} loading={"lazy"}/>
                             <div className={"location-header-info full-length result-item-header"}>
                                 <h2>{result.building}</h2>
                                 <h3>{result.location}</h3>
@@ -89,7 +89,7 @@ export default function Search(props) {
 
     function handleSubmit(event) {
         event.preventDefault()
-        axios.post(props.basePath + "/api/post/search", {
+        axios.post(props.apiPath + "/api/post/search", {
             "building": event.target.buildings.value,
             "seatComfort": event.target.ratingSC.value,
             "outlets": event.target.ratingO.value,

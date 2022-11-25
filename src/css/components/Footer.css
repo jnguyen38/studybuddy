@@ -7,6 +7,7 @@
     min-height: 50px;
     padding: 20px 5%;
     gap: 20px 50px;
+    box-shadow: 0 0 5px black;
 }
 
 #footer-info {
@@ -15,17 +16,9 @@
     gap: 20px 50px;
 }
 
-#footer-contact {
-    min-width: 122px;
-}
-
-#footer-hours {
-    min-width: 120px;
-}
-
-#footer-cr {
-    align-self: flex-end;
-}
+#footer-contact {min-width: 122px;}
+#footer-hours {min-width: 120px;}
+#footer-cr {align-self: flex-end;}
 
 #footer-container h1 {font-size: 1.2em}
 #footer-container p {font-size: 0.8em}

@@ -23,7 +23,7 @@ export function Random(props) {
                       outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
                       comfortability={[rand.table_seat_comfort, rand.nontable_seat_comfort, rand.couch_comfort]}
                       hasPrinter={rand.printer} hasTables={rand.tables} overall={rand.overall_rating}
-                      description={rand.description} floor={rand.floor} notes={rand.notes} basePath={props.basePath}/>
+                      description={rand.description} floor={rand.floor} notes={rand.notes} apiPath={props.apiPath}/>
         </div>
     );
 }
@@ -170,19 +170,19 @@ export default function Location(props) {
     }
 
     useEffect(() => {
-        axios.post(props.basePath + "/api/post/location", {
+        axios.post(props.apiPath + "/api/post/location", {
             "spot_id": params.spot_id
         }).then(data => {
             setSpotData(data.data[0]);
         });
-    }, [params.spot_id, props.basePath]);
+    }, [params.spot_id, props.apiPath]);
 
     useEffect(() => {
         root.style.setProperty('--loudness-width', spotData.loudness_rating/5 * 100 + "%");
         root.style.setProperty('--comfort-width', calcComf([spotData.couch_comfort, spotData.table_seat_comfort, spotData.nontable_seat_comfort])/5 * 100 + "%");
         root.style.setProperty('--natlight-width', spotData.natural_light_rating/5 * 100 + "%");
         root.style.setProperty('--outlet-width', spotData.outlets_rating/5 * 100 + "%");
-        setImage("../media/locations/" + spotData.spot_id + "-00.jpg");
+        setImage("../media/webp/" + spotData.spot_id + "-00.webp");
         console.log(spotData)
     }, [root.style, spotData]);
 

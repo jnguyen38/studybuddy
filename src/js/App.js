@@ -14,11 +14,11 @@ import Upload from "./pages/Upload";
 import Collaborate from "./pages/Collaborate";
 import {Authenticate} from "./components/Modal";
 import SignUp from "./pages/SignUp";
+import Explore from "./pages/Explore";
 
 export default function App() {
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
-    const [spots, setSpots] = useState("");
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [showAuthenticate, setShowAuthenticate] = useState(false);
@@ -26,12 +26,15 @@ export default function App() {
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
     const [location, setLocation] = useState({latitude: NaN, longitude: NaN});
-    const [majors, setMajors] = useState({});
+    const [spots, setSpots] = useState("");
+    const [majors, setMajors] = useState([]);       // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
+    const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
+
 
 
     // Path variables
     const path = "";
-    const basePath = "http://db8.cse.nd.edu:5000";
+    const apiPath = "http://db8.cse.nd.edu:5000";
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions
@@ -86,23 +89,33 @@ export default function App() {
 
     // useEffect Hooks
     useEffect(() => {
-        Axios.get(basePath + "/api/get").then(data => {
-            setSpots(data.data);
-            console.log(data);
+        // Get all spots and store into spots state on page load
+        Axios.get(apiPath + "/api/get").then(res => {
+            setSpots(res.data);
+            console.log(res);
+            return res.data;
+        }).then(data => {
+            let tempBuildings = {}
+            for (const spot of data)
+                if (spot.building in tempBuildings) tempBuildings[spot.building].push(spot.spot_id);
+                else tempBuildings[spot.building] = [spot.spot_id];
+            setBuildings(tempBuildings);
         });
-        Axios.get(basePath + "/api/get/majors").then(data => {
+
+        // Get majors and store into majors state on page load
+        Axios.get(apiPath + "/api/get/majors").then(res => {
             let tempMajors = [];
-            for (const major of data.data) {
-                tempMajors.push({value: major.major, label: major.major})
-            }
+            for (const major of res.data) tempMajors.push({value: major.major, label: major.major})
             setMajors(tempMajors)
         });
-    }, [basePath]);
+
+        // Get buildings and store into buildings state on page load
+
+    }, [apiPath]);
 
     useEffect(() => {
         setRand(spots[randomize(spots.length)])
-        console.log(location)
-    }, [location, spots]);
+    }, [spots]);
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
@@ -128,30 +141,32 @@ export default function App() {
                     showSettings={showSettings} showMenu={showMenu} showAuthenticate={showAuthenticate}/>
 
             <main>
-                <Authenticate path={path} basePath={basePath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate} location={location}/>
+                <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate} location={location}/>
                 <div id={"sign-in-notification"} className={"d-flex-row-c notification"}>You have been signed in!</div>
                 <div id={"sign-out-notification"} className={"d-flex-row-c notification"}>You have been signed out!</div>
                 <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
 
                 <Routes>
                     <Route path={path + "/*"} element={
-                        <Home user={user} UXMode={UXMode} path={path} basePath={basePath}/>}/>
+                        <Home user={user} UXMode={UXMode} path={path} apiPath={apiPath}/>}/>
                     <Route path={path + "/devplan"} element={
                         <Devplan/>}/>
                     <Route path={path + "/overview"} element={
                         <Overview/>}/>
                     <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} handler={handler} basePath={basePath} showAuthenticate={showAuthenticate}/>}/>
+                        <Location user={user} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
                     <Route path={path + "/search"} element={
-                        <Search basePath={basePath} path={path}/>}/>
+                        <Search apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/upload"} element={
                         <Upload/>}/>
                     <Route path={path + "/random"} element={
-                        <Random rand={rand} spots={spots} basePath={basePath} user={user}/>}/>
+                        <Random rand={rand} spots={spots} apiPath={apiPath} user={user}/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate/>}/>
                     <Route path={path + "/signup"} element={
-                        <SignUp user={user} redirect={redirect} path={path} basePath={basePath} majors={majors} location={location} handler={handler}/>}/>
+                        <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} location={location} handler={handler}/>}/>
+                    <Route path={path + "/explore"} element={buildings &&
+                        <Explore buildings={buildings}/>}/>
                 </Routes>
             </main>
             <Footer/>

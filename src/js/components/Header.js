@@ -1,8 +1,9 @@
 import {Link} from "react-router-dom";
 import {useEffect} from "react";
-import settings from "../../media/icons/settings.svg";
 import {SettingsModal, MenuModal} from "./Modal";
 
+import settings from "../../media/icons/settings.svg";
+// import search from "../../media/icons/search.svg";
 
 function handleScroll() {
 
@@ -18,13 +19,22 @@ export default function Header(props) {
     }, []);
 
     return (
-        <div className="header">
+        <div id={"header"}>
             <Link to={props.redirect.home} id="header-main" className="d-flex-row-c">
                 {/*<img src="" alt="" id="header-logo"/>*/}
                 <h1>StudyBuddy</h1>
             </Link>
 
-            <nav id="header-nav" className="d-flex-row-c">
+            {/*<div id={"search"} className={"d-flex jc-sb"}>*/}
+            {/*    <div className={"search-img d-flex-col-c"}>*/}
+            {/*        <img src={search} alt="" className={"icon warning-icon xs-icon"}/>*/}
+            {/*    </div>*/}
+            {/*    <form>*/}
+            {/*        <input type="text" placeholder={"Search"}/>*/}
+            {/*    </form>*/}
+            {/*</div>*/}
+
+            <nav id={"header-nav"} className={"d-flex-row-c"}>
                 <Link to={props.redirect.home}>
                     <div className="nav-item d-flex-row-c"><h2>Home</h2></div>
                 </Link>

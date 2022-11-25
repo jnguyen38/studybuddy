@@ -41,7 +41,7 @@ export default function Collaborate(props) {
     function handleSubmit(event) {
         event.preventDefault()
         console.log(count)
-        axios.post(props.basePath + "/api/post/groupRec", {
+        axios.post(props.apiPath + "/api/post/groupRec", {
             "groupSize": count
         }).then(data => {
             console.log(data)

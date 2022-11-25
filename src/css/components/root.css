@@ -10,7 +10,7 @@
     --sb-white: #f2efe9;
     --border-color: #cbcbcb;
     --sb-warning-bg: #ffb9c0;
-    --header-height: 60px;
+    --header-height: 50px;
     --loudness-width: 0;
     --comfort-width: 0;
     --natlight-width: 0;
@@ -33,12 +33,12 @@ code {
 }
 
 .dark-mode {
-    --inverted-bg-color: var(--sb-white);
-    --inverted-bg-rgba: rgba(242, 239, 233, .8);
+    --inverted-bg-solid: var(--sb-white);
+    --inverted-bg-transparent: rgba(242, 239, 233, .8);
     --inverted-text-color: var(--sb-dark-blue);
-    --reg-bg-color: var(--sb-dark-blue);
-    --reg-bg-rgba: rgba(11, 33, 65, .4);
-    --reg-bg-rgba-header: rgba(11, 33, 65, .8);
+    --reg-bg-solid: var(--sb-dark-blue);
+    --reg-bg-transparent: rgba(11, 33, 65, 0.4);
+    --reg-bg-transparent-dark: rgba(11, 33, 65, .8);
     --icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);
     --inverted-filter: invert(10%) sepia(34%) saturate(2988%) hue-rotate(194deg) brightness(88%) contrast(96%);
     background-color: var(--sb-dark-blue);
@@ -46,12 +46,12 @@ code {
 }
 
 .light-mode {
-    --inverted-bg-color: var(--sb-light-blue);
-    --inverted-bg-rgba: rgba(11, 33, 65, .75);
+    --inverted-bg-solid: var(--sb-light-blue);
+    --inverted-bg-transparent: rgba(11, 33, 65, .75);
     --inverted-text-color: var(--sb-white);
-    --reg-bg-color: var(--sb-white);
-    --reg-bg-rgba: rgba(242, 239, 233, .6);
-    --reg-bg-rgba-header: rgba(242, 239, 233, .8);
+    --reg-bg-solid: var(--sb-white);
+    --reg-bg-transparent: rgba(242, 239, 233, 0.6);
+    --reg-bg-transparent-dark: rgba(242, 239, 233, .9);
     --icon-filter: invert(39%) sepia(27%) saturate(540%) hue-rotate(153deg) brightness(96%) contrast(86%);
     --inverted-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);
     background-color: var(--sb-white);
@@ -139,7 +139,7 @@ a:link { text-decoration: none; }
     height: 40px;
     font-family: Outfit, sans-serif;
     border-radius: 5px;
-    border-color: var(--inverted-bg-color);
+    border-color: var(--inverted-bg-solid);
     border-style: solid;
     border-width: 1px;
     cursor: pointer;
@@ -159,7 +159,7 @@ a:link { text-decoration: none; }
 .line {
     width: 50px;
     height: 2px;
-    background-color: var(--inverted-bg-color);
+    background-color: var(--inverted-bg-solid);
     margin: 3px 0 6px 0;
 }
 

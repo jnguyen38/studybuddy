@@ -66,17 +66,17 @@
 }
 
 .another-btn {
-    background-color: var(--inverted-bg-color);
+    background-color: var(--inverted-bg-solid);
     color: var(--inverted-text-color);
-    border-color: var(--inverted-bg-color);
+    border-color: var(--inverted-bg-solid);
     font-size: 1em;
     width: 11%;
 }
 
 .delete-btn {
-    background-color: var(--inverted-bg-color);
+    background-color: var(--inverted-bg-solid);
     color: var(--inverted-text-color);
-    border-color: var(--inverted-bg-color);
+    border-color: var(--inverted-bg-solid);
     font-size: 1em;
     margin-left: 20px;
     width: 11%;

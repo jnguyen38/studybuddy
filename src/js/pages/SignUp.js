@@ -85,25 +85,23 @@ export default function SignUp(props) {
     const [confirm, setConfirm] = useState("");
 
     useEffect(() => {
-        Axios.get(props.basePath + "/api/get/usernames").then(data => {
+        Axios.get(props.apiPath + "/api/get/usernames").then(data => {
             let tempUsernames = new Set();
             for (const username of data.data) tempUsernames.add(username.username);
             setUsernames(tempUsernames);
         });
-        Axios.get(props.basePath + "/api/get/emails").then(data => {
+        Axios.get(props.apiPath + "/api/get/emails").then(data => {
             let tempEmails = new Set();
             for (const email of data.data) tempEmails.add(email.email);
             setEmails(tempEmails);
         });
-    }, [props.basePath]);
+    }, [props.apiPath]);
     
     useEffect(() => {
         setPasswordsMatch(confirm === password);
     }, [confirm, password]);
 
-    useEffect(() => {
-        window.scrollTo(0, 0)
-    }, [])
+    useEffect(() => window.scrollTo(0, 0), []);
 
     class signUpHandler {
         static handleUsernameChange(event) {setUsernameTaken((usernames.has(event.target.value.toLowerCase())));}
@@ -121,7 +119,7 @@ export default function SignUp(props) {
         hash.update(password);
 
         if (!usernameTaken && !emailTaken && passwordsMatch) {
-            Axios.post(props.basePath + "/api/post/signup", {
+            Axios.post(props.apiPath + "/api/post/signup", {
                 "first_name": formatName(event.target.firstName.value),
                 "last_name": formatName(event.target.lastName.value),
                 "username": event.target.username.value.toLowerCase(),
@@ -131,7 +129,7 @@ export default function SignUp(props) {
                 "latitude": props.location.latitude,
                 "longitude": props.location.longitude
             }).then(() => {
-                Axios.put(props.basePath + "/api/put/signin", {
+                Axios.put(props.apiPath + "/api/put/signin", {
                     "user": event.target.username.value,
                     "password": hash.digest("hex").toString(),
                     "latitude": props.location.latitude,
@@ -168,7 +166,7 @@ export default function SignUp(props) {
 
                         <div className={"sign-up d-flex-col-c as-c"}>
                             <p>Already have an account?</p>
-                            <Link to={props.path + "/signin"}>Sign in here!</Link>
+                            <p><Link to={props.path + "/signin"}>Sign in here!</Link></p>
                         </div>
 
                     </form>

@@ -1,7 +1,7 @@
 #sign-up-container {
     width: 100%;
     min-height: 100vh;
-    background-color: var(--reg-bg-rgba);
+    background-color: var(--reg-bg-transparent);
     padding: var(--header-height) 0;
 }
 
