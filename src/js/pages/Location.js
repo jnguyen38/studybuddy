@@ -3,6 +3,7 @@ import {RevModal, EditModal} from "../components/Modal";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 
+
 import person from "../../media/icons/person.svg";
 import star from "../../media/icons/double_star.svg";
 import share from "../../media/icons/share.svg";
