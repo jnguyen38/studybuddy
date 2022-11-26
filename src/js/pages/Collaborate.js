@@ -1,6 +1,16 @@
 import {useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
+//const cors = require('cors');
+//const express = require('express')
+//const app = express()
+//app.use(cors())
+
+const key = "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" // API Key
+const units = "imperial"
+const mode = "walking"
+const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+//var service = new google.maps.DistanceMatrixService();
 
 function Results(props) {
     return (
@@ -28,7 +38,38 @@ function Results(props) {
     );
 }
 
+function recommend(data, locs) {
+    let new_data = data
+    get_distance(data, '010100', ["Knott Hall", "Keough Hall"])
+    //new_data = new_data.map(place => {
+    //    return {...place, get_distance(new_data, new_data["spot_id"], locs)}}
+    //})
 
+    return data;
+}
+
+function get_distance(data, spot_id, locs) {
+    for (let i = 0; i < locs.length; i++) {
+        let dest = data.filter(spot => spot.spot_id == spot_id).location
+        let url = `${maps_url}origins=${locs[i]}&destinations=${dest}&units=${units}&mode=${mode}&key=${key}`
+        /*
+        var config = {
+            method: 'get',
+            url,
+            headers: {
+                //'Access-Control-Allow-Origin': null,
+                //'Access-Control-Allow-Headers': '*',
+                //'Access-Control-Allow-Credentials': 'true'
+            }
+        }
+        */
+        console.log(`URL is ${url}`)
+        axios.get(url)
+            .then(function (response) {
+                console.log(response)
+            });
+    }
+}
 
 export default function Collaborate(props) {
     const [state, setState] = useState({
@@ -40,15 +81,13 @@ export default function Collaborate(props) {
 
     function handleSubmit(event) {
         event.preventDefault()
-
-        //console.log(count);
         axios.get( props.basePath + "/api/get/groupRec", {
             params: {
-                groupSize: count
+                groupSize: count + 1
             }
         }).then(data => {
-            console.log(data)
-            setResults(data.data)
+            data = recommend(data.data, count + 1)
+            setResults(data)
         });
     }
 
@@ -70,7 +109,7 @@ export default function Collaborate(props) {
         setCount(count - 1);
         console.log(count);
     }
-    
+
     return (
         <div className={"collab-container"}>
             <div className={"collab-header d-flex-col-c"}>
@@ -131,8 +170,7 @@ export default function Collaborate(props) {
                     <input type="submit" value="Submit" className={"btn submit-btn"} />
                 </div>
             </form>
-            <Results results = {results} {...props}/>
+            <Results results={results} {...props}/>
         </div>
     );
 };
-
