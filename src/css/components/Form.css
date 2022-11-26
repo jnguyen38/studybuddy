@@ -20,11 +20,19 @@
     gap: 20px;
     color: var(--sb-light-blue);
     width: 100%;
-
 }
 
 .form-container h2 {
     font-size: 2.1em;
+    font-weight: 400;
+}
+
+.form-container h4 {
+    font-weight: 400;
+}
+
+.form-container p {
+    font-weight: 200;
 }
 
 #edit-container, #admin-container, #write-review {

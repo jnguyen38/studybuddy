@@ -1,17 +1,15 @@
-.header {
+#header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 60px;
+    min-height: var(--header-height);
     height: var(--header-height);
     width: 100%;
-    max-width: 100%;
     position: fixed;
-    z-index: 20;
-    opacity: 1;
+    z-index: 30;
     box-shadow: 0 0 10px black;
     backdrop-filter: blur(5px);
-    background-color: var(--reg-bg-rgba-header);
+    background-color: var(--reg-bg-transparent-dark);
 }
 
 .header-buffer {
@@ -26,9 +24,9 @@
 }
 
 #header-main h1 {
-    font-size: 2.3em;
+    font-size: 1.9em;
     font-family: Yellowtail, sans-serif;
-    font-weight: 200;
+    font-weight: 100;
     color: var(--sb-yellow);
 }
 
@@ -37,6 +35,34 @@
     width: auto;
     height: calc(var(--header-height) - 10px);
     margin: 0 15px;
+}
+
+#search {
+    --search-bg: var(--sb-white);
+    background-color: var(--search-bg);
+    border-radius: 5px;
+    transition: all .15s;
+}
+
+#search:hover {
+    --search-bg: var(--border-color);
+}
+
+.search-img {
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#search input {
+    border: none;
+    padding: 5px 10px;
+    background-color: var(--search-bg);
+    color: var(--sb-dark-blue);
+}
+
+#search input:hover {
+    border: none;
 }
 
 #header-nav {
@@ -49,7 +75,7 @@
 }
 
 #settings-icon {
-    --settings-width: 36px;
+    --settings-width: 32px;
     margin-left: 20px;
     width: 40px;
     cursor: pointer;
@@ -57,17 +83,16 @@
 }
 
 #settings-icon:hover {
-    --settings-width: 40px;
+    --settings-width: 38px;
     animation: rotate 2s linear infinite;
 }
 
 #settings-icon:active {
-    --settings-width: 48px;
+    --settings-width: 44px;
     animation: rotate 2s linear infinite;
 }
 
 .settings {
-    color: white;
     width: var(--settings-width);
     margin: 0;
     transition: width .15s;
@@ -77,13 +102,15 @@
     width: 150px;
     height: 100%;
     cursor: pointer;
-    box-shadow: 0 0 0 var(--inverted-bg-color);
-    transition: background-color .3s, color .3s, box-shadow .2s;
+    font-weight: 300;
+    font-size: 1.4em;
+    box-shadow: 0 0 0 var(--inverted-bg-solid);
+    transition: background-color .3s, color .3s, box-shadow .2s, font .3s;
 }
 
 .nav-item:hover {
     color: var(--inverted-text-color);
-    background-color: var(--inverted-bg-color);
+    background-color: var(--inverted-bg-solid);
     box-shadow: 0 0 15px var(--sb-white);
 }
 
@@ -91,9 +118,13 @@
     background-color: rgba(255, 255, 255, 1);
 }
 
+.nav-item h2 {
+    font: inherit;
+}
+
 #nav-menu {
     --nav-menu-bar-height: calc(var(--header-height) / 8);
-    --nav-menu-height: calc(var(--nav-menu-bar-height) * 3);
+    --nav-menu-height: calc(var(--nav-menu-bar-height) * 3.75);
     width: calc(var(--nav-menu-bar-height) * 5);
     height: var(--nav-menu-height);
     margin: var(--nav-menu-height) var(--nav-menu-height);
@@ -109,7 +140,7 @@
     position: absolute;
     height: 3px;
     width: 100%;
-    background: var(--inverted-bg-color);
+    background: var(--inverted-bg-solid);
     border-radius: 4px;
     opacity: 1;
     left: 0;

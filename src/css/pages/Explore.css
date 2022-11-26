@@ -1,0 +1,104 @@
+#explore-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: calc(var(--header-height) * 1.5) 0;
+    background-color: var(--reg-bg-transparent);
+}
+
+.explore-page {
+    width: 90%;
+}
+
+.explore-header {
+    font-size: 2.5em;
+    color: var(--inverted-text-color);
+    background-color: var(--inverted-bg-solid);
+    padding: 3% 0;
+    border: 10px solid var(--reg-bg-solid);
+    box-shadow: 0 0 10px var(--reg-bg-solid);
+}
+
+.explore-building {
+    width: 100%;
+    box-shadow: 0 0 10px black;
+    background-color: var(--reg-bg-transparent-dark);
+    position: relative;
+
+    display: grid;
+    grid-template-areas: "header spots spots spots";
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.explore-building-header {
+    position: relative;
+    grid-area: header;
+    padding: 36%;
+}
+
+.explore-building-name {
+    min-width: auto;
+    padding: 10%;
+    position: absolute;
+    top: 20%;
+    z-index: 10;
+    color: var(--inverted-text-color);
+    background-color: var(--inverted-bg-solid);
+    font-size: 2vw;
+    border: 7px solid var(--reg-bg-solid);
+    box-shadow: max(-50px, -3vw) max(-50px, -3vw) 0 var(--inverted-bg-transparent);
+}
+
+.explore-see-all {
+    padding: 20px;
+    position: absolute;
+    bottom: 20%;
+    font-size: 1.4vw;
+    color: var(--inverted-text-color);
+    background-color: var(--inverted-bg-solid);
+    z-index: 10;
+    transition: box-shadow .2s;
+}
+
+.explore-see-all:hover {
+    box-shadow: 0 0 10px var(--inverted-bg-solid);
+}
+
+.explore-spots {
+    padding: 12%;
+    grid-area: spots;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, calc(100vh / 4));
+}
+
+.explore-spot {
+    position: relative;
+    --explore-spot-height: 50px;
+    z-index: 0;
+    transition: transform .2s;
+}
+
+.explore-spot:hover {
+    --explore-spot-height: 100px;
+    transform: scale(1.02);
+}
+
+.explore-spot:before {
+    content: attr(content);
+    width: 90%;
+    height: var(--explore-spot-height);
+    padding-inline: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .7);
+    transition: height .2s;
+}
+
+.explore-spot-img {
+    object-fit: cover;
+    box-shadow: 0 0 15px black;
+}

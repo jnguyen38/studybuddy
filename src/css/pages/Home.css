@@ -4,21 +4,25 @@
 
 #home-container {
     width: 100%;
-    margin: 0 auto;
     min-height: 100vh;
-    background-color: var(--reg-bg-rgba);
+    margin: 0 auto;
+    padding-bottom: 50px;
+    background-color: var(--reg-bg-transparent);
 }
 
 #home-menu {
-    background-color: var(--reg-bg-color);
-    padding: 50px 10%;
+    background-color: var(--reg-bg-transparent-dark);
+    padding: 50px 5%;
     width: 80%;
     min-height: 100vh;
     z-index: 10;
+    border-radius: 10px;
+    box-shadow: 0 0 20px var(--reg-bg-solid);
 }
 
 #home-menu > h1 {
     font-size: 3.5em;
+    font-weight: 400;
 }
 
 #home-op-display {
@@ -36,20 +40,20 @@
     justify-content: space-around;
     width: 250px;
     height: 150px;
-    background-color: var(--inverted-bg-color);
+    background-color: var(--inverted-bg-solid);
     color: var(--inverted-text-color);
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 0 5px var(--inverted-bg-color);
+    box-shadow: 0 0 5px var(--inverted-bg-solid);
     transition: all .25s;
+}
+
+.home-option:hover {
+    box-shadow: 0 0 20px var(--inverted-bg-solid);
 }
 
 .collaborate-option {
     font-size: 0.9em;
-}
-
-.home-option:hover {
-    box-shadow: 0 0 20px var(--inverted-bg-color);
 }
 
 .home-option p {font-size: 1.1em;}
@@ -69,7 +73,7 @@
 .home-intro p {
     font-family: Outfit, sans-serif;
     font-size: 4em;
-    font-weight: 800;
+    font-weight: 900;
     font-style: italic;
 }
 
@@ -85,7 +89,7 @@
     height: 140px;
     background-color: var(--sb-dark-blue);
     padding: 15px var(--carat-padding) 15px 15px;
-    box-shadow: 0 0 10px var(--reg-bg-color);
+    box-shadow: 0 0 10px var(--reg-bg-solid);
     display: flex;
     align-items: center;
 }
