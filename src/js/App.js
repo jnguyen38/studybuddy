@@ -25,11 +25,10 @@ export default function App() {
     const [rand, setRand] = useState({});
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
-    const [location, setLocation] = useState({latitude: NaN, longitude: NaN});
     const [spots, setSpots] = useState("");
     const [majors, setMajors] = useState([]);       // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
-
+    const [exploreLayout, setExploreLayout] = useState([]);
 
 
     // Path variables
@@ -73,19 +72,25 @@ export default function App() {
         static notifyError() {
             document.getElementById("error-notification").classList.add("notification-animation");
         }
-    }
+        static getMyLocation() {
+            const location = window.navigator && window.navigator.geolocation;
 
-    function randomize(n) {return Math.floor(Math.random() * n);}
-    function getMyLocation() {
-        const location = window.navigator && window.navigator.geolocation
-        if (location) {
-            location.getCurrentPosition((position) => {
-                setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude});
-            }, () => {
-                setLocation({ latitude: NaN, longitude: NaN})
-            }, {maximumAge:10000, timeout:5000, enableHighAccuracy: true});
+            if (location) {
+                return new Promise((res, rej) => {
+                    location.getCurrentPosition(res, rej);
+                });
+            }
+
+            return {coords: {latitude: NaN, longitude: NaN}};
         }
     }
+
+    function handleExploreRand(n) {
+        const picLayouts = [0, 0, 2, 4, 8, 12];
+        if (n > 5) n = 5;
+        return Math.floor(Math.random() * picLayouts[n]);
+    }
+    function randomize(n) {return Math.floor(Math.random() * n);}
 
     // useEffect Hooks
     useEffect(() => {
@@ -97,8 +102,8 @@ export default function App() {
         }).then(data => {
             let tempBuildings = {}
             for (const spot of data)
-                if (spot.building in tempBuildings) tempBuildings[spot.building].push(spot.spot_id);
-                else tempBuildings[spot.building] = [spot.spot_id];
+                if (spot.building in tempBuildings) tempBuildings[spot.building].push([spot.spot_id, spot.location]);
+                else tempBuildings[spot.building] = [[spot.spot_id, spot.location]];
             setBuildings(tempBuildings);
         });
 
@@ -109,9 +114,14 @@ export default function App() {
             setMajors(tempMajors)
         });
 
-        // Get buildings and store into buildings state on page load
-
     }, [apiPath]);
+
+    useEffect(() => {
+        let tempLayouts = [];
+        for (const building in buildings)
+            tempLayouts.push(handleExploreRand(buildings[building].length));
+        setExploreLayout(tempLayouts);
+    }, [buildings]);
 
     useEffect(() => {
         setRand(spots[randomize(spots.length)])
@@ -121,7 +131,6 @@ export default function App() {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
         let userLocal = JSON.parse(window.localStorage.getItem("user"));
         if (userLocal) setUser(userLocal);
-        getMyLocation();
         function onPageLoad() {setPageLoaded(true);}
         if (document.readyState === "complete") {
             onPageLoad()
@@ -143,7 +152,7 @@ export default function App() {
                     showSettings={showSettings} showMenu={showMenu} showAuthenticate={showAuthenticate}/>
 
             <main>
-                <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate} location={location}/>
+                <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate}/>
                 <div id={"sign-in-notification"} className={"d-flex-row-c notification"}>You have been signed in!</div>
                 <div id={"sign-out-notification"} className={"d-flex-row-c notification"}>You have been signed out!</div>
                 <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
@@ -166,9 +175,9 @@ export default function App() {
                     <Route path={path + "/collaborate"} element={
                         <Collaborate/>}/>
                     <Route path={path + "/signup"} element={
-                        <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} location={location} handler={handler}/>}/>
-                    <Route path={path + "/explore"} element={buildings &&
-                        <Explore buildings={buildings} path={path}/>}/>
+                        <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
+                    <Route path={path + "/explore"} element={buildings && exploreLayout &&
+                        <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
                 </Routes>
             </main>
             <Footer/>

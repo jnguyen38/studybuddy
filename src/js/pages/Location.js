@@ -186,9 +186,7 @@ export default function Location(props) {
         console.log(spotData)
     }, [root.style, spotData]);
 
-    useEffect(() => {
-        window.scrollTo(0, 0)
-    }, []);
+    useEffect(() => window.scrollTo(0, 0), []);
 
     return (
         <section id={"location-container"}>

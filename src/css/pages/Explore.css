@@ -9,6 +9,15 @@
     width: 90%;
 }
 
+.explore-header {
+    font-size: 2.5em;
+    color: var(--inverted-text-color);
+    background-color: var(--inverted-bg-solid);
+    padding: 3% 0;
+    border: 10px solid var(--reg-bg-solid);
+    box-shadow: 0 0 10px var(--reg-bg-solid);
+}
+
 .explore-building {
     width: 100%;
     box-shadow: 0 0 10px black;
@@ -34,24 +43,29 @@
     z-index: 10;
     color: var(--inverted-text-color);
     background-color: var(--inverted-bg-solid);
-    font-size: 1.8em;
-    border: 10px solid var(--reg-bg-solid);
+    font-size: 2vw;
+    border: 7px solid var(--reg-bg-solid);
     box-shadow: max(-50px, -3vw) max(-50px, -3vw) 0 var(--inverted-bg-transparent);
 }
 
 .explore-see-all {
-    height: 50px;
-    width: 100%;
+    padding: 20px;
     position: absolute;
-    bottom: 0;
+    bottom: 20%;
+    font-size: 1.4vw;
     color: var(--inverted-text-color);
     background-color: var(--inverted-bg-solid);
+    z-index: 10;
+    transition: box-shadow .2s;
+}
+
+.explore-see-all:hover {
+    box-shadow: 0 0 10px var(--inverted-bg-solid);
 }
 
 .explore-spots {
     padding: 12%;
     grid-area: spots;
-
     display: grid;
     grid-gap: 20px;
     grid-template-columns: repeat(2, 1fr);
@@ -60,15 +74,17 @@
 
 .explore-spot {
     position: relative;
-    --explore-spot-height: 40px;
+    --explore-spot-height: 50px;
+    z-index: 0;
+    transition: transform .2s;
 }
 
 .explore-spot:hover {
     --explore-spot-height: 100px;
+    transform: scale(1.02);
 }
 
-
-.explore-spot::before {
+.explore-spot:before {
     content: attr(content);
     width: 90%;
     height: var(--explore-spot-height);
@@ -78,9 +94,10 @@
     justify-content: flex-end;
     position: absolute;
     bottom: 0;
-    background-color: rgba(0, 0, 0, .5);
+    background-color: rgba(0, 0, 0, .7);
     transition: height .2s;
 }
+
 .explore-spot-img {
     object-fit: cover;
     box-shadow: 0 0 15px black;

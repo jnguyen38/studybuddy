@@ -118,7 +118,7 @@ export default function SignUp(props) {
         let hash = new SHA3(512);
         hash.update(password);
 
-        if (!usernameTaken && !emailTaken && passwordsMatch) {
+        function request(event, lat, long) {
             Axios.post(props.apiPath + "/api/post/signup", {
                 "first_name": formatName(event.target.firstName.value),
                 "last_name": formatName(event.target.lastName.value),
@@ -126,14 +126,14 @@ export default function SignUp(props) {
                 "password": hash.digest("hex").toString(),
                 "email": event.target.email.value.toLowerCase(),
                 "major": event.target.major.value,
-                "latitude": props.location.latitude,
-                "longitude": props.location.longitude
+                "latitude": lat,
+                "longitude": long
             }).then(() => {
                 Axios.put(props.apiPath + "/api/put/signin", {
                     "user": event.target.username.value,
                     "password": hash.digest("hex").toString(),
-                    "latitude": props.location.latitude,
-                    "longitude": props.location.longitude
+                    "latitude": long,
+                    "longitude": lat
                 }).then(res => {
                     window.location.reload();
                     if (res.data.isSignedIn) {
@@ -145,6 +145,15 @@ export default function SignUp(props) {
                 });
             });
         }
+
+        props.handler.getMyLocation().then(data => {
+            if (!usernameTaken && !emailTaken && passwordsMatch)
+                request(event, data.coords.latitude, data.coords.longitude);
+        }, reason => {
+            console.log(reason)
+            if (!usernameTaken && !emailTaken && passwordsMatch)
+                request(event, NaN, NaN);
+        });
     }
 
     return (!props.user.isSignedIn) ? (

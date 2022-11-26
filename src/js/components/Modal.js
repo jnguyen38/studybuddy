@@ -23,20 +23,29 @@ export function Authenticate(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        
+
         let hash = new SHA3(512);
         hash.update(event.target.password.value);
-        
-        Axios.put(props.apiPath + "/api/put/signin", {
-            "user": event.target.user.value,
-            "password": hash.digest("hex").toString(),
-            "latitude": props.location.latitude,
-            "longitude": props.location.longitude
-        }).then(res => {
-            if (res.data.isSignedIn)
-                handleSignIn(res);
-            else
-                handleIncorrectSignIn();
+
+        function request(event, lat, long) {
+            Axios.put(props.apiPath + "/api/put/signin", {
+                "user": event.target.user.value,
+                "password": hash.digest("hex").toString(),
+                "latitude": lat,
+                "longitude": long
+            }).then(res => {
+                if (res.data.isSignedIn)
+                    handleSignIn(res);
+                else
+                    handleIncorrectSignIn();
+            });
+        }
+
+        props.handler.getMyLocation().then(data => {
+            request(event, data.coords.latitude, data.coords.longitude);
+        }, reason => {
+            console.log(reason);
+            request(event, NaN, NaN);
         });
     }
 

@@ -1,4 +1,5 @@
-import {Link} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
+import {useEffect} from "react";
 
 
 function ExploreSpot(props) {
@@ -8,7 +9,7 @@ function ExploreSpot(props) {
 
     return (
         <Link className={"explore-link fill"} to={`${props.path}/location/${props.id}`} style={{gridColumn: `span ${props.gridCol}`, gridRow: `span ${props.gridRow}`}}>
-            <div className={"explore-spot fill"} content={props.id}>
+            <div className={"explore-spot fill"} content={props.location}>
                 <img src={image} alt="" className={"explore-spot-img fill"} loading={"lazy"}/>
             </div>
         </Link>
@@ -16,35 +17,27 @@ function ExploreSpot(props) {
 }
 
 function ExploreBuilding(props) {
-    const picLayouts = [0, 0, 2, 4, 8, 12];
-    const gridAreas = {cols: [[2, 2], [2, 2], [2, 1, 1], [1, 1, 2], [1, 1, 1, 2], [2, 1, 1, 1], [1, 1, 1, 2], [2, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 1, 2], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]],
-        rows: [[2, 1], [1, 2], [2, 1, 1], [1, 1, 2], [2, 1, 1, 1], [1, 2, 1, 1], [1, 2, 1, 1], [1, 1, 2, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 2, 1]]};
-    const set = handleRand(props.idList.length);
-
-    const shuffled = props.idList.sort(() => 0.5 - Math.random());
-
-    function handleRand(n) {
-        if (n > 5) n = 5;
-        return Math.floor(Math.random() * picLayouts[n]);
-    }
-
     return (
         <div className={"explore-building"}>
-            <div className={"explore-building-header fill"}>
-                <Link to={"building"} className={"full-length"}>
-                    <div className={"explore-see-all d-flex-row-c"}>
-                        <p>See All <b>{props.idList.length}</b> Study Spots &rarr;</p>
+            <div className={"explore-building-header full-length"}>
+                <div className={"explore-building-name"}>
+                    <h1 className={"fw-500"}>{props.building.split(" ")[0]}</h1>
+                    <h1 className={"fw-100"}>{props.building.split(" ").slice(1).join(" ")}</h1>
+                </div>
+                <Link to={props.path + "/building"} className={"full-length"}>
+                    <div className={"explore-see-all text-left"}>
+                        <p className={"fw-200"}>See All <b>{props.idList.length}</b> Study Spots in</p>
+                        <p><b>{props.building} &rarr;</b></p>
                     </div>
                 </Link>
-                <div className={"explore-building-name"}>
-                    <h1 className={"fw-100"}><span className={"fw-500"}>{props.building.split(" ")[0]}</span> {props.building.split(" ").slice(1).join(" ")}</h1>
-                </div>
             </div>
             <div className={"explore-spots"}>
-                {shuffled.slice(0,5).map((id, index) => {
-                    return (
-                        <ExploreSpot {...props} key={id} id={id}
-                                     gridCol={gridAreas.cols[set][index]} gridRow={gridAreas.rows[set][index]}/>
+                {props.idList.slice(0,5).map((id, index) => {
+                    return (id) ? (
+                        <ExploreSpot {...props} key={id} id={id[0]} location={id[1]}
+                                     gridCol={props.gridAreas.cols[props.layout][index]} gridRow={props.gridAreas.rows[props.layout][index]}/>
+                    ) : (
+                        <div/>
                     );
                 })}
             </div>
@@ -53,19 +46,28 @@ function ExploreBuilding(props) {
 }
 
 export default function Explore(props) {
-    return (
+    const gridAreas = {cols: [[2, 2], [2, 2], [2, 1, 1], [1, 1, 2], [1, 1, 1, 2], [2, 1, 1, 1], [1, 1, 1, 2], [2, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 1, 2], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]],
+        rows: [[2, 1], [1, 2], [2, 1, 1], [1, 1, 2], [2, 1, 1, 1], [1, 2, 1, 1], [1, 2, 1, 1], [1, 1, 2, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 2, 1]]};
+
+    useEffect(() => window.scrollTo(0, 0), []);
+
+
+    return (props.layout && props.buildings) ? (
         <div id={"map-bg"}>
             <div id={"explore-container"} className={"d-flex-col-c"}>
                 <div className={"explore-page d-flex-col-l gap-40"}>
-                    {Object.entries(props.buildings).map(([building, idList]) => {
+                    {/*<div className={"explore-header as-fs full-length d-flex-row-c"}>*/}
+                    {/*    <h1 className={"fw-700"}>Explore</h1>*/}
+                    {/*</div>*/}
+                    {Object.entries(props.buildings).map(([building, idList], index) => {
                         return (
-                            // <div key={building} className={"full-length"}>
-                                <ExploreBuilding {...props} key={building} building={building} idList={idList}/>
-                            // </div>
+                            <ExploreBuilding {...props} key={building} building={building} idList={idList} layout={props.layout[index]} gridAreas={gridAreas}/>
                         );
                     })}
                 </div>
             </div>
         </div>
+    ) : (
+        <Navigate to={props.path + "/"}/>
     );
 }
