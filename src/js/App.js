@@ -37,7 +37,7 @@ export default function App() {
 
 
     // Path variables
-    const path = "/cse30246/studybuddy/build";
+    const path = "";
     const basePath = "http://db8.cse.nd.edu:5000";
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
     const icons = {person: person, wrong: wrong, camera: camera, star: star, share: share, check: check};
@@ -157,7 +157,7 @@ export default function App() {
                     <Route path={path + "/random"} element={
                         <Random rand={rand} spots={spots} basePath={basePath} user={user}/>}/>
                     <Route path={path + "/collaborate"} element={
-                        <Collaborate/>}/>
+                        <Collaborate basePath={basePath} path={path}/>}/>
                     <Route path={path + "/signup"} element={
                         <SignUp user={user} redirect={redirect} path={path} basePath={basePath} majors={majors} location={location} handler={handler}/>}/>
                 </Routes>
