@@ -19,8 +19,6 @@ import Explore from "./pages/Explore";
 export default function App() {
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
     const [showAuthenticate, setShowAuthenticate] = useState(false);
     const [rand, setRand] = useState({});
     const [pageLoaded, setPageLoaded] = useState(false);
@@ -38,11 +36,7 @@ export default function App() {
 
     // Handler Functions
     class handler {
-        static closeMenu() {setShowMenu(false)}
-        static closeSettings() {setShowSettings(false)}
         static handleUXMode() {setUXMode(!UXMode);}
-        static handleMenu() {setShowMenu(() => !showMenu); handler.closeSettings();}
-        static handleSettings() {setShowSettings(() => !showSettings); handler.closeMenu();}
         static signIn(data) {
             let tempUser = user;
             tempUser.isSignedIn = true;
@@ -59,7 +53,7 @@ export default function App() {
             handler.notifySignOut();
             window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
         }
-        static handleShowAuthenticate() {setShowAuthenticate(()=> !showAuthenticate)}
+        static handleShowAuthenticate() {setShowAuthenticate(currVal => !currVal)}
         static closeAuthenticate() {setShowAuthenticate(false)}
         static notifySignOut() {
             document.getElementById("sign-in-notification").classList.remove("notification-animation");
@@ -148,8 +142,7 @@ export default function App() {
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
             <div id={"map-bg"}></div>
 
-            <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user}
-                    showSettings={showSettings} showMenu={showMenu} showAuthenticate={showAuthenticate}/>
+            <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user} showAuthenticate={showAuthenticate}/>
 
             <main>
                 <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate}/>

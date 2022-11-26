@@ -10,6 +10,7 @@
     --sb-white: #f2efe9;
     --border-color: #cbcbcb;
     --sb-warning-bg: #ffb9c0;
+    --border-radius: 5px;
     --header-height: 50px;
     --loudness-width: 0;
     --comfort-width: 0;
@@ -147,7 +148,7 @@ a:link { text-decoration: none; }
     min-width: 90px;
     height: 40px;
     font-family: Outfit, sans-serif;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     border-color: var(--inverted-bg-solid);
     border-style: solid;
     border-width: 1px;

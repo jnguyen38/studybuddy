@@ -20,9 +20,10 @@
 
 .explore-building {
     width: 100%;
-    box-shadow: 0 0 10px black;
+    box-shadow: 0 0 10px #333;
     background-color: var(--reg-bg-transparent-dark);
     position: relative;
+    border-radius: var(--border-radius);
 
     display: grid;
     grid-template-areas: "header spots spots spots";
@@ -45,6 +46,7 @@
     background-color: var(--inverted-bg-solid);
     font-size: 2vw;
     border: 7px solid var(--reg-bg-solid);
+    border-radius: var(--border-radius);
     box-shadow: max(-50px, -3vw) max(-50px, -3vw) 0 var(--inverted-bg-transparent);
 }
 
@@ -56,6 +58,7 @@
     color: var(--inverted-text-color);
     background-color: var(--inverted-bg-solid);
     z-index: 10;
+    border-radius: var(--border-radius);
     transition: box-shadow .2s;
 }
 
@@ -76,6 +79,7 @@
     position: relative;
     --explore-spot-height: 50px;
     z-index: 0;
+    border-radius: var(--border-radius);
     transition: transform .2s;
 }
 
@@ -94,6 +98,9 @@
     justify-content: flex-end;
     position: absolute;
     bottom: 0;
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    color: var(--sb-white);
     background-color: rgba(0, 0, 0, .7);
     transition: height .2s;
 }
@@ -101,4 +108,5 @@
 .explore-spot-img {
     object-fit: cover;
     box-shadow: 0 0 15px black;
+    border-radius: var(--border-radius);
 }
