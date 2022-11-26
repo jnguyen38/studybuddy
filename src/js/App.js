@@ -15,6 +15,7 @@ import Collaborate from "./pages/Collaborate";
 import {Authenticate} from "./components/Modal";
 import SignUp from "./pages/SignUp";
 import Explore from "./pages/Explore";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
     // useState Hooks
@@ -154,7 +155,7 @@ export default function App() {
                 <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
 
                 <Routes>
-                    <Route path={path + "/*"} element={
+                    <Route path={path + "/"} element={
                         <Home user={user} UXMode={UXMode} path={path} apiPath={apiPath}/>}/>
                     <Route path={path + "/devplan"} element={
                         <Devplan/>}/>
@@ -174,6 +175,8 @@ export default function App() {
                         <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
                     <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
                         <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
+                    <Route path={"*"} element={
+                        <NotFound/>}/>
                 </Routes>
             </main>
             <Footer/>
