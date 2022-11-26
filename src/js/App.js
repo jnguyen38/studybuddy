@@ -95,9 +95,12 @@ export default function App() {
             return res.data;
         }).then(data => {
             let tempBuildings = {}
-            for (const spot of data)
-                if (spot.building in tempBuildings) tempBuildings[spot.building].push([spot.spot_id, spot.location]);
-                else tempBuildings[spot.building] = [[spot.spot_id, spot.location]];
+            for (const spot of data) {
+                if (spot.building in tempBuildings)
+                    tempBuildings[spot.building].push({id: spot.spot_id, location: spot.location});
+                else
+                    tempBuildings[spot.building] = [{id: spot.spot_id, location: spot.location}];
+            }
             setBuildings(tempBuildings);
         });
 
@@ -169,7 +172,7 @@ export default function App() {
                         <Collaborate apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/signup"} element={
                         <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
-                    <Route path={path + "/explore"} element={buildings && exploreLayout &&
+                    <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
                         <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
                 </Routes>
             </main>
