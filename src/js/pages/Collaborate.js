@@ -39,7 +39,7 @@ function Results(props) {
 }
 
 function recommend(data, locs) {
-    let new_data = data
+    // let new_data = data
     get_distance(data, '010100', ["Knott Hall", "Keough Hall"])
     //new_data = new_data.map(place => {
     //    return {...place, get_distance(new_data, new_data["spot_id"], locs)}}
@@ -50,7 +50,7 @@ function recommend(data, locs) {
 
 function get_distance(data, spot_id, locs) {
     for (let i = 0; i < locs.length; i++) {
-        let dest = data.filter(spot => spot.spot_id == spot_id).location
+        let dest = data.filter(spot => spot.spot_id === spot_id).location
         let url = `${maps_url}origins=${locs[i]}&destinations=${dest}&units=${units}&mode=${mode}&key=${key}`
         /*
         var config = {
@@ -81,7 +81,7 @@ export default function Collaborate(props) {
 
     function handleSubmit(event) {
         event.preventDefault()
-        axios.get( props.basePath + "/api/get/groupRec", {
+        axios.get( props.apiPath + "/api/get/groupRec", {
             params: {
                 groupSize: count + 1
             }

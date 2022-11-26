@@ -173,7 +173,7 @@ export default function App() {
                     <Route path={path + "/random"} element={
                         <Random rand={rand} spots={spots} apiPath={apiPath} user={user}/>}/>
                     <Route path={path + "/collaborate"} element={
-                        <Collaborate basePath={basePath} path={path}/>}/>
+                        <Collaborate apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/signup"} element={
                         <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
                     <Route path={path + "/explore"} element={buildings && exploreLayout &&
@@ -183,6 +183,6 @@ export default function App() {
             <Footer/>
         </div>
     ) : (
-        <div></div>
+        <div/>
     );
 }
