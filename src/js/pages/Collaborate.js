@@ -22,8 +22,8 @@ function Results(props) {
                     const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
 
                     return (
-                        <Link to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}}>
-                            <div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                        <Link key={result.spot_id} to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}}>
+                            <div id={"location-header"} className={"result-item"}>
                                 <img src={image} alt="" className={"location-img"}/>
                                 <div className={"location-header-info full-length result-item-header"}>
                                     <h2>{result.building}</h2>

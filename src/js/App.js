@@ -1,8 +1,8 @@
 import {Route, Routes} from "react-router-dom";
 import {useEffect, useState} from "react";
-
-
 import Axios from "axios";
+
+
 import Devplan from "./pages/Devplan";
 import Home from "./pages/Home";
 import Header from "./components/Header";
@@ -15,6 +15,9 @@ import Collaborate from "./pages/Collaborate";
 import {Authenticate} from "./components/Modal";
 import SignUp from "./pages/SignUp";
 import Explore from "./pages/Explore";
+import NotFound from "./pages/NotFound";
+import Building from "./pages/Building";
+
 
 export default function App() {
     // useState Hooks
@@ -95,9 +98,12 @@ export default function App() {
             return res.data;
         }).then(data => {
             let tempBuildings = {}
-            for (const spot of data)
-                if (spot.building in tempBuildings) tempBuildings[spot.building].push([spot.spot_id, spot.location]);
-                else tempBuildings[spot.building] = [[spot.spot_id, spot.location]];
+            for (const spot of data) {
+                if (spot.building in tempBuildings)
+                    tempBuildings[spot.building].push({id: spot.spot_id, location: spot.location});
+                else
+                    tempBuildings[spot.building] = [{id: spot.spot_id, location: spot.location}];
+            }
             setBuildings(tempBuildings);
         });
 
@@ -151,7 +157,7 @@ export default function App() {
                 <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
 
                 <Routes>
-                    <Route path={path + "/*"} element={
+                    <Route path={path + "/"} element={
                         <Home user={user} UXMode={UXMode} path={path} apiPath={apiPath}/>}/>
                     <Route path={path + "/devplan"} element={
                         <Devplan/>}/>
@@ -169,8 +175,12 @@ export default function App() {
                         <Collaborate apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/signup"} element={
                         <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
-                    <Route path={path + "/explore"} element={buildings && exploreLayout &&
+                    <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
                         <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
+                    <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
+                        <Building buildings={buildings} path={path}/>}/>
+                    <Route path={"*"} element={
+                        <NotFound/>}/>
                 </Routes>
             </main>
             <Footer/>

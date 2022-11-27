@@ -5,17 +5,35 @@
     background-color: var(--reg-bg-transparent);
 }
 
-.explore-page {
-    width: 90%;
-}
-
-.explore-header {
-    font-size: 2.5em;
+.side-nav {
     color: var(--inverted-text-color);
     background-color: var(--inverted-bg-solid);
-    padding: 3% 0;
-    border: 10px solid var(--reg-bg-solid);
-    box-shadow: 0 0 10px var(--reg-bg-solid);
+    border-radius: var(--border-radius);
+    margin-left: 5vw;
+    padding: 20px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 75px;
+    gap: 3px;
+    align-self: flex-start;
+}
+
+.side-nav-link {
+    padding: 5px;
+    font-size: .9em;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: all .2s;
+}
+
+.side-nav-link:hover {
+    color: var(--reg-text-color);
+    background-color: var(--reg-bg-solid);
+}
+
+.explore-page {
+    width: 100%;
+    margin-inline: 5vw;
 }
 
 .explore-building {
@@ -44,7 +62,7 @@
     z-index: 10;
     color: var(--inverted-text-color);
     background-color: var(--inverted-bg-solid);
-    font-size: 2vw;
+    font-size: 1.6vmax;
     border: 7px solid var(--reg-bg-solid);
     border-radius: var(--border-radius);
     box-shadow: max(-50px, -3vw) max(-50px, -3vw) 0 var(--inverted-bg-transparent);
@@ -54,7 +72,8 @@
     padding: 20px;
     position: absolute;
     bottom: 20%;
-    font-size: 1.4vw;
+    left: 10%;
+    font-size: 1.3vw;
     color: var(--inverted-text-color);
     background-color: var(--inverted-bg-solid);
     z-index: 10;
@@ -78,7 +97,7 @@
 .explore-spot {
     position: relative;
     --explore-spot-height: 50px;
-    z-index: 0;
+    min-height: 100px;
     border-radius: var(--border-radius);
     transition: transform .2s;
 }

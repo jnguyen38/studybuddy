@@ -82,6 +82,13 @@ function LocationMain(props) {
                 <div className={"line thin full-length"}/>
                 <h4>Space Statistics</h4>
                 <div className={"stat-line d-flex jc-sb full-length"}>
+                    <h3>Maximum Group</h3>
+                    <div className={"d-flex"}>
+                        <img src={person} alt="" className={"icon sm-icon"}/>
+                        <p>{props.max_group_size}</p>
+                    </div>
+                </div>
+                <div className={"stat-line d-flex jc-sb full-length"}>
                     <h3>Maximum Capacity</h3>
                     <div className={"d-flex"}>
                         <img src={person} alt="" className={"icon sm-icon"}/>
@@ -159,7 +166,6 @@ export default function Location(props) {
     function closeEdit() {setShowEdit(false)}
     function editSubmit() {setEditSubmitted(true)}
 
-
     function calcComf(comfRatings) {
         let avg = 0, count = 0;
         for (const rating of comfRatings) {
@@ -184,7 +190,6 @@ export default function Location(props) {
         root.style.setProperty('--natlight-width', spotData.natural_light_rating/5 * 100 + "%");
         root.style.setProperty('--outlet-width', spotData.outlets_rating/5 * 100 + "%");
         setImage("../media/locationsHD/" + spotData.spot_id + "-00.webp");
-        console.log(spotData)
     }, [root.style, spotData]);
 
     useEffect(() => window.scrollTo(0, 0), []);
