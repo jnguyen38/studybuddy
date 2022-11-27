@@ -1,25 +1,14 @@
 import {Link} from "react-router-dom";
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import {SettingsModal, MenuModal} from "./Modal";
 
 import settings from "../../media/icons/settings.svg";
 // import search from "../../media/icons/search.svg";
 
-function handleScroll() {
-    console.log(window.scrollY)
-}
-
 
 export default function Header(props) {
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll, { passive: true })
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        };
-    }, []);
 
     function closeMenu() {setShowMenu(false)}
     function handleMenu() {setShowMenu(currVal => !currVal); closeSettings();}

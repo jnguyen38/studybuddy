@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 
 function ExploreSpot(props) {
@@ -47,14 +47,28 @@ function ExploreBuilding(props) {
 }
 
 export default function Explore(props) {
+    const [scrollItem, setScrollItem] = useState(0);
+    const [sectorHeight, setSectorHeight] = useState(0);
+
     const gridAreas = {cols: [[2, 2], [2, 2], [2, 1, 1], [1, 1, 2], [1, 1, 1, 2], [2, 1, 1, 1], [1, 1, 1, 2], [2, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 1, 2], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]],
         rows: [[2, 1], [1, 2], [2, 1, 1], [1, 1, 2], [2, 1, 1, 1], [1, 2, 1, 1], [1, 2, 1, 1], [1, 1, 2, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 2, 1]]};
+
 
     useEffect(() => window.scrollTo(0, 0), []);
 
     useEffect(() => {
-        console.log(window.scrollY)
-    }, [])
+        console.log(Object.entries(props.buildings)[0][0])
+        const sector = document.getElementById(Object.entries(props.buildings)[0][0])
+        if (sector)
+            setSectorHeight(sector.clientHeight + 40)
+    }, [props.buildings]);
+    
+    useEffect(() => {
+        window.addEventListener('scroll', () => setScrollItem(Math.floor(window.scrollY / sectorHeight)), { passive: true })
+        return () => {
+            window.removeEventListener('scroll', () => setScrollItem(Math.floor(window.scrollY / sectorHeight)))
+        };
+    }, [sectorHeight]);
 
 
     function scrollTo(element) {
@@ -72,9 +86,9 @@ export default function Explore(props) {
                 <aside className={"side-nav d-flex-col-l no-select"}>
                     <h2>Navigation</h2>
                     <div className={"thin inverted line"}/>
-                    {Object.entries(props.buildings).map(([building, spots]) => {
+                    {Object.entries(props.buildings).map(([building, spots], index) => {
                         return (
-                            <div onClick={() => scrollTo(building)} key={building} className={"side-nav-link"}><p>{building}</p></div>
+                            <div onClick={() => scrollTo(building)} key={building} className={(scrollItem === index) ? "side-nav-link-scrolled side-nav-link" : "side-nav-link"}><p>{building}</p></div>
                         );
                     })}
                 </aside>
