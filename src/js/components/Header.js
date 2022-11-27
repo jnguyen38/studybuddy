@@ -6,7 +6,7 @@ import settings from "../../media/icons/settings.svg";
 // import search from "../../media/icons/search.svg";
 
 function handleScroll() {
-
+    console.log(window.scrollY)
 }
 
 

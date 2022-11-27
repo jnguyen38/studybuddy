@@ -52,6 +52,11 @@ export default function Explore(props) {
 
     useEffect(() => window.scrollTo(0, 0), []);
 
+    useEffect(() => {
+        console.log(window.scrollY)
+    }, [])
+
+
     function scrollTo(element) {
         let elem = document.getElementById(element);
         elem.scrollIntoView({

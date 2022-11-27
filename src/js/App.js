@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Header from "./components/Header";
 import Overview from "./pages/Overview";
 import Footer from "./components/Footer";
-import Location, {Random} from "./pages/Location";
+import Location from "./pages/Location";
 import Search from "./pages/Search";
 import Upload from "./pages/Upload";
 import Collaborate from "./pages/Collaborate";
@@ -23,10 +23,8 @@ export default function App() {
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
     const [showAuthenticate, setShowAuthenticate] = useState(false);
-    const [rand, setRand] = useState({});
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
-    const [spots, setSpots] = useState("");
     const [majors, setMajors] = useState([]);       // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
@@ -87,18 +85,13 @@ export default function App() {
         if (n > 5) n = 5;
         return Math.floor(Math.random() * picLayouts[n]);
     }
-    function randomize(n) {return Math.floor(Math.random() * n);}
 
     // useEffect Hooks
     useEffect(() => {
         // Get all spots and store into spots state on page load
         Axios.get(apiPath + "/api/get").then(res => {
-            setSpots(res.data);
-            console.log(res);
-            return res.data;
-        }).then(data => {
             let tempBuildings = {}
-            for (const spot of data) {
+            for (const spot of res.data) {
                 if (spot.building in tempBuildings)
                     tempBuildings[spot.building].push({id: spot.spot_id, location: spot.location});
                 else
@@ -122,10 +115,6 @@ export default function App() {
             tempLayouts.push(handleExploreRand(buildings[building].length));
         setExploreLayout(tempLayouts);
     }, [buildings]);
-
-    useEffect(() => {
-        setRand(spots[randomize(spots.length)])
-    }, [spots]);
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
@@ -169,8 +158,6 @@ export default function App() {
                         <Search apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/upload"} element={
                         <Upload/>}/>
-                    <Route path={path + "/random"} element={
-                        <Random rand={rand} spots={spots} apiPath={apiPath} user={user}/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/signup"} element={

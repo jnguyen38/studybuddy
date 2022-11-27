@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {RevModal, EditModal} from "../components/Modal";
 import {useParams} from "react-router-dom";
-import axios from "axios";
+import Axios from "axios";
 
 
 import person from "../../media/icons/person.svg";
@@ -10,24 +10,6 @@ import share from "../../media/icons/share.svg";
 import camera from "../../media/icons/camera.svg";
 import wrong from "../../media/icons/close.svg";
 import check from "../../media/icons/check.svg";
-
-export function Random(props) {
-    if (!(props.rand && props.spots)) return;
-
-    const rand = props.rand;
-
-    return (
-        <div>
-            <Location spots={props.spots} admin={props.admin} setAdmin={props.makeAdmin} id={rand.spot_id} building={rand.building}
-                      maxGroup={rand.max_group_size} capacity={rand.max_capacity}
-                      location={rand.location} loudness={rand.loudness_rating}
-                      outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
-                      comfortability={[rand.table_seat_comfort, rand.nontable_seat_comfort, rand.couch_comfort]}
-                      hasPrinter={rand.printer} hasTables={rand.tables} overall={rand.overall_rating}
-                      description={rand.description} floor={rand.floor} notes={rand.notes} apiPath={props.apiPath}/>
-        </div>
-    );
-}
 
 export function LocationHeader(props) {
     return (
@@ -176,7 +158,7 @@ export default function Location(props) {
     }
 
     useEffect(() => {
-        axios.get(props.apiPath + "/api/get/location", {
+        Axios.get(props.apiPath + "/api/get/location", {
             params: {
                 "spot_id": params.spot_id
             }
@@ -186,8 +168,16 @@ export default function Location(props) {
     }, [params.spot_id, props.apiPath]);
 
     useEffect(() => {
-        console.log(spotData)
-    }, [spotData])
+        if ("building" in spotData) {
+            Axios.get(props.apiPath + "/api/get/buildingInfo", {
+                params: {
+                    "building": spotData.building
+                }
+            }).then(data => {
+                console.log(data);
+            });
+        }
+    }, [props.apiPath, spotData])
 
     useEffect(() => {
         root.style.setProperty('--loudness-width', spotData.loudness_rating/5 * 100 + "%");
