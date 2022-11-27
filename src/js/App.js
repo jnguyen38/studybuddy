@@ -1,8 +1,8 @@
 import {Route, Routes} from "react-router-dom";
 import {useEffect, useState} from "react";
-
-
 import Axios from "axios";
+
+
 import Devplan from "./pages/Devplan";
 import Home from "./pages/Home";
 import Header from "./components/Header";
@@ -16,6 +16,8 @@ import {Authenticate} from "./components/Modal";
 import SignUp from "./pages/SignUp";
 import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
+import Building from "./pages/Building";
+
 
 export default function App() {
     // useState Hooks
@@ -175,6 +177,8 @@ export default function App() {
                         <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
                     <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
                         <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
+                    <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
+                        <Building buildings={buildings} path={path}/>}/>
                     <Route path={"*"} element={
                         <NotFound/>}/>
                 </Routes>

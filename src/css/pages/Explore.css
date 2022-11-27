@@ -97,6 +97,7 @@
 .explore-spot {
     position: relative;
     --explore-spot-height: 50px;
+    min-height: 100px;
     border-radius: var(--border-radius);
     transition: transform .2s;
 }

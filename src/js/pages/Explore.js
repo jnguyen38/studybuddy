@@ -30,14 +30,13 @@ function ExploreBuilding(props) {
                 {props.spots.slice(0,5).map((spot, index) => {
                     return (spot) ? (
                         <ExploreSpot {...props} key={spot.id} id={spot.id} location={spot.location}
-
                                      gridCol={props.gridAreas.cols[props.layout][index]} gridRow={props.gridAreas.rows[props.layout][index]}/>
                     ) : (
                         <div/>
                     );
                 })}
             </div>
-            <Link to={props.path + "/building"} className={"full-length"}>
+            <Link to={props.path + "/explore/" + props.building} className={"full-length"}>
                 <div className={"explore-see-all text-left"}>
                     <p className={"fw-200"}>See All <b>{props.spots.length}</b> Study Spots in</p>
                     <p><b>{props.building} &rarr;</b></p>
@@ -69,7 +68,6 @@ export default function Explore(props) {
                     <h2>Navigation</h2>
                     <div className={"thin inverted line"}/>
                     {Object.entries(props.buildings).map(([building, spots]) => {
-                        console.log(building)
                         return (
                             <div onClick={() => scrollTo(building)} key={building} className={"side-nav-link"}><p>{building}</p></div>
                         );
