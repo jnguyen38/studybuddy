@@ -1,7 +1,7 @@
 
 # To Do
 - [ ] Password strength checker or password requirements to SignUp.js page
-- [ ] Building Pages
+- [x] Building Pages
 - [ ] Dedicated SignIn.js page (ie, not just the modal that pops up in settings)
 - [ ] Reviewing functionality
 - [ ] Advanced Function 1
