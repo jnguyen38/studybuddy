@@ -141,13 +141,12 @@ function LocationAside() {
 export default function Location(props) {
     const [spotData, setSpotData] = useState([]);
     const [image, setImage] = useState("");
-
-    const root = document.querySelector(":root");
-    const params = useParams()
-
     const [showEdit, setShowEdit] = useState(false);
     const [editSubmitted, setEditSubmitted] = useState(false);
     const [query, setQuery] = useState("");
+
+    const root = document.querySelector(":root");
+    const params = useParams()
 
 
     function handleShowEdit(queryType) {
@@ -177,12 +176,18 @@ export default function Location(props) {
     }
 
     useEffect(() => {
-        axios.post(props.apiPath + "/api/post/location", {
-            "spot_id": params.spot_id
+        axios.get(props.apiPath + "/api/get/location", {
+            params: {
+                "spot_id": params.spot_id
+            }
         }).then(data => {
             setSpotData(data.data[0]);
         });
     }, [params.spot_id, props.apiPath]);
+
+    useEffect(() => {
+        console.log(spotData)
+    }, [spotData])
 
     useEffect(() => {
         root.style.setProperty('--loudness-width', spotData.loudness_rating/5 * 100 + "%");
