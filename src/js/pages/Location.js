@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {RevModal, EditModal} from "../components/Modal";
 import {useParams} from "react-router-dom";
-import axios from "axios";
+import Axios from "axios";
 
 
 import person from "../../media/icons/person.svg";
@@ -10,6 +10,8 @@ import share from "../../media/icons/share.svg";
 import camera from "../../media/icons/camera.svg";
 import wrong from "../../media/icons/close.svg";
 import check from "../../media/icons/check.svg";
+import fullheart from "../../media/icons/full_heart.svg";
+import emptyheart from "../../media/icons/empty_heart.svg";
 
 export function Random(props) {
     if (!(props.rand && props.spots)) return;
@@ -46,13 +48,96 @@ export function LocationHeader(props) {
 }
 
 function LocationButtons(props) {
+
+    var userLikesLocal = JSON.parse(window.localStorage.getItem("userLikes"));
+    var userUnlikesLocal = JSON.parse(window.localStorage.getItem("userUnlikes"));
+
     const [showRev, setShowRev] = useState(false);
+    const [likeText, setButtonText] = useState(userLikesLocal.includes(props.study_id) ? "Unlikes" : "Like");
+    const [likePic, setButtonPic] = useState(userLikesLocal.includes(props.study_id) ? fullheart : emptyheart);
 
     function handleRev() {(props.user.isSignedIn) ? setShowRev(() => !showRev) : props.handler.handleShowAuthenticate();}
     function closeRev() {setShowRev(false);}
 
+    useEffect(() => {
+      if (userLikesLocal.includes(props.spot_id)) {
+        setButtonPic(fullheart);
+        setButtonText("Unlike");
+      } else {
+        setButtonPic(emptyheart);
+        setButtonText("Like");
+      }
+    }, [userLikesLocal, props.spot_id])
+
+    function handleLikeClick(event) {
+
+      console.log("likes:")
+      console.log(userLikesLocal)
+      console.log(props.userLikes)
+      console.log("unlikes")
+      console.log(userUnlikesLocal)
+      console.log(props.userUnlikes)
+      console.log(userLikesLocal.includes(props.spot_id));
+      if (userLikesLocal.includes(props.spot_id) && props.user.isSignedIn) {
+        Axios.put(props.apiPath + "/api/put/changeUnlike", {
+          "user": props.user.username,
+          "spot_id": props.spot_id
+        }).then(data => {
+           console.log(data)
+           setButtonPic(emptyheart);
+           setButtonText("Like");
+
+           Axios.get(props.apiPath + "/api/get/likes").then(data => {
+             props.handler.findLikes(data.data);
+           });
+
+           userLikesLocal = JSON.parse(window.localStorage.getItem("userLikes"));
+           userUnlikesLocal = JSON.parse(window.localStorage.getItem("userUnlikes"));
+        });
+      } else if (userUnlikesLocal.includes(props.spot_id) && props.user.isSignedIn) {
+        Axios.put(props.apiPath + "/api/put/changeLike", {
+          "user": props.user.username,
+          "spot_id": props.spot_id
+        }).then(data => {
+           console.log(data)
+           setButtonPic(fullheart);
+           setButtonText("Unlike");
+
+           Axios.get(props.apiPath + "/api/get/likes").then(data => {
+             props.handler.findLikes(data.data);
+           });
+
+           userLikesLocal = JSON.parse(window.localStorage.getItem("userLikes"));
+           userUnlikesLocal = JSON.parse(window.localStorage.getItem("userUnlikes"));
+        });
+      } else if (props.user.isSignedIn) {
+        Axios.post(props.apiPath + "/api/post/createLike", {
+          "user": props.user.username,
+          "spot_id": props.spot_id
+        }).then(data => {
+          console.log(data)
+          setButtonPic(fullheart);
+          setButtonText("Unlike");
+
+          Axios.get(props.apiPath + "/api/get/likes").then(data => {
+            props.handler.findLikes(data.data);
+          });
+
+          userLikesLocal = JSON.parse(window.localStorage.getItem("userLikes"));
+          userUnlikesLocal = JSON.parse(window.localStorage.getItem("userUnlikes"));
+        });
+      } else {
+        props.handler.handleShowAuthenticate();
+      };
+
+    };
+
     return (
         <div className={"location-buttons"}>
+            <button className={"btn d-flex-row-c"} id={"like-spot-btn"} onClick={handleLikeClick}>
+                <img src={likePic} alt="" className={"icon white-icon sm-icon"}/>
+                {likeText}
+            </button>
             <button className={"btn d-flex-row-c"} id={"write-review-btn"} onClick={handleRev}>
                 <img src={star} alt="" className={"icon white-icon sm-icon"}/>
                 Write a Review
@@ -75,6 +160,7 @@ function LocationButtons(props) {
 }
 
 function LocationMain(props) {
+
     return (
         <div id={"location-main"}>
             <LocationButtons {...props}/>
@@ -142,7 +228,6 @@ export default function Location(props) {
     const [editSubmitted, setEditSubmitted] = useState(false);
     const [query, setQuery] = useState("");
 
-
     function handleShowEdit(queryType) {
         setQuery(queryType)
         setShowEdit(() => !showEdit);
@@ -171,7 +256,7 @@ export default function Location(props) {
     }
 
     useEffect(() => {
-        axios.post(props.apiPath + "/api/post/location", {
+        Axios.post(props.apiPath + "/api/post/location", {
             "spot_id": params.spot_id
         }).then(data => {
             setSpotData(data.data[0]);

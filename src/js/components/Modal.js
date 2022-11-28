@@ -11,8 +11,9 @@ export function Authenticate(props) {
         props.close();
     }
 
-    function handleSignIn(res) {
-        props.handler.signIn(res.data);
+    function handleSignIn(userData, likesData) {
+        props.handler.signIn(userData.data);
+        props.handler.findLikes(likesData.data);
         props.close();
     }
 
@@ -28,17 +29,21 @@ export function Authenticate(props) {
         hash.update(event.target.password.value);
 
         function request(event, lat, long) {
-            Axios.put(props.apiPath + "/api/put/signin", {
+            Axios.all([
+              Axios.put(props.apiPath + "/api/put/signin", {
                 "user": event.target.user.value,
                 "password": hash.digest("hex").toString(),
                 "latitude": lat,
                 "longitude": long
-            }).then(res => {
-                if (res.data.isSignedIn)
-                    handleSignIn(res);
-                else
+              }),
+              Axios.get(props.apiPath + "/api/get/likes")
+            ]).then(Axios.spread((userData, likesData) => {
+                if (userData.data.isSignedIn) {
+                    console.log(likesData.data)
+                    handleSignIn(userData, likesData);
+                } else
                     handleIncorrectSignIn();
-            });
+            }));
         }
 
         props.handler.getMyLocation().then(data => {
@@ -213,4 +218,3 @@ export function SettingsModal(props) {
         </div>
     );
 }
-

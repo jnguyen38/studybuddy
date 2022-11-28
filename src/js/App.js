@@ -29,11 +29,12 @@ export default function App() {
     const [majors, setMajors] = useState([]);       // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
-
+    const [userLikes, setUserLikes] = useState([]);
+    const [userUnlikes, setUserUnlikes] = useState([]);
 
     // Path variables
     const path = "";
-    const apiPath = "http://db8.cse.nd.edu:5000";
+    const apiPath = "http://db8.cse.nd.edu:5002";
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions
@@ -43,13 +44,35 @@ export default function App() {
         static handleUXMode() {setUXMode(!UXMode);}
         static handleMenu() {setShowMenu(() => !showMenu); handler.closeSettings();}
         static handleSettings() {setShowSettings(() => !showSettings); handler.closeMenu();}
-        static signIn(data) {
+        static findLikes(likesData) {
+          let tempLikes = [];
+          for (const like of likesData) {
+            if (user.username === like.username && like.like_bool === 1) {
+              console.log("found");
+              tempLikes.push(like.spot_id)
+            };
+          };
+
+          let tempUnlikes = [];
+          for (const like of likesData) {
+            if (user.username === like.username && like.like_bool === 0) {
+              tempUnlikes.push(like.spot_id)
+            };
+          };
+
+          setUserLikes(tempLikes);
+          window.localStorage.setItem("userLikes", JSON.stringify(tempLikes));
+          setUserUnlikes(tempUnlikes);
+          window.localStorage.setItem("userUnlikes", JSON.stringify(tempUnlikes));
+
+        }
+        static signIn(userData) {
             let tempUser = user;
             tempUser.isSignedIn = true;
-            tempUser.isAdmin = data.isAdmin;
-            tempUser.firstName = data.firstName;
-            tempUser.lastName = data.lastName;
-            tempUser.username = data.username;
+            tempUser.isAdmin = userData.isAdmin;
+            tempUser.firstName = userData.firstName;
+            tempUser.lastName = userData.lastName;
+            tempUser.username = userData.username;
             setUser(tempUser);
             handler.notifySignIn();
             window.localStorage.setItem("user", JSON.stringify(user));
@@ -58,6 +81,10 @@ export default function App() {
             setUser({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
             handler.notifySignOut();
             window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
+            setUserUnlikes([]);
+            setUserLikes([]);
+            window.localStorage.setItem("userUnlikes", JSON.stringify([]));
+            window.localStorage.setItem("userLikes", JSON.stringify([]));
         }
         static handleShowAuthenticate() {setShowAuthenticate(()=> !showAuthenticate)}
         static closeAuthenticate() {setShowAuthenticate(false)}
@@ -165,7 +192,7 @@ export default function App() {
                     <Route path={path + "/overview"} element={
                         <Overview/>}/>
                     <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
+                        <Location user={user} userLikes={userLikes} userUnlikes={userUnlikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
                     <Route path={path + "/search"} element={
                         <Search apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/upload"} element={
