@@ -59,7 +59,9 @@ export default function Explore(props) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const calcScrollItem = useCallback(
-        throttle(() => {setScrollItem(Math.floor((window.scrollY + sectorHeight/2) / sectorHeight)); console.log("Throttle " + scrollItem, window.scrollY, sectorHeight);}, 100), [sectorHeight],
+        throttle(() =>
+            setScrollItem(Math.floor((window.scrollY + sectorHeight/2) / sectorHeight)), 100),
+        [sectorHeight]
     );
 
     const gridAreas = {cols: [[2, 2], [2, 2], [2, 1, 1], [1, 1, 2], [1, 1, 1, 2], [2, 1, 1, 1], [1, 1, 1, 2], [2, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 1, 2], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]],
