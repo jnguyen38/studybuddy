@@ -7,7 +7,7 @@ export function Authenticate(props) {
     if (!props.show) return;
 
     function handleSignUp() {
-        props.handler.closeSettings();
+        props.closeSettings();
         props.close();
     }
 

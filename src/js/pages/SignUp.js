@@ -2,8 +2,9 @@ import {Link, Navigate} from 'react-router-dom';
 import Select from "react-select";
 import SHA3 from "sha3";
 import info from "../../media/icons/info.svg";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import Axios from "axios";
+import debounce from 'lodash.debounce';
 
 import study from "../../media/icons/study.svg";
 import user from "../../media/icons/user.svg";
@@ -11,7 +12,7 @@ import lock from "../../media/icons/lock.svg";
 import mail from "../../media/icons/mail.svg";
 
 function Warnings(props) {
-    if (!props.usernameTaken && !props.emailTaken && props.passwordsMatch) return;
+    if (!props.usernameTaken && !props.emailTaken && !props.showPassWarning) return;
 
     return (
         <div className={"warning d-flex-row-c"}>
@@ -19,7 +20,7 @@ function Warnings(props) {
             <img src={info} alt="" className={"icon warning-icon xxs-icon"}/>
 
             <div className={"d-flex-col-l"}>
-                <div id={"err-password-match"} className={(!props.passwordsMatch) ? "warning d-flex-row-c" : "warning d-none"}><p>Passwords do not match</p></div>
+                <div id={"err-password-match"} className={(props.showPassWarning) ? "warning d-flex-row-c" : "warning d-none"}><p>Passwords do not match</p></div>
                 <div id={"err-username-taken"} className={(props.usernameTaken) ? "warning d-flex-row-c" : "warning d-none"}><p>Username is unavailable</p></div>
                 <div id={"err-email-taken"} className={(props.emailTaken) ? "warning d-flex-row-c" : "warning d-none"}><p>Email is unavailable</p></div>
             </div>
@@ -48,7 +49,7 @@ function AccountInfo(props) {
     return (
         <div className={"d-flex-col-c gap-20"}>
             <h4>Account Information</h4>
-            <Warnings usernameTaken={props.usernameTaken} emailTaken={props.emailTaken} passwordsMatch={props.passwordsMatch}/>
+            <Warnings usernameTaken={props.usernameTaken} emailTaken={props.emailTaken} showPassWarning={props.showPassWarning}/>
 
             <div className={"f-responsive-row"}>
                 <div className={"d-flex-row-c"}>
@@ -76,13 +77,24 @@ function AccountInfo(props) {
 }
 
 export default function SignUp(props) {
-    const [usernames, setUsernames] = useState({});
-    const [usernameTaken, setUsernameTaken] = useState(false);
-    const [emails, setEmails] = useState({});
-    const [emailTaken, setEmailTaken] = useState(false);
-    const [passwordsMatch, setPasswordsMatch] = useState(true);
-    const [password, setPassword] = useState("");
-    const [confirm, setConfirm] = useState("");
+    const [usernames, setUsernames]             = useState({});
+    const [emails, setEmails]                   = useState({});
+    const [confirm, setConfirm]                 = useState("");
+    const [password, setPassword]               = useState("");
+    const [passwordsMatch, setPasswordsMatch]   = useState(true);
+    const [showPassWarning, setShowPassWarning] = useState(false);
+    const [usernameTaken, setUsernameTaken]     = useState(false);
+    const [emailTaken, setEmailTaken]           = useState(false);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debounceWarning = useCallback(
+        debounce((confirm, password) => {
+                if (confirm)
+                    setShowPassWarning(confirm !== password);
+                else
+                    setShowPassWarning(false);
+            }, 500), []
+    );
 
     useEffect(() => {
         Axios.get(props.apiPath + "/api/get/usernames").then(data => {
@@ -98,8 +110,12 @@ export default function SignUp(props) {
     }, [props.apiPath]);
     
     useEffect(() => {
-        setPasswordsMatch(confirm === password);
+        setPasswordsMatch(confirm === password)
     }, [confirm, password]);
+
+    useEffect(() => {
+        debounceWarning(confirm, password);
+    }, [confirm, password, debounceWarning]);
 
     useEffect(() => window.scrollTo(0, 0), []);
 
@@ -167,7 +183,7 @@ export default function SignUp(props) {
                         <PersonalInfo majors={props.majors}/>
 
                         <AccountInfo handler={signUpHandler} password={password} confirm={confirm}
-                                     usernameTaken={usernameTaken} emailTaken={emailTaken} passwordsMatch={passwordsMatch}/>
+                                     usernameTaken={usernameTaken} emailTaken={emailTaken} showPassWarning={showPassWarning}/>
 
                         <div className={"form-buttons d-flex jc-c"}>
                             <input type={"submit"} value={"Sign Up"} className={"btn submit-btn"}/>

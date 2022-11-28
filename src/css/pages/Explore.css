@@ -31,6 +31,11 @@
     background-color: var(--reg-bg-solid);
 }
 
+.side-nav-link-scrolled {
+    color: var(--reg-text-color);
+    background-color: var(--reg-bg-solid);
+}
+
 .explore-page {
     width: 100%;
     margin-inline: 5vw;

@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 import {RevModal, EditModal} from "../components/Modal";
 import {useParams} from "react-router-dom";
-import axios from "axios";
-
+import Axios from "axios";
+import GoogleMapReact from 'google-map-react';
 
 import person from "../../media/icons/person.svg";
 import star from "../../media/icons/double_star.svg";
@@ -10,24 +10,6 @@ import share from "../../media/icons/share.svg";
 import camera from "../../media/icons/camera.svg";
 import wrong from "../../media/icons/close.svg";
 import check from "../../media/icons/check.svg";
-
-export function Random(props) {
-    if (!(props.rand && props.spots)) return;
-
-    const rand = props.rand;
-
-    return (
-        <div>
-            <Location spots={props.spots} admin={props.admin} setAdmin={props.makeAdmin} id={rand.spot_id} building={rand.building}
-                      maxGroup={rand.max_group_size} capacity={rand.max_capacity}
-                      location={rand.location} loudness={rand.loudness_rating}
-                      outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
-                      comfortability={[rand.table_seat_comfort, rand.nontable_seat_comfort, rand.couch_comfort]}
-                      hasPrinter={rand.printer} hasTables={rand.tables} overall={rand.overall_rating}
-                      description={rand.description} floor={rand.floor} notes={rand.notes} apiPath={props.apiPath}/>
-        </div>
-    );
-}
 
 export function LocationHeader(props) {
     return (
@@ -130,10 +112,32 @@ function LocationMain(props) {
     );
 }
 
-function LocationAside() {
+function LocationAside(props) {
+    const defaultProps = {
+        center: {
+            lat: props.latitude,
+            lng: props.longitude
+        },
+        zoom: 5
+    };
+
+    const AnyReactComponent = ({ text }) => <div>{text}</div>;
+
     return (
         <div id={"location-aside"}>
-            <h1>Aside</h1>
+            <div style={{ height: '200px', width: '200px' }}>
+                <GoogleMapReact
+                    bootstrapURLKeys={{ key: "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" }}
+                    defaultCenter={defaultProps.center}
+                    defaultZoom={defaultProps.zoom}
+                >
+                    <AnyReactComponent
+                        lat={59.955413}
+                        lng={30.337844}
+                        text="My Marker"
+                    />
+                </GoogleMapReact>
+            </div>
         </div>
     );
 }
@@ -141,13 +145,13 @@ function LocationAside() {
 export default function Location(props) {
     const [spotData, setSpotData] = useState([]);
     const [image, setImage] = useState("");
-
-    const root = document.querySelector(":root");
-    const params = useParams()
-
     const [showEdit, setShowEdit] = useState(false);
     const [editSubmitted, setEditSubmitted] = useState(false);
     const [query, setQuery] = useState("");
+    const [geolocation, setGeolocation] = useState({lat: NaN, long: NaN})
+
+    const root = document.querySelector(":root");
+    const params = useParams()
 
 
     function handleShowEdit(queryType) {
@@ -177,12 +181,27 @@ export default function Location(props) {
     }
 
     useEffect(() => {
-        axios.post(props.apiPath + "/api/post/location", {
-            "spot_id": params.spot_id
+        Axios.get(props.apiPath + "/api/get/location", {
+            params: {
+                "spot_id": params.spot_id
+            }
         }).then(data => {
             setSpotData(data.data[0]);
         });
     }, [params.spot_id, props.apiPath]);
+
+    useEffect(() => {
+        if ("building" in spotData) {
+            Axios.get(props.apiPath + "/api/get/buildingInfo", {
+                params: {
+                    "building": spotData.building
+                }
+            }).then(data => {
+                setGeolocation({lat: data.data[0].latitude, long: data.data[0].longitude})
+                console.log(data.data[0]);
+            });
+        }
+    }, [props.apiPath, spotData])
 
     useEffect(() => {
         root.style.setProperty('--loudness-width', spotData.loudness_rating/5 * 100 + "%");
@@ -201,8 +220,8 @@ export default function Location(props) {
             <div className={"d-flex-row-l"}>
                 <LocationMain {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
-                <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
-                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
+                {(!isNaN(geolocation.long)) && <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit} center={geolocation}
+                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>}
             </div>
         </section>
     );
