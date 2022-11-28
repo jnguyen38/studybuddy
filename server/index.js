@@ -11,7 +11,8 @@ app.use(express.json());
 
 app.get("/api/get", (req, res) => {
     db.query("SELECT * \
-                FROM study_spots", (err, result) => {
+                FROM study_spots \
+                ORDER BY building", (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
@@ -42,14 +43,24 @@ app.get("/api/get/emails", (req, res) => {
     });
 });
 
-app.get("/api/get/buildings", (req, res) => {
-    db.query("SELECT DISTINCT building \
-                FROM buildings \
-                ORDER BY building;", (err, result) => {
+app.get("/api/get/location", (req, res) => {
+    db.query(`SELECT * \
+                FROM study_spots \
+                WHERE spot_id = ?`, [req.query.spot_id], (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
 });
+
+app.get("/api/get/buildingInfo", (req, res) => {
+    db.query(`SELECT * \
+                FROM buildings \
+                WHERE building = ?`, [req.query.building], (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    })
+});
+
 
 /* PUT API ENDPOINTS */
 
@@ -110,14 +121,6 @@ app.post("/api/post/search", (req, res) => {
     });
 });
 
-app.post("/api/post/location", (req, res) => {
-    db.query(`SELECT * \
-                FROM study_spots \
-                WHERE spot_id = ?`, [req.body.spot_id], (err, result) => {
-        if (err) console.log(err);
-        res.send(result);
-    });
-});
 
 app.post("/api/post/signup", (req, res) => {
 	db.query(`INSERT INTO users (first_name, last_name, email, major, latitude, longitude, last_login, created, username, password, admin) \
