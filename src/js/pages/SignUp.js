@@ -2,8 +2,9 @@ import {Link, Navigate} from 'react-router-dom';
 import Select from "react-select";
 import SHA3 from "sha3";
 import info from "../../media/icons/info.svg";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import Axios from "axios";
+import debounce from 'lodash.debounce';
 
 import study from "../../media/icons/study.svg";
 import user from "../../media/icons/user.svg";
@@ -11,7 +12,7 @@ import lock from "../../media/icons/lock.svg";
 import mail from "../../media/icons/mail.svg";
 
 function Warnings(props) {
-    if (!props.usernameTaken && !props.emailTaken && props.passwordsMatch) return;
+    if (!props.usernameTaken && !props.emailTaken && (props.passwordsMatch || !props.confirm)) return;
 
     return (
         <div className={"warning d-flex-row-c"}>
@@ -19,7 +20,7 @@ function Warnings(props) {
             <img src={info} alt="" className={"icon warning-icon xxs-icon"}/>
 
             <div className={"d-flex-col-l"}>
-                <div id={"err-password-match"} className={(!props.passwordsMatch) ? "warning d-flex-row-c" : "warning d-none"}><p>Passwords do not match</p></div>
+                <div id={"err-password-match"} className={(!props.passwordsMatch && props.confirm) ? "warning d-flex-row-c" : "warning d-none"}><p>Passwords do not match</p></div>
                 <div id={"err-username-taken"} className={(props.usernameTaken) ? "warning d-flex-row-c" : "warning d-none"}><p>Username is unavailable</p></div>
                 <div id={"err-email-taken"} className={(props.emailTaken) ? "warning d-flex-row-c" : "warning d-none"}><p>Email is unavailable</p></div>
             </div>
@@ -48,7 +49,7 @@ function AccountInfo(props) {
     return (
         <div className={"d-flex-col-c gap-20"}>
             <h4>Account Information</h4>
-            <Warnings usernameTaken={props.usernameTaken} emailTaken={props.emailTaken} passwordsMatch={props.passwordsMatch}/>
+            <Warnings usernameTaken={props.usernameTaken} emailTaken={props.emailTaken} passwordsMatch={props.passwordsMatch} confirm={props.confirm}/>
 
             <div className={"f-responsive-row"}>
                 <div className={"d-flex-row-c"}>
@@ -84,6 +85,12 @@ export default function SignUp(props) {
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const checkMatch = useCallback(
+        debounce(confirm => setPasswordsMatch(confirm === password), 500),
+        [], // will be created only once initially
+    );
+
     useEffect(() => {
         Axios.get(props.apiPath + "/api/get/usernames").then(data => {
             let tempUsernames = new Set();
@@ -98,8 +105,8 @@ export default function SignUp(props) {
     }, [props.apiPath]);
     
     useEffect(() => {
-        setPasswordsMatch(confirm === password);
-    }, [confirm, password]);
+        checkMatch(confirm)
+    }, [checkMatch, confirm]);
 
     useEffect(() => window.scrollTo(0, 0), []);
 
