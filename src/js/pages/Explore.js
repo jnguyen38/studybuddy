@@ -1,5 +1,6 @@
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
+import throttle from "lodash.throttle";
 
 
 function ExploreSpot(props) {
@@ -17,6 +18,12 @@ function ExploreSpot(props) {
 }
 
 function ExploreBuilding(props) {
+    useEffect(() => {
+        const sector = document.getElementById(props.building)
+        if (sector)
+            props.setSectorHeight(sector.clientHeight + 40)
+    }, [props, props.buildings]);
+
     return (
         <div className={"explore-building"} id={props.building}>
             <div className={"explore-building-header full-length"}>
@@ -50,25 +57,28 @@ export default function Explore(props) {
     const [scrollItem, setScrollItem] = useState(0);
     const [sectorHeight, setSectorHeight] = useState(0);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const calcScrollItem = useCallback(
+        throttle(() => {setScrollItem(Math.floor((window.scrollY + sectorHeight/2) / sectorHeight)); console.log("Throttle " + scrollItem, window.scrollY, sectorHeight);}, 100), [sectorHeight],
+    );
+
     const gridAreas = {cols: [[2, 2], [2, 2], [2, 1, 1], [1, 1, 2], [1, 1, 1, 2], [2, 1, 1, 1], [1, 1, 1, 2], [2, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 1, 2], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]],
         rows: [[2, 1], [1, 2], [2, 1, 1], [1, 1, 2], [2, 1, 1, 1], [1, 2, 1, 1], [1, 2, 1, 1], [1, 1, 2, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 2, 1]]};
 
+    useEffect(() => {
+        const sector = document.getElementById(Object.entries(props.buildings)[0][0]);
+        if (sector) setSectorHeight(sector.clientHeight + 40)
+    }, [props.buildings]);
 
     useEffect(() => window.scrollTo(0, 0), []);
-
-    useEffect(() => {
-        console.log(Object.entries(props.buildings)[0][0])
-        const sector = document.getElementById(Object.entries(props.buildings)[0][0])
-        if (sector)
-            setSectorHeight(sector.clientHeight + 40)
-    }, [props.buildings]);
     
     useEffect(() => {
-        window.addEventListener('scroll', () => setScrollItem(Math.floor(window.scrollY / sectorHeight)), { passive: true })
+        window.addEventListener('scroll', calcScrollItem, {passive: true})
         return () => {
-            window.removeEventListener('scroll', () => setScrollItem(Math.floor(window.scrollY / sectorHeight)))
+            window.removeEventListener('scroll', calcScrollItem);
         };
-    }, [sectorHeight]);
+    }, [calcScrollItem]);
+
 
 
     function scrollTo(element) {
@@ -95,7 +105,7 @@ export default function Explore(props) {
                 <div className={"explore-page d-flex-col-l gap-40"}>
                     {Object.entries(props.buildings).map(([building, spots], index) => {
                         return (
-                            <ExploreBuilding {...props} key={building} building={building} spots={spots} layout={props.layout[index]} gridAreas={gridAreas}/>
+                            <ExploreBuilding {...props} key={building} building={building} spots={spots} layout={props.layout[index]} gridAreas={gridAreas} setSectorHeight={setSectorHeight}/>
                         );
                     })}
                 </div>

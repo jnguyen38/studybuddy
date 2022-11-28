@@ -17,6 +17,7 @@ import SignUp from "./pages/SignUp";
 import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
 import Building from "./pages/Building";
+import SignIn from "./pages/SignIn";
 
 
 export default function App() {
@@ -160,6 +161,8 @@ export default function App() {
                         <Upload/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate apiPath={apiPath} path={path}/>}/>
+                    <Route path={path + "/signin"} element={
+                        <SignIn user={user} redirect={redirect} path={path} apiPath={apiPath} handler={handler}/>}/>
                     <Route path={path + "/signup"} element={
                         <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
                     <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
