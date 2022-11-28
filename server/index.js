@@ -3,11 +3,19 @@ const db = require('./config/db');
 const cors = require('cors');
 
 const app = express();
-const  PORT = 5000;
+const  PORT = 5002;
 app.use(cors());
 app.use(express.json());
 
 /* GET API ENDPOINTS */
+
+app.get("/api/get/likes", (req, res) => {
+	db.query(`SELECT * \
+          FROM likes`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
 
 app.get("/api/get", (req, res) => {
     db.query("SELECT * \
@@ -53,6 +61,24 @@ app.get("/api/get/buildings", (req, res) => {
 
 /* PUT API ENDPOINTS */
 
+app.put("/api/put/changeLike", (req, res) => {
+    db.query(`UPDATE likes \
+                SET like_bool=1 \
+                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
+app.put("/api/put/changeUnlike", (req, res) => {
+    db.query(`UPDATE likes \
+                SET like_bool=0 \
+                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
 app.put("/api/put/edit", (req, res) => {
     db.query(`UPDATE study_spots \
                 SET ${req.body.query} = ? \
@@ -84,6 +110,14 @@ app.put("/api/put/signin", (req, res) => {
 });
 
 /* POST API ENDPOINTS */
+
+app.post("/api/post/createLike", (req, res) => {
+    db.query(`INSERT INTO likes (username, spot_id, like_bool) \
+                VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 1)`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
 
 app.post("/api/post/review", (req, res) => {
     db.query(`INSERT INTO reviews (time, date, content, name, rating, space_id) \
@@ -127,6 +161,7 @@ app.post("/api/post/signup", (req, res) => {
     });
 });
 
+
 app.get("/api/get/groupRec", (req, res) => {
     let group = `max_group_size >= ${req.query.groupSize}`;
     let loudness = `loudness_rating > 1`;
@@ -144,4 +179,4 @@ app.get("/api/get/groupRec", (req, res) => {
 
 app.listen(PORT, ()=>{
     console.log("Server is running on port " + PORT)
-})
+});
