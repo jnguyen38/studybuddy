@@ -48,7 +48,6 @@ export default function App() {
           let tempLikes = [];
           for (const like of likesData) {
             if (user.username === like.username && like.like_bool === 1) {
-              console.log("found");
               tempLikes.push(like.spot_id)
             };
           };
@@ -61,9 +60,7 @@ export default function App() {
           };
 
           setUserLikes(tempLikes);
-          window.localStorage.setItem("userLikes", JSON.stringify(tempLikes));
           setUserUnlikes(tempUnlikes);
-          window.localStorage.setItem("userUnlikes", JSON.stringify(tempUnlikes));
 
         }
         static signIn(userData) {
@@ -81,10 +78,6 @@ export default function App() {
             setUser({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
             handler.notifySignOut();
             window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
-            setUserUnlikes([]);
-            setUserLikes([]);
-            window.localStorage.setItem("userUnlikes", JSON.stringify([]));
-            window.localStorage.setItem("userLikes", JSON.stringify([]));
         }
         static handleShowAuthenticate() {setShowAuthenticate(()=> !showAuthenticate)}
         static closeAuthenticate() {setShowAuthenticate(false)}

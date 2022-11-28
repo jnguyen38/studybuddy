@@ -39,7 +39,6 @@ export function Authenticate(props) {
               Axios.get(props.apiPath + "/api/get/likes")
             ]).then(Axios.spread((userData, likesData) => {
                 if (userData.data.isSignedIn) {
-                    console.log(likesData.data)
                     handleSignIn(userData, likesData);
                 } else
                     handleIncorrectSignIn();

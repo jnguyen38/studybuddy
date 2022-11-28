@@ -49,41 +49,30 @@ export function LocationHeader(props) {
 
 function LocationButtons(props) {
 
-    var userLikesLocal = JSON.parse(window.localStorage.getItem("userLikes"));
-    var userUnlikesLocal = JSON.parse(window.localStorage.getItem("userUnlikes"));
-
     const [showRev, setShowRev] = useState(false);
-    const [likeText, setButtonText] = useState(userLikesLocal.includes(props.study_id) ? "Unlikes" : "Like");
-    const [likePic, setButtonPic] = useState(userLikesLocal.includes(props.study_id) ? fullheart : emptyheart);
+    const [likeText, setButtonText] = useState(props.userLikes.includes(props.study_id) ? "Unlikes" : "Like");
+    const [likePic, setButtonPic] = useState(props.userUnlikes.includes(props.study_id) ? fullheart : emptyheart);
 
     function handleRev() {(props.user.isSignedIn) ? setShowRev(() => !showRev) : props.handler.handleShowAuthenticate();}
     function closeRev() {setShowRev(false);}
 
     useEffect(() => {
-      if (userLikesLocal.includes(props.spot_id)) {
+      if (props.userLikes.includes(props.spot_id)) {
         setButtonPic(fullheart);
         setButtonText("Unlike");
       } else {
         setButtonPic(emptyheart);
         setButtonText("Like");
       }
-    }, [userLikesLocal, props.spot_id])
+    }, [props.userLikes, props.spot_id])
 
     function handleLikeClick(event) {
 
-      console.log("likes:")
-      console.log(userLikesLocal)
-      console.log(props.userLikes)
-      console.log("unlikes")
-      console.log(userUnlikesLocal)
-      console.log(props.userUnlikes)
-      console.log(userLikesLocal.includes(props.spot_id));
-      if (userLikesLocal.includes(props.spot_id) && props.user.isSignedIn) {
+      if (likeText === "Unlike" && props.user.isSignedIn) {
         Axios.put(props.apiPath + "/api/put/changeUnlike", {
           "user": props.user.username,
           "spot_id": props.spot_id
         }).then(data => {
-           console.log(data)
            setButtonPic(emptyheart);
            setButtonText("Like");
 
@@ -91,15 +80,12 @@ function LocationButtons(props) {
              props.handler.findLikes(data.data);
            });
 
-           userLikesLocal = JSON.parse(window.localStorage.getItem("userLikes"));
-           userUnlikesLocal = JSON.parse(window.localStorage.getItem("userUnlikes"));
         });
-      } else if (userUnlikesLocal.includes(props.spot_id) && props.user.isSignedIn) {
+      } else if (likeText === "Like" && props.user.isSignedIn) {
         Axios.put(props.apiPath + "/api/put/changeLike", {
           "user": props.user.username,
           "spot_id": props.spot_id
         }).then(data => {
-           console.log(data)
            setButtonPic(fullheart);
            setButtonText("Unlike");
 
@@ -107,24 +93,6 @@ function LocationButtons(props) {
              props.handler.findLikes(data.data);
            });
 
-           userLikesLocal = JSON.parse(window.localStorage.getItem("userLikes"));
-           userUnlikesLocal = JSON.parse(window.localStorage.getItem("userUnlikes"));
-        });
-      } else if (props.user.isSignedIn) {
-        Axios.post(props.apiPath + "/api/post/createLike", {
-          "user": props.user.username,
-          "spot_id": props.spot_id
-        }).then(data => {
-          console.log(data)
-          setButtonPic(fullheart);
-          setButtonText("Unlike");
-
-          Axios.get(props.apiPath + "/api/get/likes").then(data => {
-            props.handler.findLikes(data.data);
-          });
-
-          userLikesLocal = JSON.parse(window.localStorage.getItem("userLikes"));
-          userUnlikesLocal = JSON.parse(window.localStorage.getItem("userUnlikes"));
         });
       } else {
         props.handler.handleShowAuthenticate();
