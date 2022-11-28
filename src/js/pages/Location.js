@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {RevModal, EditModal} from "../components/Modal";
 import {useParams} from "react-router-dom";
 import Axios from "axios";
-
+import GoogleMapReact from 'google-map-react';
 
 import person from "../../media/icons/person.svg";
 import star from "../../media/icons/double_star.svg";
@@ -112,10 +112,32 @@ function LocationMain(props) {
     );
 }
 
-function LocationAside() {
+function LocationAside(props) {
+    const defaultProps = {
+        center: {
+            lat: props.latitude,
+            lng: props.longitude
+        },
+        zoom: 5
+    };
+
+    const AnyReactComponent = ({ text }) => <div>{text}</div>;
+
     return (
         <div id={"location-aside"}>
-            <h1>Aside</h1>
+            <div style={{ height: '200px', width: '200px' }}>
+                <GoogleMapReact
+                    bootstrapURLKeys={{ key: "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" }}
+                    defaultCenter={defaultProps.center}
+                    defaultZoom={defaultProps.zoom}
+                >
+                    <AnyReactComponent
+                        lat={59.955413}
+                        lng={30.337844}
+                        text="My Marker"
+                    />
+                </GoogleMapReact>
+            </div>
         </div>
     );
 }
@@ -126,6 +148,7 @@ export default function Location(props) {
     const [showEdit, setShowEdit] = useState(false);
     const [editSubmitted, setEditSubmitted] = useState(false);
     const [query, setQuery] = useState("");
+    const [geolocation, setGeolocation] = useState({lat: NaN, long: NaN})
 
     const root = document.querySelector(":root");
     const params = useParams()
@@ -174,7 +197,8 @@ export default function Location(props) {
                     "building": spotData.building
                 }
             }).then(data => {
-                console.log(data);
+                setGeolocation({lat: data.data[0].latitude, long: data.data[0].longitude})
+                console.log(data.data[0]);
             });
         }
     }, [props.apiPath, spotData])
@@ -196,8 +220,8 @@ export default function Location(props) {
             <div className={"d-flex-row-l"}>
                 <LocationMain {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
-                <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
-                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
+                {(!isNaN(geolocation.long)) && <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit} center={geolocation}
+                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>}
             </div>
         </section>
     );
