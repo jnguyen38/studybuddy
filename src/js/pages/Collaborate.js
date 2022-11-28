@@ -1,6 +1,9 @@
 import {useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
+//import google from '@types/google.maps';
+//import {GoogleMap, useJsApiLoader} from '@react-google-maps/api'
+//import maps from 'google'
 //const cors = require('cors');
 //const express = require('express')
 //const app = express()
@@ -40,7 +43,7 @@ function Results(props) {
 
 function recommend(data, locs) {
     // let new_data = data
-    get_distance(data, '010100', ["Knott Hall", "Keough Hall"])
+    get_distance(data, '000102', ["Knott Hall", "Keough Hall"])
     //new_data = new_data.map(place => {
     //    return {...place, get_distance(new_data, new_data["spot_id"], locs)}}
     //})
@@ -50,9 +53,20 @@ function recommend(data, locs) {
 
 function get_distance(data, spot_id, locs) {
     for (let i = 0; i < locs.length; i++) {
-        let dest = data.filter(spot => spot.spot_id === spot_id).location
+
+        let dest = data.filter(spot => spot.spot_id === spot_id)[0].building
         let url = `${maps_url}origins=${locs[i]}&destinations=${dest}&units=${units}&mode=${mode}&key=${key}`
-        /*
+/*
+        (service.getDistanceMatrix ({
+            origins: locs[i],
+            destinations: dest,
+            travelMode: 'WALKING',
+            unitSystem: google.maps.UnitSystem.IMPERIAL,
+        }).then((response) => {
+            console.log(response)
+        }))
+*/
+
         var config = {
             method: 'get',
             url,
@@ -60,14 +74,22 @@ function get_distance(data, spot_id, locs) {
                 //'Access-Control-Allow-Origin': null,
                 //'Access-Control-Allow-Headers': '*',
                 //'Access-Control-Allow-Credentials': 'true'
+                //'Access-Control-Request-Method': 'GET'
+                'origin': 'http://localhost:3000'
             }
         }
-        */
+
+
         console.log(`URL is ${url}`)
-        axios.get(url)
+        let response = axios(config)
+        console.log(response.json())
+
+        /*
             .then(function (response) {
-                console.log(response)
+                console.log(response.headers)
+                console.log(response.json())
             });
+         */
     }
 }
 
