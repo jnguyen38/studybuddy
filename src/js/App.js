@@ -30,7 +30,6 @@ export default function App() {
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
     const [userLikes, setUserLikes] = useState([]);
-    const [userUnlikes, setUserUnlikes] = useState([]);
 
     // Path variables
     const path = "";
@@ -52,16 +51,7 @@ export default function App() {
             };
           };
 
-          let tempUnlikes = [];
-          for (const like of likesData) {
-            if (user.username === like.username && like.like_bool === 0) {
-              tempUnlikes.push(like.spot_id)
-            };
-          };
-
           setUserLikes(tempLikes);
-          setUserUnlikes(tempUnlikes);
-
         }
         static signIn(userData) {
             let tempUser = user;
@@ -185,7 +175,7 @@ export default function App() {
                     <Route path={path + "/overview"} element={
                         <Overview/>}/>
                     <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} userLikes={userLikes} userUnlikes={userUnlikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
+                        <Location user={user} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
                     <Route path={path + "/search"} element={
                         <Search apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/upload"} element={

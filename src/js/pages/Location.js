@@ -51,7 +51,7 @@ function LocationButtons(props) {
 
     const [showRev, setShowRev] = useState(false);
     const [likeText, setButtonText] = useState(props.userLikes.includes(props.study_id) ? "Unlikes" : "Like");
-    const [likePic, setButtonPic] = useState(props.userUnlikes.includes(props.study_id) ? fullheart : emptyheart);
+    const [likePic, setButtonPic] = useState(props.userLikes.includes(props.study_id) ? fullheart : emptyheart);
 
     function handleRev() {(props.user.isSignedIn) ? setShowRev(() => !showRev) : props.handler.handleShowAuthenticate();}
     function closeRev() {setShowRev(false);}
