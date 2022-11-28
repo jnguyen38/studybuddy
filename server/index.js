@@ -61,24 +61,6 @@ app.get("/api/get/buildings", (req, res) => {
 
 /* PUT API ENDPOINTS */
 
-app.put("/api/put/changeLike", (req, res) => {
-    db.query(`UPDATE likes \
-                SET like_bool=1 \
-                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`, (err, result) => {
-        if (err) console.log(err);
-        res.send(result);
-    });
-});
-
-app.put("/api/put/changeUnlike", (req, res) => {
-    db.query(`UPDATE likes \
-                SET like_bool=0 \
-                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`, (err, result) => {
-        if (err) console.log(err);
-        res.send(result);
-    });
-});
-
 app.put("/api/put/edit", (req, res) => {
     db.query(`UPDATE study_spots \
                 SET ${req.body.query} = ? \
@@ -109,15 +91,46 @@ app.put("/api/put/signin", (req, res) => {
     });
 });
 
-/* POST API ENDPOINTS */
-
-app.post("/api/post/createLike", (req, res) => {
-    db.query(`INSERT INTO likes (username, spot_id, like_bool) \
-                VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 1)`, (err, result) => {
+app.put("/api/put/changeLike", (req, res) => {
+    db.query(`SELECT username, spot_id, like_bool \
+                FROM likes \
+                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\" and like_bool=0`, (err, result) => {
         if (err) console.log(err);
+
+        if (result.length) {
+          db.query(`UPDATE likes \
+                      SET like_bool=1 \
+                      WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`);
+        } else {
+          db.query(`INSERT INTO likes (username, spot_id, like_bool) \
+                      VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 1)`);
+        }
+
         res.send(result);
     });
 });
+
+app.put("/api/put/changeUnlike", (req, res) => {
+    db.query(`SELECT username, spot_id, like_bool \
+                FROM likes \
+                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\" and like_bool=1`, (err, result) => {
+        if (err) console.log(err);
+
+        if (result.length) {
+          db.query(`UPDATE likes \
+                      SET like_bool=0 \
+                      WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`);
+        } else {
+          db.query(`INSERT INTO likes (username, spot_id, like_bool) \
+                      VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 0)`);
+        }
+
+        res.send(result);
+    });
+});
+
+
+/* POST API ENDPOINTS */
 
 app.post("/api/post/review", (req, res) => {
     db.query(`INSERT INTO reviews (time, date, content, name, rating, space_id) \
