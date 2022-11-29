@@ -9,6 +9,15 @@ app.use(express.json());
 
 /* GET API ENDPOINTS */
 
+app.get("/api/get", (req, res) => {
+    db.query("SELECT * \
+                FROM study_spots \
+                ORDER BY building", (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
 app.get("/api/get/likes", (req, res) => {
 	db.query(`SELECT * \
           FROM likes`, (err, result) => {
@@ -17,9 +26,18 @@ app.get("/api/get/likes", (req, res) => {
     });
 });
 
-app.get("/api/get", (req, res) => {
-    db.query("SELECT * \
-                FROM study_spots", (err, result) => {
+app.get("/api/get/reviews", (req, res) => {
+	db.query(`SELECT * \
+          FROM reviews`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
+app.get("/api/get/spot/:spot_id", (req, res) => {
+	db.query(`SELECT * \
+          FROM study_spots \
+					WHERE spot_id=\"${req.params.spot_id}\"`, (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
@@ -133,8 +151,8 @@ app.put("/api/put/changeUnlike", (req, res) => {
 /* POST API ENDPOINTS */
 
 app.post("/api/post/review", (req, res) => {
-    db.query(`INSERT INTO reviews (time, date, content, name, rating, space_id) \
-                VALUES (now(), curdate(), \"${req.body.description}\", \"${req.body.name}\", ${req.body.rating}, ${req.body.spot_id})`, (err, result) => {
+    db.query(`INSERT INTO reviews (time, date, content, name, rating, spot_id, work_type, username) \
+                VALUES (now(), curdate(), \"${req.body.description}\", \"${req.body.name}\", ${req.body.rating}, \"${req.body.spot_id}\", \"${req.body.work_type}\", \"${req.body.username}\")`, (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
@@ -153,6 +171,27 @@ app.post("/api/post/search", (req, res) => {
                 FROM study_spots \
                 WHERE ${building} AND ${outlets} AND ${loudness} AND ${naturalLight} AND ${group} AND ${capacity}`, (err, result) => {
         if (err) console.log(err);
+        res.send(result);
+    });
+});
+
+app.post("/api/post/searchHistory", (req, res) => {
+    let tableSeatComfort = "table_seat_comfort<=" + ((req.body.comfort) + 1) + " AND table_seat_comfort>=" + ((req.body.comfort) - 1);
+    let seatComfort = "nontable_seat_comfort<=" + ((req.body.comfort) + 1) + " AND nontable_seat_comfort>=" + ((req.body.comfort) - 1);
+    let couchComfort = "couch_comfort<=" + ((req.body.comfort) + 1) + " AND couch_comfort>=" + ((req.body.comfort) - 1);
+    let outlets = "outlets_rating<=" + ((req.body.outlet) + 1) + " AND outlets_rating>=" + ((req.body.comfort) - 1);
+
+    let loudness = "loudness_rating<=" + ((req.body.loud) + 1) + " AND loudness_rating>=" + ((req.body.loud) - 1);
+    let light = "natural_light_rating<=" + ((req.body.light) + 1) + " AND natural_light_rating>=" + ((req.body.light) - 1);
+    let capacity = ("max_capacity<=" + ((req.body.capacity) + (req.body.capacity >= 60 ? 20 : (req.body.capacity >= 30 ? 15 : (req.body.capacity >= 15 ? 10 : 5)))) +
+          " AND max_capacity>= " + ((req.body.capacity) - (req.body.capacity >= 60 ? 20 : (req.body.capacity >= 30 ? 15 : (req.body.capacity >= 15 ? 10 : 5)))))
+    let table = "tables=" + Math.round(req.body.table);
+
+    db.query(`SELECT * \
+                FROM study_spots \
+                WHERE ((${tableSeatComfort}) OR (${seatComfort}) OR (${couchComfort})) AND ${outlets} AND ${loudness} AND ${light} AND ${capacity} AND ${table}`, (err, result) => {
+        if (err) console.log(err);
+        console.log(result);
         res.send(result);
     });
 });
