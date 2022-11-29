@@ -41,6 +41,7 @@ code {
     --inverted-bg-transparent: rgba(242, 239, 233, .8);
     --inverted-text-color: var(--sb-dark-blue);
     --reg-bg-solid: var(--sb-dark-blue);
+    --reg-bg-rec-trans: rgba(242, 239, 233, 0.7);
     --reg-bg-transparent: rgba(11, 33, 65, 0.4);
     --reg-bg-transparent-dark: rgba(11, 33, 65, .8);
     --icon-filter: invert(100%) sepia(2%) saturate(5756%) hue-rotate(298deg) brightness(103%) contrast(89%);
@@ -54,6 +55,7 @@ code {
     --inverted-bg-transparent: rgba(11, 33, 65, .75);
     --inverted-text-color: var(--sb-white);
     --reg-bg-solid: var(--sb-white);
+    --reg-bg-rec-trans: rgba(11, 33, 65, .8);
     --reg-bg-transparent: rgba(242, 239, 233, 0.6);
     --reg-bg-transparent-dark: rgba(242, 239, 233, .9);
     --icon-filter: invert(39%) sepia(27%) saturate(540%) hue-rotate(153deg) brightness(96%) contrast(86%);

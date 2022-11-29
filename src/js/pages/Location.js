@@ -13,24 +13,6 @@ import check from "../../media/icons/check.svg";
 import fullheart from "../../media/icons/full_heart.svg";
 import emptyheart from "../../media/icons/empty_heart.svg";
 
-export function Random(props) {
-    if (!(props.rand && props.spots)) return;
-
-    const rand = props.rand;
-
-    return (
-        <div>
-            <Location spots={props.spots} admin={props.admin} setAdmin={props.makeAdmin} id={rand.spot_id} building={rand.building}
-                      maxGroup={rand.max_group_size} capacity={rand.max_capacity}
-                      location={rand.location} loudness={rand.loudness_rating}
-                      outlets={rand.outlets_rating} naturalLight={rand.natural_light_rating}
-                      comfortability={[rand.table_seat_comfort, rand.nontable_seat_comfort, rand.couch_comfort]}
-                      hasPrinter={rand.printer} hasTables={rand.tables} overall={rand.overall_rating}
-                      description={rand.description} floor={rand.floor} notes={rand.notes} apiPath={props.apiPath}/>
-        </div>
-    );
-}
-
 export function LocationHeader(props) {
     return (
         <div id={"location-header"}>

@@ -1,0 +1,144 @@
+.recommendation-container {
+    padding-top: calc(var(--header-height) * 1.5);
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+}
+
+.recommendation-header {
+    font-size: 2em;
+}
+
+.recommendation-select-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+#op-display {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    margin: 50px;
+}
+
+#rec-desc-container {
+    background-color: var(--reg-bg-rec-trans);
+    color: var(--inverted-text-color);
+    padding: 50px 5%;
+    width: 60%;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.rec-option {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    width: 250px;
+    height: 150px;
+    background-color: var(--inverted-bg-solid);
+    color: var(--inverted-text-color);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px var(--inverted-bg-solid);
+    transition: all .25s;
+}
+
+.rec-option:hover {
+    box-shadow: 0 0 20px var(--inverted-bg-solid);
+}
+
+.recommendation-desc {
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+  margin: 10px;
+}
+
+.history-typewriter {
+  align-items: start;
+  width: 100%;
+  color: var(--inverted-text-color);
+  margin: 10px;
+}
+
+.history-typewriter1 p {
+    overflow: hidden;
+    border-right: .15em solid transparent;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation:
+            typing-rec 2.0s steps(40, end) forwards;
+    width: 0;
+}
+
+.history-typewriter2 p {
+    overflow: hidden;
+    border-right: .15em solid transparent;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation:
+            typing-rec 2.0s steps(40, end) forwards;
+    animation-delay: 2.0s;
+    width: 0;
+}
+
+.history-typewriter3 p {
+    overflow: hidden;
+    border-right: .15em solid transparent;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation:
+            typing-rec 2.0s steps(40, end) forwards;
+    animation-delay: 4.0s;
+    width: 0;
+}
+
+.history-typewriter4 p {
+    overflow: hidden;
+    border-right: .15em solid transparent;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation:
+            typing-rec 2.0s steps(40, end) forwards;
+    animation-delay: 6.0s;
+    width: 0;
+}
+
+.history-typewriter5 p {
+    overflow: hidden;
+    border-right: .15em solid transparent;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation:
+            typing-rec 2.0s steps(40, end) forwards;
+    animation-delay: 8.0s;
+    width: 0;
+}
+
+.history-typewriter6 p {
+    overflow: hidden;
+    border-right: .15em solid transparent;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation:
+            typing-rec 2.0s steps(40, end) forwards;
+    animation-delay: 10.0s;
+    width: 0;
+}
+
+.rec-results {
+  padding: 50px 5%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+@keyframes typing-rec {
+    from { width: 0%; }
+    to { width: 100%; }
+}

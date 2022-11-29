@@ -8,13 +8,14 @@ import Home from "./pages/Home";
 import Header from "./components/Header";
 import Overview from "./pages/Overview";
 import Footer from "./components/Footer";
-import Location, {Random} from "./pages/Location";
+import Location from "./pages/Location";
 import Search from "./pages/Search";
 import Upload from "./pages/Upload";
 import Collaborate from "./pages/Collaborate";
 import {Authenticate} from "./components/Modal";
 import SignUp from "./pages/SignUp";
 import Explore from "./pages/Explore";
+import Recommendation from "./pages/Recommendation";
 
 export default function App() {
     // useState Hooks
@@ -22,7 +23,6 @@ export default function App() {
     const [showSettings, setShowSettings] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [showAuthenticate, setShowAuthenticate] = useState(false);
-    const [rand, setRand] = useState({});
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
     const [spots, setSpots] = useState("");
@@ -30,6 +30,9 @@ export default function App() {
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
     const [userLikes, setUserLikes] = useState([]);
+    const [userReviews, setUserReviews] = useState([]);
+    const [likesData, setLikesData] = useState([]);
+    const [totalDict, setDict] = useState({});
 
     // Path variables
     const path = "";
@@ -38,6 +41,8 @@ export default function App() {
 
     // Handler Functions
     class handler {
+        static setDictHelper(totalDict) {setDict(totalDict)}
+        static setLikesDataHelper(data) {setLikesData(data)}
         static closeMenu() {setShowMenu(false)}
         static closeSettings() {setShowSettings(false)}
         static handleUXMode() {setUXMode(!UXMode);}
@@ -52,6 +57,16 @@ export default function App() {
           };
 
           setUserLikes(tempLikes);
+        }
+        static findReviews(reviewsData) {
+          let tempReviews = [];
+          for (const review of reviewsData) {
+            if (user.username === review.username) {
+              tempReviews.push(review)
+            };
+          };
+
+          setUserReviews(tempReviews);
         }
         static signIn(userData) {
             let tempUser = user;
@@ -100,7 +115,6 @@ export default function App() {
         if (n > 5) n = 5;
         return Math.floor(Math.random() * picLayouts[n]);
     }
-    function randomize(n) {return Math.floor(Math.random() * n);}
 
     // useEffect Hooks
     useEffect(() => {
@@ -132,10 +146,6 @@ export default function App() {
             tempLayouts.push(handleExploreRand(buildings[building].length));
         setExploreLayout(tempLayouts);
     }, [buildings]);
-
-    useEffect(() => {
-        setRand(spots[randomize(spots.length)])
-    }, [spots]);
 
     useEffect(() => {
         setUXMode(JSON.parse(window.localStorage.getItem("UXMode")));
@@ -180,8 +190,10 @@ export default function App() {
                         <Search apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/upload"} element={
                         <Upload/>}/>
-                    <Route path={path + "/random"} element={
-                        <Random rand={rand} spots={spots} apiPath={apiPath} user={user}/>}/>
+                    <Route path={path + "/recommendation"} element={
+                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} likesData={likesData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                    <Route path={path + "/recommendation/:typerec"} element={
+                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} likesData={likesData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/signup"} element={

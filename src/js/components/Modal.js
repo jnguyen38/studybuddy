@@ -2,6 +2,7 @@ import {Link} from "react-router-dom";
 import Axios from "axios";
 import SHA3 from "sha3";
 import info from "../../media/icons/info.svg";
+import CreatableSelect from 'react-select/creatable';
 
 export function Authenticate(props) {
     if (!props.show) return;
@@ -11,9 +12,10 @@ export function Authenticate(props) {
         props.close();
     }
 
-    function handleSignIn(userData, likesData) {
+    function handleSignIn(userData, likesData, reviewsData) {
         props.handler.signIn(userData.data);
         props.handler.findLikes(likesData.data);
+        props.handler.findReviews(reviewsData.data);
         props.close();
     }
 
@@ -36,10 +38,11 @@ export function Authenticate(props) {
                 "latitude": lat,
                 "longitude": long
               }),
-              Axios.get(props.apiPath + "/api/get/likes")
-            ]).then(Axios.spread((userData, likesData) => {
+              Axios.get(props.apiPath + "/api/get/likes"),
+              Axios.get(props.apiPath + "/api/get/reviews")
+            ]).then(Axios.spread((userData, likesData, reviewsData) => {
                 if (userData.data.isSignedIn) {
-                    handleSignIn(userData, likesData);
+                    handleSignIn(userData, likesData, reviewsData);
                 } else
                     handleIncorrectSignIn();
             }));
@@ -126,17 +129,32 @@ export function EditModal(props) {
 export function RevModal(props) {
     if (!props.show) return;
 
+    const optionList = [
+      { value: "Essay", label: "Essay" },
+      { value: "Problem Set", label: "Problem Set" },
+      { value: "Presentation", label: "Presentation" },
+      { value: "Reading", label: "Reading" },
+      { value: "Exam Prep", label: "Exam Prep" }
+    ];
+
     function handleSubmit(event) {
         event.preventDefault()
         Axios.post(props.apiPath + "/api/post/review", {
             "name": event.target.name.value,
             "description": event.target.description.value,
             "rating": event.target.rating.value,
-            "spot_id": props.spot_id
+            "spot_id": props.spot_id,
+            "work_type": event.target.work.value,
+            "username": props.user.username
         }).then((data) => {
             console.log(data)
             props.close()
-        });
+        }).then((data) => {
+          Axios.get(props.apiPath + "/api/get/likes").then((reviewsData) => {
+            props.handler.findReviews(reviewsData.data);
+          })
+        })
+
     }
 
     return (
@@ -148,6 +166,7 @@ export function RevModal(props) {
                     <div className={"d-flex jc-sb full-length"}>
                         <input type="text" value={`${props.user.firstName} ${props.user.lastName}`} name="name" readOnly/>
                         <input type="number" placeholder="Rating" name="rating" min="1" max="5" required/>
+                        <CreatableSelect isMulti name="work" options={optionList} className="basic-multi-select" classNamePrefix="select"/>
                     </div>
                     <textarea placeholder="Content" name="description" required/>
                     <div className={"form-buttons d-flex jc-fe"}>
