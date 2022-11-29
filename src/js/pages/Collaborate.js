@@ -40,7 +40,7 @@ function Results(props) {
         </div>
     );
 }
-
+/*
 function recommend(data, locs) {
     // let new_data = data
     get_distance(data, '000102', ["Knott Hall", "Keough Hall"])
@@ -50,13 +50,15 @@ function recommend(data, locs) {
 
     return data;
 }
+ */
 
+/*
 function get_distance(data, spot_id, locs) {
     for (let i = 0; i < locs.length; i++) {
 
         let dest = data.filter(spot => spot.spot_id === spot_id)[0].building
         let url = `${maps_url}origins=${locs[i]}&destinations=${dest}&units=${units}&mode=${mode}&key=${key}`
-/*
+
         (service.getDistanceMatrix ({
             origins: locs[i],
             destinations: dest,
@@ -65,7 +67,7 @@ function get_distance(data, spot_id, locs) {
         }).then((response) => {
             console.log(response)
         }))
-*/
+
 
         var config = {
             method: 'get',
@@ -84,14 +86,16 @@ function get_distance(data, spot_id, locs) {
         let response = axios(config)
         console.log(response.json())
 
-        /*
+
             .then(function (response) {
                 console.log(response.headers)
                 console.log(response.json())
             });
-         */
+
     }
 }
+ */
+
 
 export default function Collaborate(props) {
     const [state, setState] = useState({
@@ -108,8 +112,8 @@ export default function Collaborate(props) {
                 groupSize: count + 1
             }
         }).then(data => {
-            data = recommend(data.data, count + 1)
-            setResults(data)
+            //data = recommend(data.data, count + 1)
+            setResults(data.data)
         });
     }
 
