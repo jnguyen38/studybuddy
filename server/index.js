@@ -139,7 +139,9 @@ app.get("/api/get/groupRec", (req, res) => {
                 FROM study_spots \
                 WHERE ${group} and ${loudness}`, (err, result) => {
         if (err) console.log(err);
-        res.send(result);
+        return result
+    }).then(result => {
+        console.log(result)
     });
 });
 
