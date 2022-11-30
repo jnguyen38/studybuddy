@@ -33,7 +33,7 @@ export default function App() {
 
     // Path variables
     const path = "";
-    const apiPath = "http://db8.cse.nd.edu:5000";
+    const apiPath = "https://cors-everywhere-me.herokuapp.com/http://db8.cse.nd.edu:5000";
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions
