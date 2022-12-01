@@ -1,6 +1,8 @@
 import {useState} from "react";
 import axios from "axios";
+//import * as Pyscript from "pyscript";
 import {Link} from "react-router-dom";
+//import {Html, Head, Main, NextScript} from next/document
 //import google from '@types/google.maps';
 //import {GoogleMap, useJsApiLoader} from '@react-google-maps/api'
 //import maps from 'google'
@@ -16,6 +18,8 @@ const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 //var service = new google.maps.DistanceMatrixService();
 
 function Results(props) {
+    //console.log(Pyscript.range(0, 10))
+
     return (
         <div className={"results-container d-flex-col-c gap-20"}>
             {(props.results.length === 0) ?
@@ -107,13 +111,14 @@ export default function Collaborate(props) {
 
     function handleSubmit(event) {
         event.preventDefault()
-        axios.get( props.apiPath + "/api/get/groupRec", {
+        axios.get( "http://localhost:5001/api/get/groupRec", {
             params: {
                 groupSize: count + 1
             }
         }).then(data => {
             //data = recommend(data.data, count + 1)
-            setResults(data.data)
+            console.log(data)
+            //setResults(data.data)
         });
     }
 

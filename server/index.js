@@ -1,9 +1,10 @@
 const express = require('express');
 const db = require('./config/db');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
-const  PORT = 5000;
+const  PORT = 5001;
 app.use(cors());
 app.use(express.json());
 
@@ -135,15 +136,23 @@ app.get("/api/get/groupRec", (req, res) => {
     let loudness = `loudness_rating > 1`;
     console.log(group);
 
-    db.query(`SELECT * \
+    spots = await db.query(`SELECT * \
                 FROM study_spots \
                 WHERE ${group} and ${loudness}`, (err, result) => {
         if (err) console.log(err);
-        return result
-    }).then(result => {
         console.log(result)
     });
+
+    axios.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins=Knott Hall&destinations=Fitzpatrick Hall of Engineering&units=imperial&mode=walking&key=AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE").then(response => {
+        res.send(response.data["rows"][0]["elements"][0]["duration"]["text"].split()[0])
+    });
 });
+
+/*
+app.get("/api/get/distances", (req, res) => {
+
+}
+ */
 
 /* LISTENER */
 
