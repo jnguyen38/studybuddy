@@ -5,6 +5,16 @@
     text-align: center;
 }
 
+.history-container {
+    width: 100%;
+    text-align: center;
+}
+
+.work-container {
+    width: 100%;
+    text-align: center;
+}
+
 .recommendation-header {
     font-size: 2em;
 }
@@ -24,6 +34,15 @@
 }
 
 #rec-desc-container {
+    background-color: var(--reg-bg-rec-trans);
+    color: var(--inverted-text-color);
+    padding: 50px 5%;
+    width: 60%;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+#work-sel-container {
     background-color: var(--reg-bg-rec-trans);
     color: var(--inverted-text-color);
     padding: 50px 5%;
@@ -62,6 +81,11 @@
   width: 100%;
   color: var(--inverted-text-color);
   margin: 10px;
+}
+
+.basic-multi-select {
+  padding: 10px;
+  width: 100%;
 }
 
 .history-typewriter1 p {

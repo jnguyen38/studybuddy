@@ -12,10 +12,8 @@ export function Authenticate(props) {
         props.close();
     }
 
-    function handleSignIn(userData, likesData, reviewsData) {
+    function handleSignIn(userData) {
         props.handler.signIn(userData.data);
-        props.handler.findLikes(likesData.data);
-        props.handler.findReviews(reviewsData.data);
         props.close();
     }
 
@@ -31,21 +29,17 @@ export function Authenticate(props) {
         hash.update(event.target.password.value);
 
         function request(event, lat, long) {
-            Axios.all([
-              Axios.put(props.apiPath + "/api/put/signin", {
-                "user": event.target.user.value,
-                "password": hash.digest("hex").toString(),
-                "latitude": lat,
-                "longitude": long
-              }),
-              Axios.get(props.apiPath + "/api/get/likes"),
-              Axios.get(props.apiPath + "/api/get/reviews")
-            ]).then(Axios.spread((userData, likesData, reviewsData) => {
+            Axios.put(props.apiPath + "/api/put/signin", {
+              "user": event.target.user.value,
+              "password": hash.digest("hex").toString(),
+              "latitude": lat,
+              "longitude": long
+            }).then((userData) => {
                 if (userData.data.isSignedIn) {
-                    handleSignIn(userData, likesData, reviewsData);
+                    handleSignIn(userData);
                 } else
                     handleIncorrectSignIn();
-            }));
+            });
         }
 
         props.handler.getMyLocation().then(data => {

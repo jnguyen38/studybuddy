@@ -31,7 +31,7 @@ export default function App() {
     const [exploreLayout, setExploreLayout] = useState([]);
     const [userLikes, setUserLikes] = useState([]);
     const [userReviews, setUserReviews] = useState([]);
-    const [likesData, setLikesData] = useState([]);
+    const [histData, setHistData] = useState([]);
     const [totalDict, setDict] = useState({});
 
     // Path variables
@@ -42,7 +42,7 @@ export default function App() {
     // Handler Functions
     class handler {
         static setDictHelper(totalDict) {setDict(totalDict)}
-        static setLikesDataHelper(data) {setLikesData(data)}
+        static setHistDataHelper(historyRecDict) {setHistData(historyRecDict)}
         static closeMenu() {setShowMenu(false)}
         static closeSettings() {setShowSettings(false)}
         static handleUXMode() {setUXMode(!UXMode);}
@@ -138,6 +138,12 @@ export default function App() {
             setMajors(tempMajors)
         });
 
+        /* Axios.get(apiPath + "/api/get/work").then(res => {
+            let tempWork = [];
+            for (const workItem of res.data) tempWork.push()
+            setMajors(tempMajors)
+        }); */
+
     }, [apiPath]);
 
     useEffect(() => {
@@ -163,6 +169,23 @@ export default function App() {
     useEffect(() => {
         window.localStorage.setItem("UXMode", JSON.stringify(UXMode));
     }, [UXMode]);
+
+    useEffect(() => {
+      if (user.isSignedIn) {
+        Axios.all([
+          Axios.get(apiPath + "/api/get/likes"),
+          Axios.get(apiPath + "/api/get/reviews")
+        ]).then(Axios.spread((likesData, reviewsData) => {
+          handler.findLikes(likesData.data)
+          handler.findReviews(reviewsData.data)
+        }))
+      } else {
+        setUserReviews([])
+        setUserLikes([])
+        setDict([])
+      }
+
+    }, [user.isSignedIn])
 
     return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
@@ -191,9 +214,9 @@ export default function App() {
                     <Route path={path + "/upload"} element={
                         <Upload/>}/>
                     <Route path={path + "/recommendation"} element={
-                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} likesData={likesData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                     <Route path={path + "/recommendation/:typerec"} element={
-                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} likesData={likesData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/signup"} element={
