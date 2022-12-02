@@ -1,0 +1,24 @@
+#building-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: calc(var(--header-height) * 1.5) 0;
+    background-color: var(--reg-bg-transparent);
+}
+
+.building-page {
+    width: 80%;
+    padding: 5%;
+    border-radius: var(--border-radius);
+    background-color: var(--reg-bg-transparent-dark);
+}
+
+.building-page h1 {
+    font-size: 2.5em;
+}
+
+.spots-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-rows: 200px;
+    margin: auto;
+}
