@@ -72,30 +72,6 @@ function get_distance(data, spot_id, locs) {
             console.log(response)
         }))
 
-
-        var config = {
-            method: 'get',
-            url,
-            headers: {
-                //'Access-Control-Allow-Origin': null,
-                //'Access-Control-Allow-Headers': '*',
-                //'Access-Control-Allow-Credentials': 'true'
-                //'Access-Control-Request-Method': 'GET'
-                'origin': 'http://localhost:3000'
-            }
-        }
-
-
-        console.log(`URL is ${url}`)
-        let response = axios(config)
-        console.log(response.json())
-
-
-            .then(function (response) {
-                console.log(response.headers)
-                console.log(response.json())
-            });
-
     }
 }
  */
@@ -108,12 +84,16 @@ export default function Collaborate(props) {
 
     const [count, setCount] = useState(0);
     const [results, setResults] = useState([])
+    const [locations, setLocations] = useState([])
+    const [usernames, setUsernames] = useState([])
 
     function handleSubmit(event) {
         event.preventDefault()
+        console.log(locations)
         axios.get( "http://localhost:5001/api/get/groupRec", {
             params: {
-                groupSize: count + 1
+                groupSize: count + 1,
+                locations: locations
             }
         }).then(data => {
             //data = recommend(data.data, count + 1)
@@ -141,6 +121,12 @@ export default function Collaborate(props) {
         console.log(count);
     }
 
+    function handleLocationChange(index, event) {
+        let cur_locs = locations
+        cur_locs[index] = event.target.value
+        setLocations(cur_locs)
+    }
+
     return (
         <div className={"collab-container"}>
             <div className={"collab-header d-flex-col-c"}>
@@ -151,7 +137,7 @@ export default function Collaborate(props) {
                 <div className={"initial-questions"}>
                     <div className={"self-input"}>
                         <p>Where are you?</p>
-                        <input name="userBuilding" type="text" value={state.userBuilding} placeholder="Enter a building name" onChange={handleChange}/>
+                        <input key = "0" name="userBuilding" type="text" placeholder="Enter a building name" onChange={handleLocationChange.bind(this, 0)}/>
                     </div>
                 </div>
                 <div className={"friends-info"}>
@@ -169,12 +155,12 @@ export default function Collaborate(props) {
                     }
                     <div className={"friend-user-input"}>
                         {Array.from(Array(count)).map((c, index) => {
-                            return <input key={index} name={'friendUsername' + index} type="text" placeholder="Enter a username"></input>;
+                            return <input key={index + 1} name={"friendUsername" + index} type="text" placeholder="Enter a username"></input>;
                         })}
                     </div>
                     <div className={"friend-building-input"}>
                         {Array.from(Array(count)).map((c, index) => {
-                            return <input key={index} name={'friendBuilding' + index} type="text" placeholder="Enter a building name"></input>;
+                            return <input key={index + 1} name={'friendBuilding' + index} type="text" placeholder="Enter a building name" onChange={handleLocationChange.bind(this, index + 1)}></input>;
                         })}
                     </div>
                     {(count > 0) ?

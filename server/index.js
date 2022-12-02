@@ -132,27 +132,47 @@ app.post("/api/post/signup", (req, res) => {
 });
 
 app.get("/api/get/groupRec", (req, res) => {
+    const key = "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" // API Key
+    const units = "imperial"
+    const mode = "walking"
+    const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+
     let group = `max_group_size >= ${req.query.groupSize}`;
     let loudness = `loudness_rating > 1`;
+    locs = req.query.locations
     console.log(group);
+    console.log(locs)
 
-    spots = await db.query(`SELECT * \
+    db.query(`SELECT * \
                 FROM study_spots \
                 WHERE ${group} and ${loudness}`, (err, result) => {
         if (err) console.log(err);
         console.log(result)
+        result = result.map(place => place, Object.assign(place, get_distance(place["building"], place["spot_id"], locs)))
+        res.send(result)
     });
+
+    function get_distance(building, spot_id, locs) {
+        distObj = {}
+        let longestDist = 0
+        for (let i = 0; i < locs.length; i++) {
+
+            let url = `${maps_url}origins=${locs[i]}&destinations=${building}&units=${units}&mode=${mode}&key=${key}`
+            dist = axios.get(url).data["rows"][0]["elements"][0]["duration"]["text"].split()[0];
+
+            longestDist = max(longestDist, dist)
+            distObj[`dist${i}`] = dist
+            if (i === (locs.length - 1))
+                distObj["longestDist"] = longestDist
+        }
+
+        return distObj;
+    }
 
     axios.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins=Knott Hall&destinations=Fitzpatrick Hall of Engineering&units=imperial&mode=walking&key=AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE").then(response => {
         res.send(response.data["rows"][0]["elements"][0]["duration"]["text"].split()[0])
     });
 });
-
-/*
-app.get("/api/get/distances", (req, res) => {
-
-}
- */
 
 /* LISTENER */
 
