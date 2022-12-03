@@ -44,17 +44,6 @@ function Results(props) {
         </div>
     );
 }
-/*
-function recommend(data, locs) {
-    // let new_data = data
-    get_distance(data, '000102', ["Knott Hall", "Keough Hall"])
-    //new_data = new_data.map(place => {
-    //    return {...place, get_distance(new_data, new_data["spot_id"], locs)}}
-    //})
-
-    return data;
-}
- */
 
 /*
 function get_distance(data, spot_id, locs) {
@@ -62,15 +51,6 @@ function get_distance(data, spot_id, locs) {
 
         let dest = data.filter(spot => spot.spot_id === spot_id)[0].building
         let url = `${maps_url}origins=${locs[i]}&destinations=${dest}&units=${units}&mode=${mode}&key=${key}`
-
-        (service.getDistanceMatrix ({
-            origins: locs[i],
-            destinations: dest,
-            travelMode: 'WALKING',
-            unitSystem: google.maps.UnitSystem.IMPERIAL,
-        }).then((response) => {
-            console.log(response)
-        }))
 
     }
 }
@@ -90,7 +70,7 @@ export default function Collaborate(props) {
     function handleSubmit(event) {
         event.preventDefault()
         console.log(locations)
-        axios.get( "http://localhost:5001/api/get/groupRec", {
+        axios.get( props.apiPath + "/api/get/groupRec", {
             params: {
                 groupSize: count + 1,
                 locations: locations

@@ -4,7 +4,7 @@ const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
-const  PORT = 5000;
+const  PORT = 5001;
 app.use(cors());
 app.use(express.json());
 
@@ -148,11 +148,11 @@ app.get("/api/get/groupRec", (req, res) => {
                 WHERE ${group} and ${loudness}`, (err, result) => {
         if (err) console.log(err);
         console.log(result)
-        result = result.map(place => place, Object.assign(place, get_distance(place["building"], place["spot_id"], locs)))
+        result = result.map(place => place, Object.assign(place, get_distance(place["building"], locs)))
         res.send(result)
     });
 
-    function get_distance(building, spot_id, locs) {
+    function get_distance(building, locs) {
         distObj = {}
         let longestDist = 0
         for (let i = 0; i < locs.length; i++) {
@@ -169,9 +169,9 @@ app.get("/api/get/groupRec", (req, res) => {
         return distObj;
     }
 
-    axios.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins=Knott Hall&destinations=Fitzpatrick Hall of Engineering&units=imperial&mode=walking&key=AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE").then(response => {
-        res.send(response.data["rows"][0]["elements"][0]["duration"]["text"].split()[0])
-    });
+    //axios.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins=Knott Hall&destinations=Fitzpatrick Hall of Engineering&units=imperial&mode=walking&key=AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE").then(response => {
+    //    res.send(response.data["rows"][0]["elements"][0]["duration"]["text"].split()[0])
+    //});
 });
 
 /* LISTENER */
