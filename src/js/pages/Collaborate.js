@@ -44,37 +44,6 @@ function Results(props) {
         </div>
     );
 }
-/*
-function recommend(data, locs) {
-    // let new_data = data
-    get_distance(data, '000102', ["Knott Hall", "Keough Hall"])
-    //new_data = new_data.map(place => {
-    //    return {...place, get_distance(new_data, new_data["spot_id"], locs)}}
-    //})
-
-    return data;
-}
- */
-
-/*
-function get_distance(data, spot_id, locs) {
-    for (let i = 0; i < locs.length; i++) {
-
-        let dest = data.filter(spot => spot.spot_id === spot_id)[0].building
-        let url = `${maps_url}origins=${locs[i]}&destinations=${dest}&units=${units}&mode=${mode}&key=${key}`
-
-        (service.getDistanceMatrix ({
-            origins: locs[i],
-            destinations: dest,
-            travelMode: 'WALKING',
-            unitSystem: google.maps.UnitSystem.IMPERIAL,
-        }).then((response) => {
-            console.log(response)
-        }))
-
-    }
-}
- */
 
 
 export default function Collaborate(props) {
@@ -87,17 +56,16 @@ export default function Collaborate(props) {
     const [locations, setLocations] = useState([])
     const [usernames, setUsernames] = useState([])
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault()
-        console.log(locations)
-        axios.get( "http://localhost:5001/api/get/groupRec", {
+        axios.get(props.apiPath + "/api/get/groupRec", {
             params: {
                 groupSize: count + 1,
-                locations: locations
+                locs: locations
             }
         }).then(data => {
             //data = recommend(data.data, count + 1)
-            console.log(data)
+            get_distance_obj("Mendoza College of Business", locations)
             //setResults(data.data)
         });
     }
@@ -109,6 +77,30 @@ export default function Collaborate(props) {
             [event.target.name]: value,
         });
         console.log(event);
+    }
+
+    async function get_distance_obj(building, locs) {
+
+        console.log(locs)
+        axios.get(props.apiPath + "/api/get/distances", {
+            params: {
+                building: building,
+                locs: locs
+            }
+        }).then(response => {
+            let distances = response.data
+            let distObj = {}
+            let longestDist = 0
+            for (let j = 0; j < distances.length; j++) {
+                if (distances[j] > longestDist)
+                    longestDist = distances[j]
+                distObj[`dist${j}`] = distances[j]
+                if (j === (locs.length - 1))
+                    distObj["longestDist"] = longestDist
+            }
+            console.log(distObj)
+            return distObj
+        })
     }
 
     function addAnother(event) {

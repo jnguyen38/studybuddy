@@ -6,7 +6,7 @@ import json
 import pprint
 import pandas as pd
 
-key = "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" # API key
+key = "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" # API key
 encodings = {" ": "%20", ",": "%2C"}
 
 units = "imperial"
@@ -51,7 +51,8 @@ def meeting_spot(study_spots, locs):
     df["max_dist"] = df.max(axis="columns")
 
 def main():
-    meeting_spot(pd.read_csv(sys.argv[1], dtype={"spot_id": str}), sys.argv[2:])
+    print(requests.get(f"https://maps.googleapis.com/maps/api/distancematrix/json?origins=Knott Hall, Notre Dame, IN | Keough Hall, Notre Dame, IN&destinations=Mendoza College of Business&units={units}&mode={mode}&key={key}").json())
+    #meeting_spot(pd.read_csv(sys.argv[1], dtype={"spot_id": str}), sys.argv[2:])
     #one_distance(sys.argv[1], sys.argv[2])
 
 if __name__ == "__main__":
