@@ -80,6 +80,9 @@ function LocationButtons(props) {
         props.handler.handleShowAuthenticate();
       };
 
+      props.handler.setDictHelper({});
+      props.handler.setHistDataHelper([]);
+
     };
 
     return (

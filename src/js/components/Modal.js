@@ -123,13 +123,7 @@ export function EditModal(props) {
 export function RevModal(props) {
     if (!props.show) return;
 
-    const optionList = [
-      { value: "Essay", label: "Essay" },
-      { value: "Problem Set", label: "Problem Set" },
-      { value: "Presentation", label: "Presentation" },
-      { value: "Reading", label: "Reading" },
-      { value: "Exam Prep", label: "Exam Prep" }
-    ];
+    const optionList = props.work;
 
     function handleSubmit(event) {
         event.preventDefault()
@@ -146,6 +140,8 @@ export function RevModal(props) {
         }).then((data) => {
           Axios.get(props.apiPath + "/api/get/likes").then((reviewsData) => {
             props.handler.findReviews(reviewsData.data);
+            props.handler.setDictHelper({});
+            props.handler.setHistDataHelper([]);
           })
         })
 

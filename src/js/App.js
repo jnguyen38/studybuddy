@@ -26,17 +26,19 @@ export default function App() {
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
     const [spots, setSpots] = useState("");
-    const [majors, setMajors] = useState([]);       // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
+    const [majors, setMajors] = useState([]);   // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
+    const [work, setWork] = useState([]);
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
     const [userLikes, setUserLikes] = useState([]);
     const [userReviews, setUserReviews] = useState([]);
     const [histData, setHistData] = useState([]);
     const [totalDict, setDict] = useState({});
+    const [workReviews, setWorkReviews] = useState({});
 
     // Path variables
     const path = "";
-    const apiPath = "http://db8.cse.nd.edu:5000";
+    const apiPath = "http://db8.cse.nd.edu:5002";
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions
@@ -138,11 +140,24 @@ export default function App() {
             setMajors(tempMajors)
         });
 
-        /* Axios.get(apiPath + "/api/get/work").then(res => {
+        Axios.get(apiPath + "/api/get/work").then(res => {
+            console.log(res.data)
             let tempWork = [];
-            for (const workItem of res.data) tempWork.push()
-            setMajors(tempMajors)
-        }); */
+            for (const review of res.data) tempWork.push({value: review.work_type, label: review.work_type})
+            setWork(tempWork)
+        });
+
+        Axios.get(apiPath + "/api/get/reviews").then(res => {
+            console.log(res.data)
+            let tempWorkReviews = {};
+            for (const review of res.data) {
+              if (!tempWorkReviews[review.work_type]) {
+                tempWorkReviews[review.work_type] = []
+              }
+              tempWorkReviews[review.work_type].push([review.spot_id, review.rating])
+            }
+            setWorkReviews(tempWorkReviews)
+        });
 
     }, [apiPath]);
 
@@ -208,15 +223,15 @@ export default function App() {
                     <Route path={path + "/overview"} element={
                         <Overview/>}/>
                     <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
+                        <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
                     <Route path={path + "/search"} element={
                         <Search apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/upload"} element={
                         <Upload/>}/>
                     <Route path={path + "/recommendation"} element={
-                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                     <Route path={path + "/recommendation/:typerec"} element={
-                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Recommendation spots={spots} work={work} userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/signup"} element={
