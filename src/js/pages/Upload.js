@@ -1,6 +1,5 @@
-import React, {useState} from "react";
+import React from "react";
 import ReactAvatarEditor from "react-avatar-editor";
-import FormControl from "rsuite/FormControl";
 
 function Ratings(props) {
     let selectedOption = undefined;
