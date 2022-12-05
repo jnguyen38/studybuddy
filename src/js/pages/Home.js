@@ -36,9 +36,9 @@ export default function Home(props) {
                             <h1>🚀 Explore &rarr;</h1>
                             <p>Explore study spaces on campus that you haven't visited before!</p>
                         </div></Link>
-                        <Link to={props.path + "/random"}><div className={"home-option"}>
-                            <h1>🎲 Random &rarr;</h1>
-                            <p>Feeling Lucky? Find a hidden gem on campus.</p>
+                        <Link to={props.path + "/recommendation"}><div className={"home-option"}>
+                            <h1>🎲 Suggest &rarr;</h1>
+                            <p>Find spot recommendations based on your previous activity or work needs!</p>
                         </div></Link>
                         <Link to={props.path + "/upload"}><div className={"home-option"}>
                             <h1>📤 Upload &rarr;</h1>

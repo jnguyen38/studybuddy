@@ -10,6 +10,7 @@ const certificate = fs.readFileSync('/etc/letsencrypt/live/api.studybuddynd.com/
 const credentials = {key: privateKey, cert: certificate};
 
 const app = express();
+
 const  PORT = 5000;
 
 app.use(cors());
@@ -21,6 +22,30 @@ app.get("/api/get", (req, res) => {
     db.query("SELECT * \
                 FROM study_spots \
                 ORDER BY building", (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
+app.get("/api/get/likes", (req, res) => {
+	db.query(`SELECT * \
+          FROM likes`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
+app.get("/api/get/reviews", (req, res) => {
+	db.query(`SELECT * \
+          FROM reviews`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
+app.get("/api/get/work", (req, res) => {
+	db.query(`SELECT DISTINCT work_type \
+          FROM reviews`, (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
@@ -60,6 +85,20 @@ app.get("/api/get/location", (req, res) => {
     });
 });
 
+app.get("/api/get/groupRec", (req, res) => {
+    let group = `max_group_size >= ${req.query.groupSize}`;
+    let loudness = `loudness_rating > 1`;
+    console.log(group);
+
+    db.query(`SELECT * \
+                FROM study_spots \
+                WHERE ${group} and ${loudness}`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
+
 app.get("/api/get/buildingInfo", (req, res) => {
     db.query(`SELECT * \
                 FROM buildings \
@@ -68,7 +107,6 @@ app.get("/api/get/buildingInfo", (req, res) => {
         res.send(result);
     })
 });
-
 
 /* PUT API ENDPOINTS */
 
@@ -102,11 +140,31 @@ app.put("/api/put/signin", (req, res) => {
     });
 });
 
+app.put("/api/put/toggleLike", (req, res) => {
+    db.query(`SELECT username, spot_id, like_bool \
+                FROM likes \
+                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`, (err, result) => {
+        if (err) console.log(err);
+
+        if (result.length) {
+            db.query(`UPDATE likes \
+                      SET like_bool=${result.like_bool} \
+                      WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`);
+        } else {
+            db.query(`INSERT INTO likes (username, spot_id, like_bool) \
+                      VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 1)`);
+        }
+
+        res.send(result);
+    });
+});
+
+
 /* POST API ENDPOINTS */
 
 app.post("/api/post/review", (req, res) => {
-    db.query(`INSERT INTO reviews (time, date, content, name, rating, space_id) \
-                VALUES (now(), curdate(), \"${req.body.description}\", \"${req.body.name}\", ${req.body.rating}, ${req.body.spot_id})`, (err, result) => {
+    db.query(`INSERT INTO reviews (time, date, content, name, rating, spot_id, work_type, username) \
+                VALUES (now(), curdate(), \"${req.body.description}\", \"${req.body.name}\", ${req.body.rating}, \"${req.body.spot_id}\", \"${req.body.work_type}\", \"${req.body.username}\")`, (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
@@ -130,27 +188,41 @@ app.post("/api/post/search", (req, res) => {
 });
 
 
-app.post("/api/post/signup", (req, res) => {
-	db.query(`INSERT INTO users (first_name, last_name, email, major, latitude, longitude, last_login, created, username, password, admin) \
-                VALUES (\"${req.body.first_name}\", \"${req.body.last_name}\", \"${req.body.email}\", \"${req.body.major}\", ${req.body.latitude}, ${req.body.longitude}, now(), now(), \"${req.body.username}\", \"${req.body.password}\", 0)`, (err, result) => {
+app.post("/api/post/searchHistory", (req, res) => {
+    let tableSeatComfort = "table_seat_comfort<=" + ((req.body.comfort) + 1) + " AND table_seat_comfort>=" + ((req.body.comfort) - 1);
+    let seatComfort = "nontable_seat_comfort<=" + ((req.body.comfort) + 1) + " AND nontable_seat_comfort>=" + ((req.body.comfort) - 1);
+    let couchComfort = "couch_comfort<=" + ((req.body.comfort) + 1) + " AND couch_comfort>=" + ((req.body.comfort) - 1);
+    let outlets = "outlets_rating<=" + ((req.body.outlet) + 1) + " AND outlets_rating>=" + ((req.body.comfort) - 1);
+
+    let loudness = "loudness_rating<=" + ((req.body.loud) + 1) + " AND loudness_rating>=" + ((req.body.loud) - 1);
+    let light = "natural_light_rating<=" + ((req.body.light) + 1) + " AND natural_light_rating>=" + ((req.body.light) - 1);
+    let capacity = ("max_capacity<=" + ((req.body.capacity) + (req.body.capacity >= 60 ? 20 : (req.body.capacity >= 30 ? 15 : (req.body.capacity >= 15 ? 10 : 5)))) +
+          " AND max_capacity>= " + ((req.body.capacity) - (req.body.capacity >= 60 ? 20 : (req.body.capacity >= 30 ? 15 : (req.body.capacity >= 15 ? 10 : 5)))))
+    let table = "tables=" + Math.round(req.body.table);
+
+    db.query(`SELECT * \
+                FROM study_spots \
+                WHERE ((${tableSeatComfort}) OR (${seatComfort}) OR (${couchComfort})) AND ${outlets} AND ${loudness} AND ${light} AND ${capacity} AND ${table}`, (err, result) => {
+        if (err) console.log(err);
+        console.log(result)
+        res.send(result);
+    });
+});
+
+app.post("/api/post/location", (req, res) => {
+    db.query(`SELECT * \
+                FROM study_spots \
+                WHERE spot_id = ?`, [req.body.spot_id], (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
 });
 
-app.get("/api/get/groupRec", (req, res) => {
-
-    let group = `max_group_size >= ${req.query.groupSize}`;
-    let loudness = `loudness_rating > 1`;
-    locs = req.query.locs
-    console.log(group);
-    console.log(locs)
-
-    db.query(`SELECT * \
-                FROM study_spots \
-                WHERE ${group} and ${loudness}`, (err, result) => {
+app.post("/api/post/signup", (req, res) => {
+	db.query(`INSERT INTO users (first_name, last_name, email, major, latitude, longitude, last_login, created, username, password, admin) \
+                VALUES (\"${req.body.first_name}\", \"${req.body.last_name}\", \"${req.body.email}\", \"${req.body.major}\", ${req.body.latitude}, ${req.body.longitude}, now(), now(), \"${req.body.username}\", \"${req.body.password}\", 0)`, (err, result) => {
         if (err) console.log(err);
-        res.send(result)
+        res.send(result);
     });
 });
 
@@ -184,10 +256,11 @@ app.get("/api/get/distances", (req, res) => {
 
 app.listen(PORT, ()=>{
     console.log("Server is running on port " + PORT)
-})
+});
 
 let httpServer = http.createServer(app);
 let httpsServer = https.createServer(credentials, app);
 
 httpServer.listen(8080);
 httpsServer.listen(8443);
+
