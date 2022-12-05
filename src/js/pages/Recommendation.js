@@ -109,7 +109,7 @@ function Work(props) {
                 rating = 4;
             }
 
-            const response = await Axios.get(props.apiPath + "/api/get/spot/" + spot[0]);
+            const response = await Axios.get(props.apiPath + "/api/get/location/", {params: {spot_id: spot[0]}});
             tempWorkDict["loud"] += response.data[0].loudness_rating * (rating / 5) / lengthSpots;
             tempWorkDict["light"] += response.data[0].natural_light_rating * (rating / 5) / lengthSpots;
             tempWorkDict["outlet"] += response.data[0].outlets_rating * (rating / 5) / lengthSpots;
