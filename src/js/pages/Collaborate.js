@@ -15,10 +15,8 @@ const key = "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" // API Key
 const units = "imperial"
 const mode = "walking"
 const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
-//var service = new google.maps.DistanceMatrixService();
 
 function Results(props) {
-    //console.log(Pyscript.range(0, 10))
 
     return (
         <div className={"results-container d-flex-col-c gap-20"}>
@@ -63,10 +61,12 @@ export default function Collaborate(props) {
                 groupSize: count + 1,
                 locs: locations
             }
-        }).then(data => {
-            //data = recommend(data.data, count + 1)
-            get_distance_obj("Mendoza College of Business", locations)
-            //setResults(data.data)
+        }).then(async (data) => {
+            let new_data = await Promise.all(data.data.map(async (place) => Object.assign(place, await get_distance_obj(place["building"], locations))))
+            new_data = new_data.map(place => Object.assign(place, calc_score(place)))
+            new_data.sort((o1,o2) => (o1["score"] - o2["score"]))
+            console.log(new_data)
+            setResults(new_data)
         });
     }
 
@@ -81,26 +81,33 @@ export default function Collaborate(props) {
 
     async function get_distance_obj(building, locs) {
 
-        console.log(locs)
-        axios.get(props.apiPath + "/api/get/distances", {
+        return axios.get(props.apiPath + "/api/get/distances", {
             params: {
                 building: building,
                 locs: locs
             }
         }).then(response => {
             let distances = response.data
-            let distObj = {}
-            let longestDist = 0
-            for (let j = 0; j < distances.length; j++) {
-                if (distances[j] > longestDist)
-                    longestDist = distances[j]
-                distObj[`dist${j}`] = distances[j]
-                if (j === (locs.length - 1))
-                    distObj["longestDist"] = longestDist
-            }
-            console.log(distObj)
-            return distObj
+            return {"distances": distances}
         })
+    }
+
+    function calc_score(place) {
+        let dists = place["distances"]
+        dists.sort((a,b) => b - a)
+        let num_locs = place["distances"].length
+        let score = 0
+        let denom_total = 0
+        let score_total = 0
+        let matter = Math.ceil(num_locs / 2.0)
+        for (let i = 0; i < matter; i++) {
+            score_total += (dists[i] * (matter - i))
+            denom_total += (matter - i)
+        }
+        score = score_total / denom_total
+
+
+        return {"score": score}
     }
 
     function addAnother(event) {
