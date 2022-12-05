@@ -85,13 +85,12 @@ function Work(props) {
             "capacity": workDict["capacity"],
             "table": workDict["table"]
         }).then(data => {
-            console.log(workDict)
-            console.log(data)
             setResults(data.data)
         });
     }, [props.apiPath, workDict]);
 
-    const getAllInfo = useCallback(async () => {
+    const getAllInfo = useCallback(async (workType) => {
+        console.log(workType)
         let lengthSpots = props.workReviews[workType].length;
         let tempWorkDict = {"loud": 0, "light": 0, "outlet": 0, "comfort": 0, "table": 0, "capacity": 0}
         let rating = 0;
@@ -138,15 +137,20 @@ function Work(props) {
         setWorkDict(tempWorkDict)
         return Promise.resolve()
 
-    }, [props.apiPath, props.workReviews, workType]);
+    }, [props.apiPath, props.workReviews]);
 
     useEffect(() => {
 
         if (workType) {
-            getAllInfo().then(() => {
+            getAllInfo(workType).then(() => {
                 handleRequestWork()
             })
         }
+
+    }, [workType])
+
+    useEffect(() => {
+        handleRequestWork()
 
         if (workType) {
             setShowDesc(true)
@@ -154,13 +158,7 @@ function Work(props) {
             setShowDesc(false)
         }
 
-    }, [getAllInfo, handleRequestWork, workType])
-
-    useEffect(() => {
-        handleRequestWork()
-
-    }, [handleRequestWork, workDict])
-
+    }, [handleRequestWork, workDict, workType])
 
     return (
         <div className={"work-container d-flex-col-c"}>
