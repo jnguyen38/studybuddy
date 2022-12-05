@@ -74,6 +74,13 @@
     font-size: 1em !important;
 }
 
+#like-spot-btn, .submit-btn {
+    background-color: var(--sb-yellow) !important;
+    color: var(--sb-white) !important;
+    border-color: var(--sb-yellow) !important;
+    font-size: 1em !important;
+}
+
 .location-img {
     position: absolute;
     width: 100%;
