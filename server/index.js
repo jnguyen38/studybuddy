@@ -77,6 +77,19 @@ app.get("/api/get/buildings", (req, res) => {
     });
 });
 
+app.get("/api/get/groupRec", (req, res) => {
+    let group = `max_group_size >= ${req.query.groupSize}`;
+    let loudness = `loudness_rating > 1`;
+    console.log(group);
+
+    db.query(`SELECT * \
+                FROM study_spots \
+                WHERE ${group} and ${loudness}`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
 /* PUT API ENDPOINTS */
 
 app.put("/api/put/edit", (req, res) => {
@@ -109,6 +122,26 @@ app.put("/api/put/signin", (req, res) => {
     });
 });
 
+app.put("/api/put/toggleLike", (req, res) => {
+    db.query(`SELECT username, spot_id, like_bool \
+                FROM likes \
+                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`, (err, result) => {
+        if (err) console.log(err);
+        console.log(result)
+
+        if (result.length) {
+            db.query(`UPDATE likes \
+                      SET like_bool=${result.like_bool} \
+                      WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`);
+        } else {
+            db.query(`INSERT INTO likes (username, spot_id, like_bool) \
+                      VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 1)`);
+        }
+
+        res.send(result);
+    });
+});
+
 app.put("/api/put/changeLike", (req, res) => {
     db.query(`SELECT username, spot_id, like_bool \
                 FROM likes \
@@ -116,11 +149,11 @@ app.put("/api/put/changeLike", (req, res) => {
         if (err) console.log(err);
 
         if (result.length) {
-          db.query(`UPDATE likes \
+            db.query(`UPDATE likes \
                       SET like_bool=1 \
                       WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`);
         } else {
-          db.query(`INSERT INTO likes (username, spot_id, like_bool) \
+            db.query(`INSERT INTO likes (username, spot_id, like_bool) \
                       VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 1)`);
         }
 
@@ -213,19 +246,6 @@ app.post("/api/post/signup", (req, res) => {
     });
 });
 
-
-app.get("/api/get/groupRec", (req, res) => {
-    let group = `max_group_size >= ${req.query.groupSize}`;
-    let loudness = `loudness_rating > 1`;
-    console.log(group);
-
-    db.query(`SELECT * \
-                FROM study_spots \
-                WHERE ${group} and ${loudness}`, (err, result) => {
-        if (err) console.log(err);
-        res.send(result);
-    });
-});
 
 /* LISTENER */
 

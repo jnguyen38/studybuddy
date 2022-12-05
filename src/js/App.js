@@ -1,7 +1,6 @@
 import {Route, Routes} from "react-router-dom";
 import {useEffect, useState} from "react";
 
-
 import Axios from "axios";
 import Devplan from "./pages/Devplan";
 import Home from "./pages/Home";
@@ -29,6 +28,7 @@ export default function App() {
     const [majors, setMajors] = useState([]);       // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
+
     const [userLikes, setUserLikes] = useState([]);
     const [userReviews, setUserReviews] = useState([]);
     const [histData, setHistData] = useState([]);
@@ -36,7 +36,7 @@ export default function App() {
 
     // Path variables
     const path = "";
-    const apiPath = "http://db8.cse.nd.edu:5000";
+    const apiPath = "https://api.studybuddynd.com:8443";
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions
@@ -48,25 +48,27 @@ export default function App() {
         static handleUXMode() {setUXMode(!UXMode);}
         static handleMenu() {setShowMenu(() => !showMenu); handler.closeSettings();}
         static handleSettings() {setShowSettings(() => !showSettings); handler.closeMenu();}
-        static findLikes(likesData) {
-          let tempLikes = [];
-          for (const like of likesData) {
-            if (user.username === like.username && like.like_bool === 1) {
-              tempLikes.push(like.spot_id)
-            };
-          };
-
-          setUserLikes(tempLikes);
+        static updateLikes() {
+            Axios.get(apiPath + "/api/get/likes").then(data => {
+                let tempLikes = [];
+                for (const like of data.data) {
+                    if (user.username === like.username && like.like_bool === 1) {
+                        tempLikes.push(like.spot_id)
+                    }
+                }
+                setUserLikes(tempLikes);
+            });
         }
-        static findReviews(reviewsData) {
-          let tempReviews = [];
-          for (const review of reviewsData) {
-            if (user.username === review.username) {
-              tempReviews.push(review)
-            };
-          };
-
-          setUserReviews(tempReviews);
+        static updateReviews() {
+            Axios.get(apiPath + "/api/get/reviews").then(data => {
+                let tempReviews = [];
+                for (const review of data.data) {
+                    if (user.username === review.username) {
+                        tempReviews.push(review)
+                    }
+                }
+                setUserReviews(tempReviews);
+            });
         }
         static signIn(userData) {
             let tempUser = user;
@@ -82,6 +84,9 @@ export default function App() {
         static signOut() {
             setUser({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
             handler.notifySignOut();
+            setUserReviews([]);
+            setUserLikes([]);
+            setDict([]);
             window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
         }
         static handleShowAuthenticate() {setShowAuthenticate(()=> !showAuthenticate)}
@@ -138,14 +143,11 @@ export default function App() {
             setMajors(tempMajors)
         });
 
-        /* Axios.get(apiPath + "/api/get/work").then(res => {
-            let tempWork = [];
-            for (const workItem of res.data) tempWork.push()
-            setMajors(tempMajors)
-        }); */
+        // Get all likes, and
 
     }, [apiPath]);
 
+    // Explore Layouts
     useEffect(() => {
         let tempLayouts = [];
         for (const building in buildings)
@@ -166,26 +168,35 @@ export default function App() {
         }
     }, []);
 
-    useEffect(() => {
-        window.localStorage.setItem("UXMode", JSON.stringify(UXMode));
-    }, [UXMode]);
+    // UX Mode
+    useEffect(() => window.localStorage.setItem("UXMode", JSON.stringify(UXMode)), [UXMode]);
 
     useEffect(() => {
       if (user.isSignedIn) {
-        Axios.all([
-          Axios.get(apiPath + "/api/get/likes"),
-          Axios.get(apiPath + "/api/get/reviews")
-        ]).then(Axios.spread((likesData, reviewsData) => {
-          handler.findLikes(likesData.data)
-          handler.findReviews(reviewsData.data)
-        }))
+          Axios.get(apiPath + "/api/get/likes").then(data => {
+              let tempLikes = [];
+              for (const like of data.data) {
+                  if (user.username === like.username && like.like_bool === 1) {
+                      tempLikes.push(like.spot_id)
+                  }
+              }
+              setUserLikes(tempLikes);
+          });
+          Axios.get(apiPath + "/api/get/reviews").then(data => {
+              let tempReviews = [];
+              for (const review of data.data) {
+                  if (user.username === review.username) {
+                      tempReviews.push(review)
+                  }
+              }
+              setUserReviews(tempReviews);
+          });
       } else {
-        setUserReviews([])
-        setUserLikes([])
-        setDict([])
+          setUserReviews([]);
+          setUserLikes([]);
+          setDict([]);
       }
-
-    }, [user.isSignedIn])
+    }, [user.isSignedIn, user.username])
 
     return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>

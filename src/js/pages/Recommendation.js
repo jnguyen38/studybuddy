@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {useParams} from "react-router-dom";
 import Axios from "axios";
@@ -6,23 +6,23 @@ import Select from 'react-select';
 
 function Choice(props) {
 
-  var params = useParams()
+    let params = useParams()
 
-  if (params.typerec === "history") {
-    if (props.user.isSignedIn) {
-      return (<History {...props}/>)
+    if (params.typerec === "history") {
+        if (props.user.isSignedIn) {
+            return (<History {...props}/>)
+        } else {
+            props.handler.handleShowAuthenticate();
+        }
+    } else if (params.typerec === "work") {
+        return (<Work {...props}/>)
     } else {
-      props.handler.handleShowAuthenticate();
+        return (<div></div>)
     }
-  } else if (params.typerec === "work") {
-    return (<Work {...props}/>)
-  } else {
-    return (<div></div>)
-  }
 
 }
 
-function Work(props) {
+function Work() {
 
   const optionList = [
     { value: "Essay", label: "Essay" },
@@ -46,40 +46,14 @@ function History(props) {
 
     const [results, setResults] = useState([])
 
-    var loud = (props.totalDict["loud"] >= 3.75 ? "loud" : (props.totalDict["loud"] >= 2 ? "moderately loud" : (props.totalDict["loud"] >= 1.25 ? "moderately quiet" : "quiet")))
-    var light = (props.totalDict["light"] >= 3.75 ? "lots of" : (props.totalDict["light"] >= 2 ? "some" : (props.totalDict["light"] >= 1.25 ? "a little" : "very little")))
-    var outlet = (props.totalDict["outlet"] >= 3.75 ? "lots of" : (props.totalDict["outlet"] >= 2 ? "some" : (props.totalDict["outlet"] >= 1.25 ? "a few" : "no")))
-    var comfort = (props.totalDict["comfort"] >= 3.75 ? "very comfortable" : (props.totalDict["comfort"] >= 2 ? "comfortable" : (props.totalDict["comfort"] >= 1.25 ? "less comfortable" : "uncomfortable")))
-    var table = (props.totalDict["table"] >= 0.75 ? "need" : (props.totalDict["table"] >= 0.5 ? "want" : (props.totalDict["table"] >= 0.25 ? "don't need" : "don't want")))
-    var capacity = (props.totalDict["capacity"] >= 60 ? "lots of" : (props.totalDict["capacity"] >= 30 ? "many" : (props.totalDict["capacity"] >= 15 ? "some" : "a few")))
+    let loud = (props.totalDict["loud"] >= 3.75 ? "loud" : (props.totalDict["loud"] >= 2 ? "moderately loud" : (props.totalDict["loud"] >= 1.25 ? "moderately quiet" : "quiet")))
+    let light = (props.totalDict["light"] >= 3.75 ? "lots of" : (props.totalDict["light"] >= 2 ? "some" : (props.totalDict["light"] >= 1.25 ? "a little" : "very little")))
+    let outlet = (props.totalDict["outlet"] >= 3.75 ? "lots of" : (props.totalDict["outlet"] >= 2 ? "some" : (props.totalDict["outlet"] >= 1.25 ? "a few" : "no")))
+    let comfort = (props.totalDict["comfort"] >= 3.75 ? "very comfortable" : (props.totalDict["comfort"] >= 2 ? "comfortable" : (props.totalDict["comfort"] >= 1.25 ? "less comfortable" : "uncomfortable")))
+    let table = (props.totalDict["table"] >= 0.75 ? "need" : (props.totalDict["table"] >= 0.5 ? "want" : (props.totalDict["table"] >= 0.25 ? "don't need" : "don't want")))
+    let capacity = (props.totalDict["capacity"] >= 60 ? "lots of" : (props.totalDict["capacity"] >= 30 ? "many" : (props.totalDict["capacity"] >= 15 ? "some" : "a few")))
 
-    useEffect(() => {
-      if (Object.keys(props.totalDict).length === 0 || props.totalDict["capacity"] === 0) {
-
-        var allSpots = [];
-        var likesDict = {"loud": 0, "light": 0, "outlet": 0, "comfort": 0, "table": 0, "capacity": 0}
-        var reviewsDict = {"loud": 0, "light": 0, "outlet": 0, "comfort": 0, "table": 0, "capacity": 0}
-
-        for (const like of props.userLikes) {
-            allSpots.push(like)
-        }
-
-        for (const review of props.userReviews) {
-            if (!allSpots.includes(review.spot_id)) {
-                allSpots.push(review.spot_id)
-            }
-        }
-
-        getAllInfo(allSpots, likesDict, reviewsDict).then(() => {
-            handleRequest(props.totalDict);
-        })
-
-      } else if (props.histData.length > 0) {
-        setResults(props.histData)
-      }
-    }, [])
-
-    function handleRequest() {
+    const handleRequest = useCallback(() => {
         Axios.post(props.apiPath + "/api/post/searchHistory", {
             "comfort": props.totalDict["comfort"],
             "outlet": props.totalDict["outlet"],
@@ -93,73 +67,97 @@ function History(props) {
             props.handler.setHistDataHelper(data.data)
             setResults(data.data)
         });
-    }
+    }, [props.apiPath, props.handler, props.totalDict]);
 
-    async function getAllInfo(allSpots, likesDict, reviewsDict) {
-      var lengthRev = props.userReviews.length;
-      var lengthLike = props.userLikes.length;
-      for (const spot_id of allSpots) {
-        const response = await Axios.get(props.apiPath + "/api/get/spot/" + spot_id)
+    const calcComf = useCallback(response => {
+        let comfSum = 0
+        let comfNum = 0
+        if (response.data[0].table_seat_comfort !== -1) {
+            comfSum += response.data[0].table_seat_comfort;
+            comfNum += 1;
+        }
+        if (response.data[0].nontable_seat_comfort !== -1) {
+            comfSum = response.data[0].nontable_seat_comfort;
+            comfNum += 1;
+        }
+        if (response.data[0].couch_comfort !== -1) {
+            comfSum = response.data[0].couch_comfort;
+            comfNum += 1;
+        }
+
+        return {comfSum, comfNum};
+    }, []);
+
+
+    const getAllInfo = useCallback(async (allSpots, likesDict, reviewsDict) => {
+        let lengthRev = props.userReviews.length;
+        let lengthLike = props.userLikes.length;
+        let comf = {};
+
+        for (const spot_id of allSpots) {
+            const response = await Axios.get(props.apiPath + "/api/get/location", {
+                params: {spot_id: spot_id}
+            });
+
             if (props.userLikes.includes(response.data[0].spot_id)) {
-              likesDict["loud"] += response.data[0].loudness_rating / lengthLike;
-              likesDict["light"] += response.data[0].natural_light_rating / lengthLike;
-              likesDict["outlet"] += response.data[0].outlets_rating / lengthLike;
+                likesDict["loud"] += response.data[0].loudness_rating / lengthLike;
+                likesDict["light"] += response.data[0].natural_light_rating / lengthLike;
+                likesDict["outlet"] += response.data[0].outlets_rating / lengthLike;
 
-              var comfSum = 0
-              var comfNum = 0
-              if (response.data[0].table_seat_comfort !== -1) {
-                  comfSum += response.data[0].table_seat_comfort;
-                  comfNum += 1;
-              }
-              if (response.data[0].nontable_seat_comfort !== -1) {
-                  comfSum = response.data[0].nontable_seat_comfort;
-                  comfNum += 1;
-              }
-              if (response.data[0].couch_comfort !== -1) {
-                  comfSum = response.data[0].couch_comfort;
-                  comfNum += 1;
-              }
+                comf = calcComf(response);
 
-              likesDict["comfort"] += comfSum / comfNum / lengthLike;
+                likesDict["comfort"] += comf.comfSum / comf.comfNum / lengthLike;
 
-              likesDict["table"] += response.data[0].tables / lengthLike;
-              likesDict["capacity"] += response.data[0].max_capacity / lengthLike;
+                likesDict["table"] += response.data[0].tables / lengthLike;
+                likesDict["capacity"] += response.data[0].max_capacity / lengthLike;
             }
             for (const findReview of props.userReviews) {
-              if (findReview.spot_id === response.data[0].spot_id) {
-                reviewsDict["loud"] += response.data[0].loudness_rating * (findReview.rating/5) / lengthRev;
-                reviewsDict["light"] += response.data[0].natural_light_rating * (findReview.rating/5) / lengthRev;
-                reviewsDict["outlet"] += response.data[0].outlets_rating * (findReview.rating/5) / lengthRev;
+                if (findReview.spot_id === response.data[0].spot_id) {
+                    reviewsDict["loud"] += response.data[0].loudness_rating * (findReview.rating / 5) / lengthRev;
+                    reviewsDict["light"] += response.data[0].natural_light_rating * (findReview.rating / 5) / lengthRev;
+                    reviewsDict["outlet"] += response.data[0].outlets_rating * (findReview.rating / 5) / lengthRev;
 
-                comfSum = 0
-                comfNum = 0
-                if (response.data[0].table_seat_comfort !== -1) {
-                    comfSum += response.data[0].table_seat_comfort;
-                    comfNum += 1;
-                }
-                if (response.data[0].nontable_seat_comfort !== -1) {
-                    comfSum = response.data[0].nontable_seat_comfort;
-                    comfNum += 1;
-                }
-                if (response.data[0].couch_comfort !== -1) {
-                    comfSum = response.data[0].couch_comfort;
-                    comfNum += 1;
-                }
+                    comf = calcComf(response);
 
-                reviewsDict["comfort"] += comfSum / comfNum * (findReview.rating/5) / lengthRev;
+                    reviewsDict["comfort"] += comf.comfSum / comf.comfNum * (findReview.rating / 5) / lengthRev;
 
-                reviewsDict["table"] += response.data[0].tables * (findReview.rating/5) / lengthRev;
-                reviewsDict["capacity"] += response.data[0].max_capacity * (findReview.rating/5) / lengthRev;
-              }
+                    reviewsDict["table"] += response.data[0].tables * (findReview.rating / 5) / lengthRev;
+                    reviewsDict["capacity"] += response.data[0].max_capacity * (findReview.rating / 5) / lengthRev;
+                }
             }
-      }
+        }
 
-      for (const [key, value] of Object.entries(likesDict)) {
-        props.totalDict[key] = (value * 0.35) + (reviewsDict[key] * 0.65)
-      }
+        for (const [key, value] of Object.entries(likesDict)) {
+            props.totalDict[key] = (value * 0.35) + (reviewsDict[key] * 0.65)
+        }
+        
+    }, [calcComf, props.apiPath, props.totalDict, props.userLikes, props.userReviews]);
 
+    
+    useEffect(() => {
+        if (Object.keys(props.totalDict).length === 0 || props.totalDict["capacity"] === 0) {
+            let allSpots = [];
+            let likesDict = {"loud": 0, "light": 0, "outlet": 0, "comfort": 0, "table": 0, "capacity": 0}
+            let reviewsDict = {"loud": 0, "light": 0, "outlet": 0, "comfort": 0, "table": 0, "capacity": 0}
 
-    }
+            for (const like of props.userLikes) {
+                allSpots.push(like)
+            }
+
+            for (const review of props.userReviews) {
+                if (!allSpots.includes(review.spot_id)) {
+                    allSpots.push(review.spot_id)
+                }
+            }
+
+            getAllInfo(allSpots, likesDict, reviewsDict).then(() => {
+                handleRequest();
+            })
+
+        } else if (props.histData.length > 0) {
+            setResults(props.histData)
+        }
+    }, [getAllInfo, handleRequest, props.histData, props.totalDict, props.userLikes, props.userReviews])
 
     return(
       <div className={"history-container d-flex-col-c"}>

@@ -39,6 +39,9 @@ export function Authenticate(props) {
                     handleSignIn(userData);
                 } else
                     handleIncorrectSignIn();
+            }).then(() => {
+                props.handler.updateLikes();
+                props.handler.updateReviews();
             });
         }
 
