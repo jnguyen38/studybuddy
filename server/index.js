@@ -2,9 +2,16 @@ const express = require('express');
 const db = require('./config/db');
 const cors = require('cors');
 const axios = require('axios');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/api.studybuddynd.com/privkey.pem');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/api.studybuddynd.com/fullchain.pem');
+const credentials = {key: privateKey, cert: certificate};
 
 const app = express();
 const  PORT = 5000;
+
 app.use(cors());
 app.use(express.json());
 
@@ -173,8 +180,14 @@ app.get("/api/get/distances", (req, res) => {
     })
 });
 
-/* LISTENER */
+/* LISTENERS */
 
 app.listen(PORT, ()=>{
     console.log("Server is running on port " + PORT)
 })
+
+let httpServer = http.createServer(app);
+let httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(8080);
+httpsServer.listen(8443);
