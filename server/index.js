@@ -148,7 +148,7 @@ app.put("/api/put/toggleLike", (req, res) => {
 
         if (result.length) {
             db.query(`UPDATE likes \
-                      SET like_bool=${result.like_bool} \
+                      SET like_bool=${!result[0].like_bool} \
                       WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`);
         } else {
             db.query(`INSERT INTO likes (username, spot_id, like_bool) \
