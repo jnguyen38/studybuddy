@@ -1,5 +1,6 @@
 import {Route, Routes} from "react-router-dom";
 import {useEffect, useState} from "react";
+
 import Axios from "axios";
 
 
@@ -9,12 +10,13 @@ import Header from "./components/Header";
 import Overview from "./pages/Overview";
 import Footer from "./components/Footer";
 import Location from "./pages/Location";
-import Search from "./pages/Search";
 import Upload from "./pages/Upload";
+import Search from "./pages/Search";
 import Collaborate from "./pages/Collaborate";
 import {Authenticate} from "./components/Modal";
 import SignUp from "./pages/SignUp";
 import Explore from "./pages/Explore";
+import Recommendation from "./pages/Recommendation";
 import NotFound from "./pages/NotFound";
 import Building from "./pages/Building";
 import SignIn from "./pages/SignIn";
@@ -26,26 +28,56 @@ export default function App() {
     const [showAuthenticate, setShowAuthenticate] = useState(false);
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
-    const [majors, setMajors] = useState([]);       // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
+    const [majors, setMajors] = useState([]);   // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
+    const [work, setWork] = useState([]);
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
 
+    const [userLikes, setUserLikes] = useState([]);
+    const [userReviews, setUserReviews] = useState([]);
+    const [histData, setHistData] = useState([]);
+    const [totalDict, setDict] = useState({});
+    const [workReviews, setWorkReviews] = useState({});
 
     // Path variables
     const path = "";
-    const apiPath = "http://db8.cse.nd.edu:5000";
+    const apiPath = "https://api.studybuddynd.com:8443";
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions
     class handler {
+        static setDictHelper(totalDict) {setDict(totalDict)}
+        static setHistDataHelper(historyRecDict) {setHistData(historyRecDict)}
         static handleUXMode() {setUXMode(!UXMode);}
-        static signIn(data) {
+        static updateLikes() {
+            Axios.get(apiPath + "/api/get/likes").then(data => {
+                let tempLikes = [];
+                for (const like of data.data) {
+                    if (user.username === like.username && like.like_bool === 1) {
+                        tempLikes.push(like.spot_id)
+                    }
+                }
+                setUserLikes(tempLikes);
+            });
+        }
+        static updateReviews() {
+            Axios.get(apiPath + "/api/get/reviews").then(data => {
+                let tempReviews = [];
+                for (const review of data.data) {
+                    if (user.username === review.username) {
+                        tempReviews.push(review)
+                    }
+                }
+                setUserReviews(tempReviews);
+            });
+        }
+        static signIn(userData) {
             let tempUser = user;
             tempUser.isSignedIn = true;
-            tempUser.isAdmin = data.isAdmin;
-            tempUser.firstName = data.firstName;
-            tempUser.lastName = data.lastName;
-            tempUser.username = data.username;
+            tempUser.isAdmin = userData.isAdmin;
+            tempUser.firstName = userData.firstName;
+            tempUser.lastName = userData.lastName;
+            tempUser.username = userData.username;
             setUser(tempUser);
             handler.notifySignIn();
             window.localStorage.setItem("user", JSON.stringify(user));
@@ -53,6 +85,9 @@ export default function App() {
         static signOut() {
             setUser({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
             handler.notifySignOut();
+            setUserReviews([]);
+            setUserLikes([]);
+            setDict([]);
             window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
         }
         static handleShowAuthenticate() {setShowAuthenticate(currVal => !currVal)}
@@ -108,8 +143,27 @@ export default function App() {
             setMajors(tempMajors)
         });
 
+        Axios.get(apiPath + "/api/get/work").then(res => {
+            console.log(res.data)
+            let tempWork = [];
+            for (const review of res.data) tempWork.push({value: review.work_type, label: review.work_type})
+            setWork(tempWork)
+        });
+
+        Axios.get(apiPath + "/api/get/reviews").then(res => {
+            console.log(res.data)
+            let tempWorkReviews = {};
+            for (const review of res.data) {
+              if (!tempWorkReviews[review.work_type]) {
+                tempWorkReviews[review.work_type] = []
+              }
+              tempWorkReviews[review.work_type].push([review.spot_id, review.rating])
+            }
+            setWorkReviews(tempWorkReviews)
+        });
     }, [apiPath]);
 
+    // Explore Layouts
     useEffect(() => {
         let tempLayouts = [];
         for (const building in buildings)
@@ -130,9 +184,35 @@ export default function App() {
         }
     }, []);
 
+    // UX Mode
+    useEffect(() => window.localStorage.setItem("UXMode", JSON.stringify(UXMode)), [UXMode]);
+
     useEffect(() => {
-        window.localStorage.setItem("UXMode", JSON.stringify(UXMode));
-    }, [UXMode]);
+      if (user.isSignedIn) {
+          Axios.get(apiPath + "/api/get/likes").then(data => {
+              let tempLikes = [];
+              for (const like of data.data) {
+                  if (user.username === like.username && like.like_bool === 1) {
+                      tempLikes.push(like.spot_id)
+                  }
+              }
+              setUserLikes(tempLikes);
+          });
+          Axios.get(apiPath + "/api/get/reviews").then(data => {
+              let tempReviews = [];
+              for (const review of data.data) {
+                  if (user.username === review.username) {
+                      tempReviews.push(review)
+                  }
+              }
+              setUserReviews(tempReviews);
+          });
+      } else {
+          setUserReviews([]);
+          setUserLikes([]);
+          setDict([]);
+      }
+    }, [user.isSignedIn, user.username])
 
     return (pageLoaded) ? (
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
@@ -140,38 +220,44 @@ export default function App() {
 
             <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user} showAuthenticate={showAuthenticate}/>
 
-            <main>
-                <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate}/>
-                <div id={"sign-in-notification"} className={"d-flex-row-c notification"}>You have been signed in!</div>
-                <div id={"sign-out-notification"} className={"d-flex-row-c notification"}>You have been signed out!</div>
-                <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
+            <main id={"map-bg"}>
+                <div className={"map-overlay d-flex-row-c"}>
+                    <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate}/>
+                    <div id={"sign-in-notification"} className={"d-flex-row-c notification"}>You have been signed in!</div>
+                    <div id={"sign-out-notification"} className={"d-flex-row-c notification"}>You have been signed out!</div>
+                    <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
 
-                <Routes>
-                    <Route path={path + "/"} element={
-                        <Home user={user} UXMode={UXMode} path={path} apiPath={apiPath}/>}/>
-                    <Route path={path + "/devplan"} element={
-                        <Devplan/>}/>
-                    <Route path={path + "/overview"} element={
-                        <Overview/>}/>
-                    <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
-                    <Route path={path + "/search"} element={
-                        <Search apiPath={apiPath} path={path}/>}/>
-                    <Route path={path + "/upload"} element={
-                        <Upload/>}/>
-                    <Route path={path + "/collaborate"} element={
-                        <Collaborate apiPath={apiPath} path={path}/>}/>
-                    <Route path={path + "/signin"} element={
-                        <SignIn user={user} redirect={redirect} path={path} apiPath={apiPath} handler={handler}/>}/>
-                    <Route path={path + "/signup"} element={
-                        <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
-                    <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
-                        <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
-                    <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
-                        <Building buildings={buildings} path={path}/>}/>
-                    <Route path={"*"} element={
-                        <NotFound/>}/>
-                </Routes>
+                    <Routes>
+                        <Route path={path + "/"} element={
+                            <Home user={user} UXMode={UXMode} path={path} apiPath={apiPath}/>}/>
+                        <Route path={path + "/devplan"} element={
+                            <Devplan/>}/>
+                        <Route path={path + "/overview"} element={
+                            <Overview/>}/>
+                        <Route path={path + "/location/:spot_id"} element={
+                            <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
+                        <Route path={path + "/search"} element={
+                            <Search apiPath={apiPath} path={path}/>}/>
+                        <Route path={path + "/upload"} element={
+                            <Upload/>}/>
+                        <Route path={path + "/recommendation"} element={
+                            <Recommendation userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Route path={path + "/recommendation/:typerec"} element={
+                            <Recommendation work={work} userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Route path={path + "/collaborate"} element={
+                            <Collaborate apiPath={apiPath} path={path}/>}/>
+                        <Route path={path + "/signin"} element={
+                            <SignIn user={user} redirect={redirect} path={path} apiPath={apiPath} handler={handler}/>}/>
+                        <Route path={path + "/signup"} element={
+                            <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
+                        <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
+                            <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
+                        <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
+                            <Building buildings={buildings} path={path}/>}/>
+                        <Route path={"*"} element={
+                            <NotFound/>}/>
+                    </Routes>
+                </div>
             </main>
             <Footer/>
         </div>

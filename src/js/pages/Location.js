@@ -10,6 +10,8 @@ import share from "../../media/icons/share.svg";
 import camera from "../../media/icons/camera.svg";
 import wrong from "../../media/icons/close.svg";
 import check from "../../media/icons/check.svg";
+import fullHeart from "../../media/icons/full_heart.svg";
+import emptyHeart from "../../media/icons/empty_heart.svg";
 
 export function LocationHeader(props) {
     return (
@@ -33,8 +35,27 @@ function LocationButtons(props) {
     function handleRev() {(props.user.isSignedIn) ? setShowRev(() => !showRev) : props.handler.handleShowAuthenticate();}
     function closeRev() {setShowRev(false);}
 
+    function handleLike() {
+        if (props.user.isSignedIn) {
+            Axios.put(props.apiPath + "/api/put/toggleLike", {
+                "user": props.user.username,
+                "spot_id": props.spot_id
+            }).then(() => {
+                props.handler.updateLikes();
+            });
+        } else {
+            props.handler.handleShowAuthenticate();
+        }
+
+        props.handler.setDictHelper({});
+        props.handler.setHistDataHelper([]);
+    }
+
     return (
         <div className={"location-buttons"}>
+            <button className={"btn d-flex-row-c"} id={"like-spot-btn"} onClick={handleLike}>
+                <img src={(props.userLikes.includes(props.spot_id)) ? fullHeart : emptyHeart} alt="" className={"icon white-icon sm-icon"}/>
+            </button>
             <button className={"btn d-flex-row-c"} id={"write-review-btn"} onClick={handleRev}>
                 <img src={star} alt="" className={"icon white-icon sm-icon"}/>
                 Write a Review
@@ -57,6 +78,7 @@ function LocationButtons(props) {
 }
 
 function LocationMain(props) {
+
     return (
         <div id={"location-main"}>
             <LocationButtons {...props}/>
@@ -153,7 +175,6 @@ export default function Location(props) {
     const root = document.querySelector(":root");
     const params = useParams()
 
-
     function handleShowEdit(queryType) {
         setQuery(queryType)
         setShowEdit(() => !showEdit);
@@ -181,10 +202,8 @@ export default function Location(props) {
     }
 
     useEffect(() => {
-        Axios.get(props.apiPath + "/api/get/location", {
-            params: {
-                "spot_id": params.spot_id
-            }
+        Axios.post(props.apiPath + "/api/post/location", {
+            "spot_id": params.spot_id
         }).then(data => {
             setSpotData(data.data[0]);
         });

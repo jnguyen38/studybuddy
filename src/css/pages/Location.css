@@ -1,8 +1,10 @@
 #location-container {
     min-height: 100vh;
     width: 80%;
-    padding: calc(var(--header-height) *1.5) 10%;
-    background-color: var(--reg-bg-solid);
+    padding: 5%;
+    background-color: var(--reg-bg-transparent-dark);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 10px #333;
 }
 
 #location-header {
@@ -68,6 +70,13 @@
 .location-buttons button:hover, .location-info button:hover {background-color: var(--inverted-bg-transparent);}
 
 #write-review-btn, .submit-btn {
+    background-color: var(--sb-yellow) !important;
+    color: var(--sb-white) !important;
+    border-color: var(--sb-yellow) !important;
+    font-size: 1em !important;
+}
+
+#like-spot-btn, .submit-btn {
     background-color: var(--sb-yellow) !important;
     color: var(--sb-white) !important;
     border-color: var(--sb-yellow) !important;
