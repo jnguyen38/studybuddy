@@ -173,31 +173,29 @@ export default function SignUp(props) {
     }
 
     return (!props.user.isSignedIn) ? (
-        <div id={"map-bg"}>
-            <section id={"sign-up-container"} className={"d-flex-col-c"}>
-                <div className={"sign-up-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
-                    <form onSubmit={handleSubmit} className={"form-container d-flex-col-c"}>
-                        <h2>Create an Account</h2>
-                        <div className={"thin light-blue full-length line"}/>
+        <section id={"sign-up-container"} className={"d-flex-col-c"}>
+            <div className={"sign-up-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
+                <form onSubmit={handleSubmit} className={"form-container d-flex-col-c"}>
+                    <h2>Create an Account</h2>
+                    <div className={"thin light-blue full-length line"}/>
 
-                        <PersonalInfo majors={props.majors}/>
+                    <PersonalInfo majors={props.majors}/>
 
-                        <AccountInfo handler={signUpHandler} password={password} confirm={confirm}
-                                     usernameTaken={usernameTaken} emailTaken={emailTaken} showPassWarning={showPassWarning}/>
+                    <AccountInfo handler={signUpHandler} password={password} confirm={confirm}
+                                 usernameTaken={usernameTaken} emailTaken={emailTaken} showPassWarning={showPassWarning}/>
 
-                        <div className={"form-buttons d-flex jc-c"}>
-                            <input type={"submit"} value={"Sign Up"} className={"btn submit-btn"}/>
-                        </div>
+                    <div className={"form-buttons d-flex jc-c"}>
+                        <input type={"submit"} value={"Sign Up"} className={"btn submit-btn"}/>
+                    </div>
 
-                        <div className={"sign-up d-flex-col-c as-c"}>
-                            <p>Already have an account?</p>
-                            <p><Link to={props.path + "/signin"}>Sign in here!</Link></p>
-                        </div>
+                    <div className={"sign-up d-flex-col-c as-c"}>
+                        <p>Already have an account?</p>
+                        <p><Link to={props.path + "/signin"}>Sign in here!</Link></p>
+                    </div>
 
-                    </form>
-                </div>
-            </section>
-        </div>
+                </form>
+            </div>
+        </section>
         ) : (
         <Navigate to={props.path + "/"}/>
     );
