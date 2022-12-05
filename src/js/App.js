@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import Header from "./components/Header";
 import Overview from "./pages/Overview";
 import Footer from "./components/Footer";
-import Location from "./pages/Location";
+import Location from "./pages/Deep/Location";
 import Upload from "./pages/Upload";
 import Search from "./pages/Search";
 import Collaborate from "./pages/Collaborate";
