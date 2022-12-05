@@ -366,7 +366,7 @@ function Results(props) {
 
 export default function Recommendation(props) {
     return (
-        <div className={"recommendation-container d-flex-col-c"}>
+        <div className={"recommendation-container d-flex f-col"}>
             <div className={"recommendation-header d-flex-col-c"}>
                 <Link to={props.path}>
                     <div>

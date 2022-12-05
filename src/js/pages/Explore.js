@@ -93,24 +93,22 @@ export default function Explore(props) {
     }
 
     return (
-        <div id={"map-bg"}>
-            <div id={"explore-container"} className={"d-flex"}>
-                <aside className={"side-nav d-flex-col-l no-select"}>
-                    <h2>Navigation</h2>
-                    <div className={"thin inverted line"}/>
-                    {Object.entries(props.buildings).map(([building, spots], index) => {
-                        return (
-                            <div onClick={() => scrollTo(building)} key={building} className={(scrollItem === index) ? "side-nav-link-scrolled side-nav-link" : "side-nav-link"}><p>{building}</p></div>
-                        );
-                    })}
-                </aside>
-                <div className={"explore-page d-flex-col-l gap-40"}>
-                    {Object.entries(props.buildings).map(([building, spots], index) => {
-                        return (
-                            <ExploreBuilding {...props} key={building} building={building} spots={spots} layout={props.layout[index]} gridAreas={gridAreas} setSectorHeight={setSectorHeight}/>
-                        );
-                    })}
-                </div>
+        <div id={"explore-container"} className={"d-flex"}>
+            <aside className={"side-nav d-flex-col-l no-select"}>
+                <h2>Navigation</h2>
+                <div className={"thin inverted line"}/>
+                {Object.entries(props.buildings).map(([building, spots], index) => {
+                    return (
+                        <div onClick={() => scrollTo(building)} key={building} className={(scrollItem === index) ? "side-nav-link-scrolled side-nav-link" : "side-nav-link"}><p>{building}</p></div>
+                    );
+                })}
+            </aside>
+            <div className={"explore-page d-flex-col-l gap-40"}>
+                {Object.entries(props.buildings).map(([building, spots], index) => {
+                    return (
+                        <ExploreBuilding {...props} key={building} building={building} spots={spots} layout={props.layout[index]} gridAreas={gridAreas} setSectorHeight={setSectorHeight}/>
+                    );
+                })}
             </div>
         </div>
     );

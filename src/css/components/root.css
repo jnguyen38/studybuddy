@@ -222,6 +222,17 @@ a:link { text-decoration: none; }
     height: 100%;
 }
 
+.map-overlay {
+    width: 100%;
+    min-height: 100vh;
+    padding: calc(var(--header-height) * 1.5) 0;
+    background-color: var(--reg-bg-transparent);
+}
+
+#map-bg {
+    background-image: url("/src/media/ND_map_bw.png");
+}
+
 @media (max-width: 768px) {
     #header-nav {
         display: none !important;

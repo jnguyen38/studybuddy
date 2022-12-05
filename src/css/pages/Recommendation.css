@@ -1,10 +1,11 @@
 .recommendation-container {
-    padding-top: calc(var(--header-height) * 1.5);
-    padding-left: 20px;
-    padding-right: 20px;
     text-align: center;
     min-height: 80vh;
-    align-items: center;
+    width: 80%;
+    padding: 5%;
+    background-color: var(--reg-bg-transparent-dark);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 10px #333;
 }
 
 .history-container {

@@ -220,42 +220,44 @@ export default function App() {
 
             <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user} showAuthenticate={showAuthenticate}/>
 
-            <main>
-                <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate}/>
-                <div id={"sign-in-notification"} className={"d-flex-row-c notification"}>You have been signed in!</div>
-                <div id={"sign-out-notification"} className={"d-flex-row-c notification"}>You have been signed out!</div>
-                <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
+            <main id={"map-bg"}>
+                <div className={"map-overlay d-flex-row-c"}>
+                    <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate}/>
+                    <div id={"sign-in-notification"} className={"d-flex-row-c notification"}>You have been signed in!</div>
+                    <div id={"sign-out-notification"} className={"d-flex-row-c notification"}>You have been signed out!</div>
+                    <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
 
-                <Routes>
-                    <Route path={path + "/"} element={
-                        <Home user={user} UXMode={UXMode} path={path} apiPath={apiPath}/>}/>
-                    <Route path={path + "/devplan"} element={
-                        <Devplan/>}/>
-                    <Route path={path + "/overview"} element={
-                        <Overview/>}/>
-                    <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
-                    <Route path={path + "/search"} element={
-                        <Search apiPath={apiPath} path={path}/>}/>
-                    <Route path={path + "/upload"} element={
-                        <Upload/>}/>
-                    <Route path={path + "/recommendation"} element={
-                        <Recommendation userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
-                    <Route path={path + "/recommendation/:typerec"} element={
-                        <Recommendation work={work} userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
-                    <Route path={path + "/collaborate"} element={
-                        <Collaborate apiPath={apiPath} path={path}/>}/>
-                    <Route path={path + "/signin"} element={
-                        <SignIn user={user} redirect={redirect} path={path} apiPath={apiPath} handler={handler}/>}/>
-                    <Route path={path + "/signup"} element={
-                        <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
-                    <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
-                        <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
-                    <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
-                        <Building buildings={buildings} path={path}/>}/>
-                    <Route path={"*"} element={
-                        <NotFound/>}/>
-                </Routes>
+                    <Routes>
+                        <Route path={path + "/"} element={
+                            <Home user={user} UXMode={UXMode} path={path} apiPath={apiPath}/>}/>
+                        <Route path={path + "/devplan"} element={
+                            <Devplan/>}/>
+                        <Route path={path + "/overview"} element={
+                            <Overview/>}/>
+                        <Route path={path + "/location/:spot_id"} element={
+                            <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
+                        <Route path={path + "/search"} element={
+                            <Search apiPath={apiPath} path={path}/>}/>
+                        <Route path={path + "/upload"} element={
+                            <Upload/>}/>
+                        <Route path={path + "/recommendation"} element={
+                            <Recommendation userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Route path={path + "/recommendation/:typerec"} element={
+                            <Recommendation work={work} userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Route path={path + "/collaborate"} element={
+                            <Collaborate apiPath={apiPath} path={path}/>}/>
+                        <Route path={path + "/signin"} element={
+                            <SignIn user={user} redirect={redirect} path={path} apiPath={apiPath} handler={handler}/>}/>
+                        <Route path={path + "/signup"} element={
+                            <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
+                        <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
+                            <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
+                        <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
+                            <Building buildings={buildings} path={path}/>}/>
+                        <Route path={"*"} element={
+                            <NotFound/>}/>
+                    </Routes>
+                </div>
             </main>
             <Footer/>
         </div>

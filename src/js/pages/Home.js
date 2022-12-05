@@ -8,7 +8,6 @@ export default function Home(props) {
 
 
     return (
-        <div id={"map-bg"}>
             <div id={"home-container"} className={"d-flex-col-c"}>
                 <div className={"home-intro fs-buffer d-flex-col-l"}>
                     <div className={"welcome-text"}>
@@ -57,6 +56,5 @@ export default function Home(props) {
                     </div>
                 </div>
             </div>
-        </div>
     );
 };
