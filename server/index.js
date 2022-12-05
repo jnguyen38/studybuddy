@@ -3,7 +3,7 @@ const db = require('./config/db');
 const cors = require('cors');
 
 const app = express();
-const  PORT = 5000;
+const  PORT = 5002;
 app.use(cors());
 app.use(express.json());
 
@@ -28,6 +28,14 @@ app.get("/api/get/likes", (req, res) => {
 
 app.get("/api/get/reviews", (req, res) => {
 	db.query(`SELECT * \
+          FROM reviews`, (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
+app.get("/api/get/work", (req, res) => {
+	db.query(`SELECT DISTINCT work_type \
           FROM reviews`, (err, result) => {
         if (err) console.log(err);
         res.send(result);
@@ -191,7 +199,7 @@ app.post("/api/post/searchHistory", (req, res) => {
                 FROM study_spots \
                 WHERE ((${tableSeatComfort}) OR (${seatComfort}) OR (${couchComfort})) AND ${outlets} AND ${loudness} AND ${light} AND ${capacity} AND ${table}`, (err, result) => {
         if (err) console.log(err);
-        console.log(result);
+        console.log(result)
         res.send(result);
     });
 });
