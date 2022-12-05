@@ -145,7 +145,7 @@
     box-shadow: 0 0 5px var(--sb-warning-bg);
     color: var(--sb-red);
     padding: 5px;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
 }
 
 .warning .warning {

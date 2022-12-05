@@ -16,7 +16,7 @@
     width: 80%;
     min-height: 100vh;
     z-index: 10;
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     box-shadow: 0 0 20px var(--reg-bg-solid);
 }
 
@@ -43,7 +43,7 @@
     background-color: var(--inverted-bg-solid);
     color: var(--inverted-text-color);
     padding: 20px;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     box-shadow: 0 0 5px var(--inverted-bg-solid);
     transition: all .25s;
 }

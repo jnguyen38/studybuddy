@@ -40,7 +40,7 @@
 #search {
     --search-bg: var(--sb-white);
     background-color: var(--search-bg);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     transition: all .15s;
 }
 

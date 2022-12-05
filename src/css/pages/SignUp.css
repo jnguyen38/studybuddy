@@ -9,7 +9,7 @@
     background-color: var(--sb-white);
     display: flex;
     flex-flow: column;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     width: min(600px, 60%);
     padding: 40px;
     overflow: visible;
