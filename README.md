@@ -1,3 +1,16 @@
+
+# To Do
+- [ ] Password strength checker or password requirements to SignUp.js page
+- [x] Building Pages
+- [ ] Dedicated SignIn.js page (ie, not just the modal that pops up in settings)
+- [ ] Reviewing functionality
+- [ ] Advanced Function 1
+- [ ] Advanced Function 2
+- [ ] Google maps integration on Location.js page
+- [ ] Building hours integration on Location.js page
+- [ ] User profiles and functionality (Liking, Disliking, Stats...)
+- [ ] User profile pages
+
 # StudyBuddy
 
 Notre Dame's first study aid for students to find study spaces around Notre Dame’s campus.  StudyBuddy contains a hand collected database of all possible study spaces on campus, and recommends study spaces to users according to various filters selected. StudyBuddy aims to help students find new study spaces they may not have visited before, as well as find central study spaces for group projects or convenient locations for studying near food options. Verified users are able to submit new study spaces, leave reviews, favorite, dislike, and search study spaces across campus. 

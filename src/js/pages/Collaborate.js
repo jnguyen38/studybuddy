@@ -1,6 +1,11 @@
 import {useState} from "react";
 import axios from "axios";
+//import * as Pyscript from "pyscript";
 import {Link} from "react-router-dom";
+//import {Html, Head, Main, NextScript} from next/document
+//import google from '@types/google.maps';
+//import {GoogleMap, useJsApiLoader} from '@react-google-maps/api'
+//import maps from 'google'
 //const cors = require('cors');
 //const express = require('express')
 //const app = express()
@@ -10,9 +15,9 @@ const key = "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" // API Key
 const units = "imperial"
 const mode = "walking"
 const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
-//var service = new google.maps.DistanceMatrixService();
 
 function Results(props) {
+
     return (
         <div className={"results-container d-flex-col-c gap-20"}>
             {(props.results.length === 0) ?
@@ -22,8 +27,8 @@ function Results(props) {
                     const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
 
                     return (
-                        <Link to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}}>
-                            <div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                        <Link key={result.spot_id} to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}}>
+                            <div id={"location-header"} className={"result-item"}>
                                 <img src={image} alt="" className={"location-img"}/>
                                 <div className={"location-header-info full-length result-item-header"}>
                                     <h2>{result.building}</h2>
@@ -38,38 +43,6 @@ function Results(props) {
     );
 }
 
-function recommend(data, locs) {
-    // let new_data = data
-    get_distance(data, '010100', ["Knott Hall", "Keough Hall"])
-    //new_data = new_data.map(place => {
-    //    return {...place, get_distance(new_data, new_data["spot_id"], locs)}}
-    //})
-
-    return data;
-}
-
-function get_distance(data, spot_id, locs) {
-    for (let i = 0; i < locs.length; i++) {
-        let dest = data.filter(spot => spot.spot_id === spot_id).location
-        let url = `${maps_url}origins=${locs[i]}&destinations=${dest}&units=${units}&mode=${mode}&key=${key}`
-        /*
-        var config = {
-            method: 'get',
-            url,
-            headers: {
-                //'Access-Control-Allow-Origin': null,
-                //'Access-Control-Allow-Headers': '*',
-                //'Access-Control-Allow-Credentials': 'true'
-            }
-        }
-        */
-        console.log(`URL is ${url}`)
-        axios.get(url)
-            .then(function (response) {
-                console.log(response)
-            });
-    }
-}
 
 export default function Collaborate(props) {
     const [state, setState] = useState({
@@ -78,16 +51,22 @@ export default function Collaborate(props) {
 
     const [count, setCount] = useState(0);
     const [results, setResults] = useState([])
+    const [locations, setLocations] = useState([])
+    const [usernames, setUsernames] = useState([])
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault()
-        axios.get( props.apiPath + "/api/get/groupRec", {
+        axios.get(props.apiPath + "/api/get/groupRec", {
             params: {
-                groupSize: count + 1
+                groupSize: count + 1,
+                locs: locations
             }
-        }).then(data => {
-            data = recommend(data.data, count + 1)
-            setResults(data)
+        }).then(async (data) => {
+            let new_data = await Promise.all(data.data.map(async (place) => Object.assign(place, await get_distance_obj(place["building"], locations))))
+            new_data = new_data.map(place => Object.assign(place, calc_score(place)))
+            new_data.sort((o1,o2) => (o1["score"] - o2["score"]))
+            console.log(new_data)
+            setResults(new_data)
         });
     }
 
@@ -100,6 +79,37 @@ export default function Collaborate(props) {
         console.log(event);
     }
 
+    async function get_distance_obj(building, locs) {
+
+        return axios.get(props.apiPath + "/api/get/distances", {
+            params: {
+                building: building,
+                locs: locs
+            }
+        }).then(response => {
+            let distances = response.data
+            return {"distances": distances}
+        })
+    }
+
+    function calc_score(place) {
+        let dists = place["distances"]
+        dists.sort((a,b) => b - a)
+        let num_locs = place["distances"].length
+        let score = 0
+        let denom_total = 0
+        let score_total = 0
+        let matter = Math.ceil(num_locs / 2.0)
+        for (let i = 0; i < matter; i++) {
+            score_total += (dists[i] * (matter - i))
+            denom_total += (matter - i)
+        }
+        score = score_total / denom_total
+
+
+        return {"score": score}
+    }
+
     function addAnother(event) {
         setCount(count + 1);
         console.log(count);
@@ -108,6 +118,12 @@ export default function Collaborate(props) {
     function removeFriend(event) {
         setCount(count - 1);
         console.log(count);
+    }
+
+    function handleLocationChange(index, event) {
+        let cur_locs = locations
+        cur_locs[index] = event.target.value
+        setLocations(cur_locs)
     }
 
     return (
@@ -120,7 +136,7 @@ export default function Collaborate(props) {
                 <div className={"initial-questions"}>
                     <div className={"self-input"}>
                         <p>Where are you?</p>
-                        <input name="userBuilding" type="text" value={state.userBuilding} placeholder="Enter a building name" onChange={handleChange}/>
+                        <input key = "0" name="userBuilding" type="text" placeholder="Enter a building name" onChange={handleLocationChange.bind(this, 0)}/>
                     </div>
                 </div>
                 <div className={"friends-info"}>
@@ -138,12 +154,12 @@ export default function Collaborate(props) {
                     }
                     <div className={"friend-user-input"}>
                         {Array.from(Array(count)).map((c, index) => {
-                            return <input key={index} name={'friendUsername' + index} type="text" placeholder="Enter a username"></input>;
+                            return <input key={index + 1} name={"friendUsername" + index} type="text" placeholder="Enter a username"></input>;
                         })}
                     </div>
                     <div className={"friend-building-input"}>
                         {Array.from(Array(count)).map((c, index) => {
-                            return <input key={index} name={'friendBuilding' + index} type="text" placeholder="Enter a building name"></input>;
+                            return <input key={index + 1} name={'friendBuilding' + index} type="text" placeholder="Enter a building name" onChange={handleLocationChange.bind(this, index + 1)}></input>;
                         })}
                     </div>
                     {(count > 0) ?

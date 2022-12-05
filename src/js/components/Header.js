@@ -1,22 +1,19 @@
 import {Link} from "react-router-dom";
-import {useEffect} from "react";
+import {useState} from "react";
 import {SettingsModal, MenuModal} from "./Modal";
 
 import settings from "../../media/icons/settings.svg";
 // import search from "../../media/icons/search.svg";
 
-function handleScroll() {
-
-}
-
 
 export default function Header(props) {
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll, { passive: true })
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        };
-    }, []);
+    const [showSettings, setShowSettings] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
+
+    function closeMenu() {setShowMenu(false)}
+    function handleMenu() {setShowMenu(currVal => !currVal); closeSettings();}
+    function closeSettings() {setShowSettings(false)}
+    function handleSettings() {setShowSettings(currVal => !currVal); closeMenu();}
 
     return (
         <div id={"header"}>
@@ -44,23 +41,23 @@ export default function Header(props) {
                 <Link to={props.redirect.overview}>
                     <div className="nav-item d-flex-row-c"><h2>Overview</h2></div>
                 </Link>
-                <div id={"settings-icon"} className={"d-flex-row-c"} onClick={props.handler.handleSettings}>
+                <div id={"settings-icon"} className={"d-flex-row-c"} onClick={handleSettings}>
                     <img src={settings} alt="" className={"icon settings"}/>
                 </div>
             </nav>
 
-            <div id="nav-menu" className={(props.showMenu) ? "open" : ""} onClick={props.handler.handleMenu}>
+            <div id="nav-menu" className={(showMenu) ? "open" : ""} onClick={handleMenu}>
                 <span/> <span/> <span/> <span/>
             </div>
 
 
-            <SettingsModal show={props.showSettings} close={props.handler.closeSettings}
+            <SettingsModal show={showSettings} close={closeSettings}
                            {...props}
-                           className={(props.showSettings) ? "item-clicked" : 0}/>
-            <MenuModal show={props.showMenu} close={props.handler.closeMenu}
+                           className={(showSettings) ? "item-clicked" : 0}/>
+            <MenuModal show={showMenu} close={closeMenu}
                        redirect={props.redirect}
-                       handleSettings={props.handler.handleSettings}
-                       className={(props.showMenu) ? "item-clicked" : 0}/>
+                       handleSettings={handleSettings}
+                       className={(showMenu) ? "item-clicked" : 0}/>
         </div>
     );
 }

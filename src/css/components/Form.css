@@ -3,7 +3,7 @@
     display: flex;
     flex-flow: column;
     overflow: hidden;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     position: absolute;
     margin: auto;
     top: 0;

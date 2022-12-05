@@ -1,9 +1,10 @@
 const express = require('express');
 const db = require('./config/db');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
-const  PORT = 5000;
+const  PORT = 5002;
 app.use(cors());
 app.use(express.json());
 
@@ -34,10 +35,9 @@ app.get("/api/get/reviews", (req, res) => {
     });
 });
 
-app.get("/api/get/spot/:spot_id", (req, res) => {
-	db.query(`SELECT * \
-          FROM study_spots \
-					WHERE spot_id=\"${req.params.spot_id}\"`, (err, result) => {
+app.get("/api/get/work", (req, res) => {
+	db.query(`SELECT DISTINCT work_type \
+          FROM reviews`, (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
@@ -68,10 +68,10 @@ app.get("/api/get/emails", (req, res) => {
     });
 });
 
-app.get("/api/get/buildings", (req, res) => {
-    db.query("SELECT DISTINCT building \
-                FROM buildings \
-                ORDER BY building;", (err, result) => {
+app.get("/api/get/location", (req, res) => {
+    db.query(`SELECT * \
+                FROM study_spots \
+                WHERE spot_id = ?`, [req.query.spot_id], (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
@@ -88,6 +88,16 @@ app.get("/api/get/groupRec", (req, res) => {
         if (err) console.log(err);
         res.send(result);
     });
+});
+
+
+app.get("/api/get/buildingInfo", (req, res) => {
+    db.query(`SELECT * \
+                FROM buildings \
+                WHERE building = ?`, [req.query.building], (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    })
 });
 
 /* PUT API ENDPOINTS */
@@ -127,7 +137,6 @@ app.put("/api/put/toggleLike", (req, res) => {
                 FROM likes \
                 WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`, (err, result) => {
         if (err) console.log(err);
-        console.log(result)
 
         if (result.length) {
             db.query(`UPDATE likes \
@@ -136,44 +145,6 @@ app.put("/api/put/toggleLike", (req, res) => {
         } else {
             db.query(`INSERT INTO likes (username, spot_id, like_bool) \
                       VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 1)`);
-        }
-
-        res.send(result);
-    });
-});
-
-app.put("/api/put/changeLike", (req, res) => {
-    db.query(`SELECT username, spot_id, like_bool \
-                FROM likes \
-                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\" and like_bool=0`, (err, result) => {
-        if (err) console.log(err);
-
-        if (result.length) {
-            db.query(`UPDATE likes \
-                      SET like_bool=1 \
-                      WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`);
-        } else {
-            db.query(`INSERT INTO likes (username, spot_id, like_bool) \
-                      VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 1)`);
-        }
-
-        res.send(result);
-    });
-});
-
-app.put("/api/put/changeUnlike", (req, res) => {
-    db.query(`SELECT username, spot_id, like_bool \
-                FROM likes \
-                WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\" and like_bool=1`, (err, result) => {
-        if (err) console.log(err);
-
-        if (result.length) {
-          db.query(`UPDATE likes \
-                      SET like_bool=0 \
-                      WHERE spot_id=\"${req.body.spot_id}\" and username=\"${req.body.user}\"`);
-        } else {
-          db.query(`INSERT INTO likes (username, spot_id, like_bool) \
-                      VALUES (\"${req.body.user}\", \"${req.body.spot_id}\", 0)`);
         }
 
         res.send(result);
@@ -208,6 +179,7 @@ app.post("/api/post/search", (req, res) => {
     });
 });
 
+
 app.post("/api/post/searchHistory", (req, res) => {
     let tableSeatComfort = "table_seat_comfort<=" + ((req.body.comfort) + 1) + " AND table_seat_comfort>=" + ((req.body.comfort) - 1);
     let seatComfort = "nontable_seat_comfort<=" + ((req.body.comfort) + 1) + " AND nontable_seat_comfort>=" + ((req.body.comfort) - 1);
@@ -224,7 +196,7 @@ app.post("/api/post/searchHistory", (req, res) => {
                 FROM study_spots \
                 WHERE ((${tableSeatComfort}) OR (${seatComfort}) OR (${couchComfort})) AND ${outlets} AND ${loudness} AND ${light} AND ${capacity} AND ${table}`, (err, result) => {
         if (err) console.log(err);
-        console.log(result);
+        console.log(result)
         res.send(result);
     });
 });
@@ -246,6 +218,31 @@ app.post("/api/post/signup", (req, res) => {
     });
 });
 
+app.get("/api/get/distances", (req, res) => {
+
+    const key = "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" // API Key
+    const units = "imperial"
+    const mode = "walking"
+    const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+
+    let building = req.query.building
+    locString = ""
+    for (let i = 0; i < req.query.locs.length; i++) {
+        if (i < (req.query.locs.length - 1))
+            locString += `${req.query.locs[i]}, Notre Dame, IN | `
+        else
+            locString += `${req.query.locs[i]}, Notre Dame, IN`
+    }
+
+    let url = `${maps_url}origins=${locString}, Notre Dame, IN&destinations=${building}, Notre Dame, IN&units=${units}&mode=${mode}&key=${key}`
+    axios.get(url).then(response => {
+        distances = []
+        for (let i = 0; i < req.query.locs.length; i++) {
+            distances.push(parseInt(response.data["rows"][i]["elements"][0]["duration"]["text"].split(" ")[0]))
+        }
+        res.send(distances)
+    })
+});
 
 /* LISTENER */
 

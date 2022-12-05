@@ -5,7 +5,6 @@ import Axios from "axios";
 import Select from 'react-select';
 
 function Choice(props) {
-
     let params = useParams()
 
     if (params.typerec === "history") {
@@ -22,24 +21,160 @@ function Choice(props) {
 
 }
 
-function Work() {
+function Work(props) {
+    const [workType, setWorkType] = useState(false)
+    const [showDesc, setShowDesc] = useState(false)
+    const [workDict, setWorkDict] = useState({})
+    const [results, setResults] = useState([])
 
-  const optionList = [
-    { value: "Essay", label: "Essay" },
-    { value: "Problem Set", label: "Problem Set" },
-    { value: "Presentation", label: "Presentation" },
-    { value: "Reading", label: "Reading" },
-    { value: "Exam Prep", label: "Exam Prep" }
-  ];
+    let loud = (workDict["loud"] >= 3.75 ? "loud" : (workDict["loud"] >= 2 ? "moderately loud" : (workDict["loud"] >= 1.25 ? "moderately quiet" : "quiet")))
+    let light = (workDict["light"] >= 3.75 ? "lots of" : (workDict["light"] >= 2 ? "some" : (workDict["light"] >= 1.25 ? "a little" : "very little")))
+    let outlet = (workDict["outlet"] >= 3.75 ? "lots of" : (workDict["outlet"] >= 2 ? "some" : (workDict["outlet"] >= 1.25 ? "a few" : "no")))
+    let comfort = (workDict["comfort"] >= 3.75 ? "very comfortable" : (workDict["comfort"] >= 2 ? "comfortable" : (workDict["comfort"] >= 1.25 ? "less comfortable" : "uncomfortable")))
+    let table = (workDict["table"] >= 0.75 ? "needed" : (workDict["table"] >= 0.5 ? "wanted" : (workDict["table"] >= 0.25 ? "didn't need" : "didn't want")))
+    let capacity = (workDict["capacity"] >= 60 ? "lots of" : (workDict["capacity"] >= 30 ? "many" : (workDict["capacity"] >= 15 ? "some" : "a few")))
 
-  return (
-    <div className={"work-container d-flex-col-c"}>
-        <div id={"work-sel-container"} className={"d-flex-col-c"}>
-          <p>What type of work are you doing?</p>
-          <Select isMulti name="work" options={optionList} className="basic-multi-select" classNamePrefix="select"/>
+    function handleSelect(selectedOption) {
+        setWorkType(selectedOption.value)
+    }
+
+    function Description() {
+        if (showDesc) {
+            return (
+                <div>
+                    <div className={"recommendation-desc d-flex-row-l"}>
+                        <p>Other users with <b>{workType}</b> work have...</p>
+                    </div>
+                    <div className={"history-typewriter1 d-flex-row-l"}>
+                        <p>...wanted a <b>{loud}</b> environment...</p>
+                    </div>
+                    <div className={"history-typewriter2 d-flex-row-l"}>
+                        <p>...liked a location with <b>{light}</b> light...</p>
+                    </div>
+                    <div className={"history-typewriter3 d-flex-row-l"}>
+                        <p>...wanted a study spot with <b>{outlet}</b> outlets...</p>
+                    </div>
+                    <div className={"history-typewriter4 d-flex-row-l"}>
+                        <p>...prefered <b>{comfort}</b> seating...</p>
+                    </div>
+                    <div className={"history-typewriter5 d-flex-row-l"}>
+                        <p>...<b>{table}</b> a table or writing surface...</p>
+                    </div>
+                    <div className={"history-typewriter6 d-flex-row-l"}>
+                        <p>...like a study spot with <b>{capacity}</b> people...</p>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    function HelperResults(props) {
+        if (showDesc) {
+            return (
+                <Results results={results} {...props}/>
+            )
+        }
+    }
+
+    const handleRequestWork = useCallback(() => {
+        Axios.post(props.apiPath + "/api/post/searchHistory", {
+            "comfort": workDict["comfort"],
+            "outlet": workDict["outlet"],
+            "loud": workDict["loud"],
+            "light": workDict["light"],
+            "capacity": workDict["capacity"],
+            "table": workDict["table"]
+        }).then(data => {
+            console.log(workDict)
+            console.log(data)
+            setResults(data.data)
+        });
+    }, [props.apiPath, workDict]);
+
+    const getAllInfo = useCallback(async () => {
+        let lengthSpots = props.workReviews[workType].length;
+        let tempWorkDict = {"loud": 0, "light": 0, "outlet": 0, "comfort": 0, "table": 0, "capacity": 0}
+        let rating = 0;
+
+        for (const spot of props.workReviews[workType]) {
+            if (spot[1] === 5) {
+                rating = 6;
+            } else if (spot[1] === 4) {
+                rating = 5.5;
+            } else if (spot[1] === 3) {
+                rating = 5;
+            } else if (spot[1] === 2) {
+                rating = 4.5;
+            } else if (spot[1] === 1) {
+                rating = 4;
+            }
+
+            const response = await Axios.get(props.apiPath + "/api/get/spot/" + spot[0]);
+            tempWorkDict["loud"] += response.data[0].loudness_rating * (rating / 5) / lengthSpots;
+            tempWorkDict["light"] += response.data[0].natural_light_rating * (rating / 5) / lengthSpots;
+            tempWorkDict["outlet"] += response.data[0].outlets_rating * (rating / 5) / lengthSpots;
+
+            let comfSum = 0
+            let comfNum = 0
+            if (response.data[0].table_seat_comfort !== -1) {
+                comfSum += response.data[0].table_seat_comfort;
+                comfNum += 1;
+            }
+            if (response.data[0].nontable_seat_comfort !== -1) {
+                comfSum = response.data[0].nontable_seat_comfort;
+                comfNum += 1;
+            }
+            if (response.data[0].couch_comfort !== -1) {
+                comfSum = response.data[0].couch_comfort;
+                comfNum += 1;
+            }
+
+            tempWorkDict["comfort"] += comfSum / comfNum * (rating / 5) / lengthSpots;
+
+            tempWorkDict["table"] += response.data[0].tables * (rating / 5) / lengthSpots;
+            tempWorkDict["capacity"] += response.data[0].max_capacity * (rating / 5) / lengthSpots;
+        }
+
+        setWorkDict(tempWorkDict)
+        return Promise.resolve()
+
+    }, [props.apiPath, props.workReviews, workType]);
+
+    useEffect(() => {
+
+        if (workType) {
+            getAllInfo().then(() => {
+                handleRequestWork()
+            })
+        }
+
+        if (workType) {
+            setShowDesc(true)
+        } else {
+            setShowDesc(false)
+        }
+
+    }, [getAllInfo, handleRequestWork, workType])
+
+    useEffect(() => {
+        handleRequestWork()
+
+    }, [handleRequestWork, workDict])
+
+
+    return (
+        <div className={"work-container d-flex-col-c"}>
+            <div id={"work-sel-container"} className={"d-flex-col-c"}>
+                <p>What type of work are you doing?</p>
+                <Select name="work" options={props.work} className="basic-multi-select" classNamePrefix="select"
+                        onChange={handleSelect}/>
+                <Description/>
+            </div>
+            <div className={"rec-results"}>
+                <HelperResults/>
+            </div>
         </div>
-    </div>
-  )
+    )
 }
 
 function History(props) {
@@ -93,6 +228,7 @@ function History(props) {
         let lengthRev = props.userReviews.length;
         let lengthLike = props.userLikes.length;
         let comf = {};
+        let rating = 0;
 
         for (const spot_id of allSpots) {
             const response = await Axios.get(props.apiPath + "/api/get/location", {
@@ -113,16 +249,27 @@ function History(props) {
             }
             for (const findReview of props.userReviews) {
                 if (findReview.spot_id === response.data[0].spot_id) {
-                    reviewsDict["loud"] += response.data[0].loudness_rating * (findReview.rating / 5) / lengthRev;
-                    reviewsDict["light"] += response.data[0].natural_light_rating * (findReview.rating / 5) / lengthRev;
-                    reviewsDict["outlet"] += response.data[0].outlets_rating * (findReview.rating / 5) / lengthRev;
+                    if (findReview.rating === 5) {
+                        rating = 6;
+                    } else if (findReview.rating === 4) {
+                        rating = 5.5;
+                    } else if (findReview.rating === 3) {
+                        rating = 5;
+                    } else if (findReview.rating === 2) {
+                        rating = 4.5;
+                    } else if (findReview.rating === 1) {
+                        rating = 4;
+                    }
+                    reviewsDict["loud"] += response.data[0].loudness_rating * (rating / 5) / lengthRev;
+                    reviewsDict["light"] += response.data[0].natural_light_rating * (rating / 5) / lengthRev;
+                    reviewsDict["outlet"] += response.data[0].outlets_rating * (rating / 5) / lengthRev;
 
                     comf = calcComf(response);
 
-                    reviewsDict["comfort"] += comf.comfSum / comf.comfNum * (findReview.rating / 5) / lengthRev;
+                    reviewsDict["comfort"] += comf.comfSum / comf.comfNum * (rating / 5) / lengthRev;
 
-                    reviewsDict["table"] += response.data[0].tables * (findReview.rating / 5) / lengthRev;
-                    reviewsDict["capacity"] += response.data[0].max_capacity * (findReview.rating / 5) / lengthRev;
+                    reviewsDict["table"] += response.data[0].tables * (rating / 5) / lengthRev;
+                    reviewsDict["capacity"] += response.data[0].max_capacity * (rating / 5) / lengthRev;
                 }
             }
         }
@@ -130,10 +277,10 @@ function History(props) {
         for (const [key, value] of Object.entries(likesDict)) {
             props.totalDict[key] = (value * 0.35) + (reviewsDict[key] * 0.65)
         }
-        
+
     }, [calcComf, props.apiPath, props.totalDict, props.userLikes, props.userReviews]);
 
-    
+
     useEffect(() => {
         if (Object.keys(props.totalDict).length === 0 || props.totalDict["capacity"] === 0) {
             let allSpots = [];
@@ -159,36 +306,36 @@ function History(props) {
         }
     }, [getAllInfo, handleRequest, props.histData, props.totalDict, props.userLikes, props.userReviews])
 
-    return(
-      <div className={"history-container d-flex-col-c"}>
-      <div id={"rec-desc-container"} className={"d-flex-col-c"}>
-          <div className={"recommendation-desc d-flex-row-l"}>
-              <p>Based on your previous activity, you usually...</p>
-          </div>
-          <div className={"history-typewriter1 d-flex-row-l"}>
-              <p>...want a <b>{loud}</b> environment...</p>
-          </div>
-          <div className={"history-typewriter2 d-flex-row-l"}>
-              <p>...like a location with <b>{light}</b> light...</p>
-          </div>
-          <div className={"history-typewriter3 d-flex-row-l"}>
-              <p>...want a study spot with <b>{outlet}</b> outlets...</p>
-          </div>
-          <div className={"history-typewriter4 d-flex-row-l"}>
-              <p>...prefer <b>{comfort}</b> seating...</p>
-          </div>
-          <div className={"history-typewriter5 d-flex-row-l"}>
-              <p>...<b>{table}</b> a table or writing surface...</p>
-          </div>
-          <div className={"history-typewriter6 d-flex-row-l"}>
-              <p>...like a study spot with <b>{capacity}</b> people...</p>
-          </div>
-      </div>
+    return (
+        <div className={"history-container d-flex-col-c"}>
+            <div id={"rec-desc-container"} className={"d-flex-col-c"}>
+                <div className={"recommendation-desc d-flex-row-l"}>
+                    <p>Based on your previous activity, you usually...</p>
+                </div>
+                <div className={"history-typewriter1 d-flex-row-l"}>
+                    <p>...want a <b>{loud}</b> environment...</p>
+                </div>
+                <div className={"history-typewriter2 d-flex-row-l"}>
+                    <p>...like a location with <b>{light}</b> light...</p>
+                </div>
+                <div className={"history-typewriter3 d-flex-row-l"}>
+                    <p>...want a study spot with <b>{outlet}</b> outlets...</p>
+                </div>
+                <div className={"history-typewriter4 d-flex-row-l"}>
+                    <p>...prefer <b>{comfort}</b> seating...</p>
+                </div>
+                <div className={"history-typewriter5 d-flex-row-l"}>
+                    <p>...<b>{table}</b> a table or writing surface...</p>
+                </div>
+                <div className={"history-typewriter6 d-flex-row-l"}>
+                    <p>...like a study spot with <b>{capacity}</b> people...</p>
+                </div>
+            </div>
 
-      <div className={"rec-results"}>
-        <Results results={results} {...props}/>
-      </div>
-      </div>
+            <div className={"rec-results"}>
+                <Results results={results} {...props}/>
+            </div>
+        </div>
     )
 }
 
@@ -218,29 +365,31 @@ function Results(props) {
 }
 
 export default function Recommendation(props) {
+    return (
+        <div className={"recommendation-container d-flex-col-c"}>
+            <div className={"recommendation-header d-flex-col-c"}>
+                <Link to={props.path}>
+                    <div>
+                        <h1>Get a Recommendation...</h1>
+                    </div>
+                </Link>
+                <div className={"thick line"}/>
+            </div>
 
-   return (
-          <div className={"recommendation-container d-flex-col-c"}>
-              <div className={"recommendation-header d-flex-col-c"}>
-                  <Link to={props.path}><div>
-                      <h1>Get a Recommendation...</h1>
-                  </div></Link>
-                  <div className={"thick line"}/>
-              </div>
-              <div className={"recommendation-select-row"}>
-                  <div id={"op-display"}>
-                      <Link to={props.path + "/history"}><div className={"rec-option"}>
-                          <h1>👀 History &rarr;</h1>
-                          <p>Find a study spot based on your likes and reviews!</p>
-                      </div></Link>
-                      <Link to={props.path + "/work"}><div className={"rec-option"}>
-                          <h1>📖 Work Type &rarr;</h1>
-                          <p>Find a study spot based on the type of work you're doing!</p>
-                      </div></Link>
-                  </div>
-              </div>
-              <Choice {...props}/>
-          </div>
+            <div className={"recommendation-select-row"}>
+                <div id={"op-display"}>
+                    <Link to={props.path + "/history"}><div className={"rec-option"}>
+                            <h1>👀 History &rarr;</h1>
+                            <p>Find a study spot based on your likes and reviews!</p>
+                    </div></Link>
+                    <Link to={props.path + "/work"}><div className={"rec-option"}>
+                            <h1>📖 Work Type &rarr;</h1>
+                            <p>Find a study spot based on the type of work you're doing!</p>
+                    </div></Link>
+                </div>
+            </div>
+
+            <Choice {...props}/>
+        </div>
     )
-
-};
+}

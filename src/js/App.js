@@ -2,30 +2,34 @@ import {Route, Routes} from "react-router-dom";
 import {useEffect, useState} from "react";
 
 import Axios from "axios";
+
+
 import Devplan from "./pages/Devplan";
 import Home from "./pages/Home";
 import Header from "./components/Header";
 import Overview from "./pages/Overview";
 import Footer from "./components/Footer";
 import Location from "./pages/Location";
-import Search from "./pages/Search";
 import Upload from "./pages/Upload";
+import Search from "./pages/Search";
 import Collaborate from "./pages/Collaborate";
 import {Authenticate} from "./components/Modal";
 import SignUp from "./pages/SignUp";
 import Explore from "./pages/Explore";
 import Recommendation from "./pages/Recommendation";
+import NotFound from "./pages/NotFound";
+import Building from "./pages/Building";
+import SignIn from "./pages/SignIn";
+
 
 export default function App() {
     // useState Hooks
     const [UXMode, setUXMode] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
     const [showAuthenticate, setShowAuthenticate] = useState(false);
     const [pageLoaded, setPageLoaded] = useState(false);
     const [user, setUser] = useState({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
-    const [spots, setSpots] = useState("");
-    const [majors, setMajors] = useState([]);       // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
+    const [majors, setMajors] = useState([]);   // List of majors for sign up Ex: [{value: "Computer Science", label: "Computer Science"}, ...]
+    const [work, setWork] = useState([]);
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
 
@@ -33,6 +37,7 @@ export default function App() {
     const [userReviews, setUserReviews] = useState([]);
     const [histData, setHistData] = useState([]);
     const [totalDict, setDict] = useState({});
+    const [workReviews, setWorkReviews] = useState({});
 
     // Path variables
     const path = "";
@@ -43,11 +48,7 @@ export default function App() {
     class handler {
         static setDictHelper(totalDict) {setDict(totalDict)}
         static setHistDataHelper(historyRecDict) {setHistData(historyRecDict)}
-        static closeMenu() {setShowMenu(false)}
-        static closeSettings() {setShowSettings(false)}
         static handleUXMode() {setUXMode(!UXMode);}
-        static handleMenu() {setShowMenu(() => !showMenu); handler.closeSettings();}
-        static handleSettings() {setShowSettings(() => !showSettings); handler.closeMenu();}
         static updateLikes() {
             Axios.get(apiPath + "/api/get/likes").then(data => {
                 let tempLikes = [];
@@ -89,7 +90,7 @@ export default function App() {
             setDict([]);
             window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
         }
-        static handleShowAuthenticate() {setShowAuthenticate(()=> !showAuthenticate)}
+        static handleShowAuthenticate() {setShowAuthenticate(currVal => !currVal)}
         static closeAuthenticate() {setShowAuthenticate(false)}
         static notifySignOut() {
             document.getElementById("sign-in-notification").classList.remove("notification-animation");
@@ -125,14 +126,13 @@ export default function App() {
     useEffect(() => {
         // Get all spots and store into spots state on page load
         Axios.get(apiPath + "/api/get").then(res => {
-            setSpots(res.data);
-            console.log(res);
-            return res.data;
-        }).then(data => {
             let tempBuildings = {}
-            for (const spot of data)
-                if (spot.building in tempBuildings) tempBuildings[spot.building].push([spot.spot_id, spot.location]);
-                else tempBuildings[spot.building] = [[spot.spot_id, spot.location]];
+            for (const spot of res.data) {
+                if (spot.building in tempBuildings)
+                    tempBuildings[spot.building].push({id: spot.spot_id, location: spot.location});
+                else
+                    tempBuildings[spot.building] = [{id: spot.spot_id, location: spot.location}];
+            }
             setBuildings(tempBuildings);
         });
 
@@ -143,8 +143,24 @@ export default function App() {
             setMajors(tempMajors)
         });
 
-        // Get all likes, and
+        Axios.get(apiPath + "/api/get/work").then(res => {
+            console.log(res.data)
+            let tempWork = [];
+            for (const review of res.data) tempWork.push({value: review.work_type, label: review.work_type})
+            setWork(tempWork)
+        });
 
+        Axios.get(apiPath + "/api/get/reviews").then(res => {
+            console.log(res.data)
+            let tempWorkReviews = {};
+            for (const review of res.data) {
+              if (!tempWorkReviews[review.work_type]) {
+                tempWorkReviews[review.work_type] = []
+              }
+              tempWorkReviews[review.work_type].push([review.spot_id, review.rating])
+            }
+            setWorkReviews(tempWorkReviews)
+        });
     }, [apiPath]);
 
     // Explore Layouts
@@ -202,8 +218,7 @@ export default function App() {
         <div id={"app-container"} className={(UXMode) ? "light-mode" : "dark-mode"}>
             <div id={"map-bg"}></div>
 
-            <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user}
-                    showSettings={showSettings} showMenu={showMenu} showAuthenticate={showAuthenticate}/>
+            <Header handler={handler} redirect={redirect} UXMode={UXMode} user={user} showAuthenticate={showAuthenticate}/>
 
             <main>
                 <Authenticate path={path} apiPath={apiPath} handler={handler} user={user} show={showAuthenticate} close={handler.closeAuthenticate}/>
@@ -212,28 +227,34 @@ export default function App() {
                 <div id={"error-notification"} className={"d-flex-row-c notification warning"}>An unknown error occurred!</div>
 
                 <Routes>
-                    <Route path={path + "/*"} element={
+                    <Route path={path + "/"} element={
                         <Home user={user} UXMode={UXMode} path={path} apiPath={apiPath}/>}/>
                     <Route path={path + "/devplan"} element={
                         <Devplan/>}/>
                     <Route path={path + "/overview"} element={
                         <Overview/>}/>
                     <Route path={path + "/location/:spot_id"} element={
-                        <Location user={user} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
+                        <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
                     <Route path={path + "/search"} element={
                         <Search apiPath={apiPath} path={path}/>}/>
                     <Route path={path + "/upload"} element={
                         <Upload/>}/>
                     <Route path={path + "/recommendation"} element={
-                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Recommendation userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                     <Route path={path + "/recommendation/:typerec"} element={
-                        <Recommendation spots={spots} userLikes={userLikes} userReviews={userReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
+                        <Recommendation work={work} userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                     <Route path={path + "/collaborate"} element={
                         <Collaborate apiPath={apiPath} path={path}/>}/>
+                    <Route path={path + "/signin"} element={
+                        <SignIn user={user} redirect={redirect} path={path} apiPath={apiPath} handler={handler}/>}/>
                     <Route path={path + "/signup"} element={
                         <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
-                    <Route path={path + "/explore"} element={buildings && exploreLayout &&
+                    <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
                         <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
+                    <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
+                        <Building buildings={buildings} path={path}/>}/>
+                    <Route path={"*"} element={
+                        <NotFound/>}/>
                 </Routes>
             </main>
             <Footer/>
@@ -242,3 +263,5 @@ export default function App() {
         <div/>
     );
 }
+
+
