@@ -12,8 +12,6 @@ const credentials = {key: privateKey, cert: certificate};
 
 const app = express();
 
-const  PORT = 5000;
-
 app.use(cors());
 app.use(express.json());
 
@@ -109,9 +107,10 @@ app.get("/api/get/buildingInfo", (req, res) => {
     })
 });
 
-app.get("api/get/allPhotos", (req, res) => {
+app.get("/api/get/allPhotos", (req, res) => {
     let dataToSend;
-    const python = spawn('python', ['py/get_pictures.py 000200']);
+	const input = `${req.query.spot_id}`;
+    const python = spawn('python', ['server/py/get_pictures.py', input]);
     python.stdout.on('data', data => {
         console.log('Pipe data from python script ...');
         dataToSend = data.toString();
@@ -268,10 +267,6 @@ app.get("/api/get/distances", (req, res) => {
 });
 
 /* LISTENERS */
-
-app.listen(PORT, ()=>{
-    console.log("Server is running on port " + PORT)
-});
 
 let httpServer = http.createServer(app);
 let httpsServer = https.createServer(credentials, app);

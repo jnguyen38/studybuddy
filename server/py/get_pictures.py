@@ -5,14 +5,14 @@ import os
 
 def get_pictures(id):
     pictures = []
-    for pic in os.listdir(f"../../public/media/locations"):
+    for pic in os.listdir(f"public/media/locationsSD"):
         if pic.startswith(id):
             pictures.append(pic)
 
-    return pictures
+    print(",".join(pictures), end='')
 
 def main():
-    return get_pictures(sys.argv[1])
+    get_pictures(sys.argv[1])
 
 if __name__ == "__main__":
     main()
