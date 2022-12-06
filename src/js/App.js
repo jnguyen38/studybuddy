@@ -58,17 +58,6 @@ export default function App() {
                 return new Set(currLikes);
             });
         }
-        static updateReviews() {
-            Axios.get(apiPath + "/api/get/reviews").then(data => {
-                let tempReviews = [];
-                for (const review of data.data) {
-                    if (user.username === review.username) {
-                        tempReviews.push(review)
-                    }
-                }
-                setUserReviews(tempReviews);
-            });
-        }
         static signIn(userData) {
             let tempUser = user;
             tempUser.isSignedIn = true;
@@ -150,7 +139,7 @@ export default function App() {
         Axios.get(apiPath + "/api/get/reviews").then(res => {
             console.log(res.data)
             let tempWorkReviews = {};
-            let tempAllReviews = {}
+            let tempAllReviews = {};
             for (const review of res.data) {
                 if (!tempWorkReviews[review.work_type]) {
                     tempWorkReviews[review.work_type] = []
@@ -162,7 +151,6 @@ export default function App() {
                 else
                     tempAllReviews[review.spot_id] = [{content: review.content, work_type: review.work_type, rating: review.rating, time: review.time, date: review.date, name: review.name}]
             }
-            console.log(tempAllReviews)
             setAllReviews(tempAllReviews);
             setWorkReviews(tempWorkReviews);
         });

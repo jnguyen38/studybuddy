@@ -39,9 +39,6 @@ export function Authenticate(props) {
                     handleSignIn(userData);
                 } else
                     handleIncorrectSignIn();
-            }).then(() => {
-                props.handler.updateLikes();
-                props.handler.updateReviews();
             });
         }
 
@@ -126,28 +123,23 @@ export function EditModal(props) {
 export function RevModal(props) {
     if (!props.show) return;
 
-    const optionList = props.work;
-
     function handleSubmit(event) {
         event.preventDefault()
-        Axios.post(props.apiPath + "/api/post/review", {
-            "name": event.target.name.value,
+
+        const data = {"name": event.target.name.value,
             "description": event.target.description.value,
             "rating": event.target.rating.value,
             "spot_id": props.spot_id,
             "work_type": event.target.work.value,
             "username": props.user.username
-        }).then((data) => {
+        }
+
+        Axios.post(props.apiPath + "/api/post/review", data).then((data) => {
             console.log(data)
             props.close()
-        }).then((data) => {
-          Axios.get(props.apiPath + "/api/get/likes").then((reviewsData) => {
-            props.handler.findReviews(reviewsData.data);
-            props.handler.setDictHelper({});
-            props.handler.setHistDataHelper([]);
-          })
-        })
-
+        }).then(() => {
+            window.location.reload()
+        });
     }
 
     return (
@@ -156,14 +148,13 @@ export function RevModal(props) {
                 <form onSubmit={handleSubmit} id={"write-review"} className={"form-container d-flex f-col"}>
                     <h2>Write a Review</h2>
                     <div className={"light-blue line"}/>
-                    <div className={"d-flex jc-sb full-length"}>
+                    <div className={"d-flex jc-sb full-length f-wrap gap-20"}>
                         <input type="text" value={`${props.user.firstName} ${props.user.lastName}`} name="name" readOnly/>
                         <input type="number" placeholder="Rating" name="rating" min="1" max="5" required/>
-                        <CreatableSelect isMulti name="work" options={optionList} className="basic-multi-select" classNamePrefix="select"/>
                     </div>
+                    <CreatableSelect name={"work"} options={props.work} className={"dropdown as-fs"} classNamePrefix={"Select"} placeholder={"Work Type"} required/>
                     <textarea placeholder="Content" name="description" required/>
                     <div className={"form-buttons d-flex jc-fe"}>
-                        <input type="reset" value="Clear" className={"btn"}/>
                         <input type="submit" value="Submit" className={"btn submit-btn"}/>
                     </div>
                 </form>
