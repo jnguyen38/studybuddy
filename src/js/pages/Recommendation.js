@@ -1,23 +1,20 @@
 import {useCallback, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import Axios from "axios";
 import Select from 'react-select';
+
 
 function Choice(props) {
     let params = useParams()
 
     if (params.typerec === "history") {
-        if (props.user.isSignedIn) {
-            return (<History {...props}/>)
-        } else {
-            props.handler.handleShowAuthenticate();
-        }
+        return (<History {...props}/>)
     } else if (params.typerec === "work") {
         return (<Work {...props}/>)
-    } else {
-        return (<div></div>)
     }
+
+    return (<div></div>)
 
 }
 
@@ -363,6 +360,14 @@ function Results(props) {
 }
 
 export default function Recommendation(props) {
+
+    useEffect(() => {
+      if (!props.user.isSignedIn) {
+        props.handler.handleShowAuthenticate()
+      }
+    }, [props.user])
+
+
     return (
         <div className={"recommendation-container d-flex f-col"}>
             <div className={"recommendation-header d-flex-col-c"}>
