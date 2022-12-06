@@ -40,7 +40,7 @@ function Results(props) {
     return (
         <div className={"results-container d-flex-col-c gap-20"}>
             {(props.results.length === 0) ?
-                <div>Hello</div>
+                <div></div>
                 :
                 props.results.map(result => {
                     const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
