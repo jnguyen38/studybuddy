@@ -1,76 +1,14 @@
 import {Link} from "react-router-dom";
 import Axios from "axios";
-import SHA3 from "sha3";
-import info from "../../media/icons/info.svg";
 import CreatableSelect from 'react-select/creatable';
+import SignIn from "../pages/SignIn";
 
 export function Authenticate(props) {
     if (!props.show) return;
 
-    function handleSignUp() {
-        props.closeSettings();
-        props.close();
-    }
-
-    function handleSignIn(userData) {
-        props.handler.signIn(userData.data);
-        props.close();
-    }
-
-    function handleIncorrectSignIn() {
-        document.getElementById("err-incorrect-sign-in").classList.remove("d-none");
-        document.getElementById("err-incorrect-sign-in").classList.add("d-flex-row-c");
-    }
-
-    function handleSubmit(event) {
-        event.preventDefault();
-
-        let hash = new SHA3(512);
-        hash.update(event.target.password.value);
-
-        function request(event, lat, long) {
-            Axios.put(props.apiPath + "/api/put/signin", {
-              "user": event.target.user.value,
-              "password": hash.digest("hex").toString(),
-              "latitude": lat,
-              "longitude": long
-            }).then((userData) => {
-                if (userData.data.isSignedIn) {
-                    handleSignIn(userData);
-                } else
-                    handleIncorrectSignIn();
-            });
-        }
-
-        props.handler.getMyLocation().then(data => {
-            request(event, data.coords.latitude, data.coords.longitude);
-        }, reason => {
-            console.log(reason);
-            request(event, NaN, NaN);
-        });
-    }
-
     return (
         <div className={"modal"} onMouseDown={props.close}>
-            <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
-                <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
-                    <h2>Sign In</h2>
-                    <div className={"thin light-blue line"}/>
-                    <div id={"err-incorrect-sign-in"} className={"warning d-none"}>
-                        <img src={info} alt="" className={"icon warning-icon xxs-icon"}/>
-                        <p>Incorrect username or password</p>
-                    </div>
-                    <input type="text" placeholder="Username" name="user" autoComplete={"username"} required/>
-                    <input type="password" placeholder="Password" name="password" autoComplete={"current-password"} required/>
-                    <div className={"form-buttons d-flex jc-c"}>
-                        <input type="submit" value="Log In" className={"btn submit-btn"}/>
-                    </div>
-                    <div className={"sign-up d-flex-col-c"}>
-                        <p>Don't have an account yet?</p>
-                        <p><Link to={props.path + "/signup"} onClick={handleSignUp}>Sign up here!</Link></p>
-                    </div>
-                </form>
-            </div>
+            <SignIn {...props} grow={true}/>
         </div>
     );
 }
@@ -95,7 +33,7 @@ export function EditModal(props) {
 
     return (
         <div className={"modal"} onMouseDown={props.close}>
-            <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
+            <div className={"modal-form grow-animation d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
                 {(props.user.isAdmin) ? (!props.editSubmitted) ?
                     <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
                         <h2>Edit the {title}</h2>
@@ -144,7 +82,7 @@ export function RevModal(props) {
 
     return (
         <div className={"modal"} onClick={props.close}>
-            <div className={"modal-form d-flex-col-c"} onClick={e => e.stopPropagation()}>
+            <div className={"modal-form grow-animation d-flex-col-c"} onClick={e => e.stopPropagation()}>
                 <form onSubmit={handleSubmit} id={"write-review"} className={"form-container d-flex f-col"}>
                     <h2>Write a Review</h2>
                     <div className={"light-blue line"}/>

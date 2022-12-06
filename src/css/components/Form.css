@@ -13,6 +13,9 @@
     width: min(400px, 60%);
     height: 60%;
     padding: 40px;
+}
+
+.grow-animation {
     animation: grow .5s ease-in-out;
 }
 

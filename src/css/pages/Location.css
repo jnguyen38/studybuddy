@@ -48,6 +48,7 @@
     color: var(--sb-white);
     margin: 20px 20px 20px -10px;
     transition: all .3s;
+    border-color: var(--sb-white);
 }
 .see-all-btn:hover {background-color: rgba(255, 255, 255, .3);}
 .see-all-btn:active {background-color: rgba(255, 255, 255, .5);}
