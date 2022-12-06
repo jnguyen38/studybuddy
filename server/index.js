@@ -5,6 +5,7 @@ const axios = require('axios');
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
+const {spawn} = require('child_process');
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/api.studybuddynd.com/privkey.pem');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/api.studybuddynd.com/fullchain.pem');
 const credentials = {key: privateKey, cert: certificate};
@@ -106,6 +107,20 @@ app.get("/api/get/buildingInfo", (req, res) => {
         if (err) console.log(err);
         res.send(result);
     })
+});
+
+app.get("api/get/allPhotos", (req, res) => {
+    let dataToSend;
+    const python = spawn('python', ['py/get_pictures.py 000200']);
+    python.stdout.on('data', data => {
+        console.log('Pipe data from python script ...');
+        dataToSend = data.toString();
+    });
+    python.on('close', (code) => {
+        console.log(`child process close all stdio with code ${code}`);
+        // send data to browser
+        res.send(dataToSend);
+    });
 });
 
 /* PUT API ENDPOINTS */

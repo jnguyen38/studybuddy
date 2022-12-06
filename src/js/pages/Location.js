@@ -34,9 +34,14 @@ export function LocationHeader(props) {
         props.handler.setHistDataHelper([]);
     }
 
+    function handleSeeAll() {
+        Axios.get(props.apiPath + "/api/get/allPhotos").then(data => {
+           console.log(data);
+        });
+    }
+
     function avgRating(allReviews) {
         if (!allReviews) return 0;
-
         let sum = 0;
         let count = 0;
         for (const review of allReviews) {
@@ -58,7 +63,7 @@ export function LocationHeader(props) {
             <div className={"d-flex f-wrap jc-fe"}>
                 <img src={(props.userLikes.has(props.spot_id)) ? fullHeart : emptyHeart} alt="" style={{zIndex: 20}}
                      className={(props.userLikes.has(props.spot_id)) ? "icon warning-icon lg-icon like-button" : "icon white-icon lg-icon like-button"} onClick={handleLike}/>
-                <button className={"btn see-all-btn"}>
+                <button className={"btn see-all-btn"} onClick={handleSeeAll}>
                     See All Photos
                 </button>
             </div>
@@ -223,31 +228,15 @@ function LocationMain(props) {
     );
 }
 
-
 function LocationAside(props) {
     const [currentState, setCurrentState] = useState(false);
-    
-    const defaultProps = {
-        center: {
-            lat: 41.69921143221658,
-            lng: -86.2388042160717
-        },
-        zoom: 14
-    };
 
     const AnyReactComponent = ({ text }) => <div className={"map-marker"} content={text}></div>;
 
     function formatTime(date) {
-        let h = parseInt(date.toString().slice(0, 2));
-        let m = parseInt(date.toString().slice(3, 5));
-        let dd = "AM";
-        if (h >= 12) {
-            h = h - 12;
-            dd = "PM";
-        }
-        if (h === 0)
-            h = 12;
-
+        let h = parseInt(date.toString().slice(0, 2)), m = parseInt(date.toString().slice(3, 5)), dd = "AM";
+        if (h >= 12) {h = h - 12; dd = "PM";}
+        if (h === 0) h = 12;
         m = m < 10 ? "0" + m : m;
 
         return `${h.toString()}:${m.toString()} ${dd}`;
@@ -273,18 +262,13 @@ function LocationAside(props) {
         setCurrentState(current(props.buildingInfo.open, props.buildingInfo.close))
     }, [props.buildingInfo.close, props.buildingInfo.open])
 
-
     return (
         <div id={"location-aside"}>
             <div className={"location-map"}>
-                <GoogleMapReact
-                    bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
-                    defaultCenter={defaultProps.center}
-                    defaultZoom={defaultProps.zoom}>
-                    <AnyReactComponent
-                        lat={props.buildingInfo.lat}
-                        lng={props.buildingInfo.long}
-                        text={props.building}/>
+                <GoogleMapReact bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
+                                defaultCenter={{lat: props.buildingInfo.lat, lng: props.buildingInfo.long}}
+                                defaultZoom={17}>
+                    <AnyReactComponent lat={props.buildingInfo.lat} lng={props.buildingInfo.long} text={props.building}/>
                 </GoogleMapReact>
             </div>
 
