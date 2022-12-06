@@ -120,6 +120,29 @@ export default function Collaborate(props) {
         console.log(count);
     }
 
+    function getTimeNow(event) {
+        var now = new Date();
+        return (now.getHours() + ':' + now.getMinutes());
+    }
+
+    function fillTimeNow(event) {
+        document.getElementById('time-id').value = getTimeNow();
+    }
+
+    function fillDateTime(event) {
+        fillDateNow(event);
+        fillTimeNow(event);
+    }
+
+    function getDateNow(event) {
+        var today = new Date();
+        return (today.getMonth() + "/" + today.getDate() + "/" + today.getFullYear())
+    }
+
+    function fillDateNow(event) {
+        document.getElementById('date-id').value = getDateNow();
+    }
+
     function handleLocationChange(index, event) {
         let cur_locs = locations
         cur_locs[index] = event.target.value
@@ -181,6 +204,29 @@ export default function Collaborate(props) {
                         :
                         <div/>
                     }
+                </div>
+                <div className={"time-day"}>
+                    <p>When are you meeting?</p>
+                    <div className={"time-day-inputs"}>
+                        <div className={"day-input"}>
+                            <p>Day: </p>
+                            <input id="date-id" name="day" type="text" placeholder="mm/dd/yyyy"/>
+                        </div>
+                        <div className={"time-input"}>
+                            <p>Time: </p>
+                            <input id="time-id" name="time" type="text" placeholder="hh:mm"/>
+                        </div>
+                        <button onClick={fillDateTime} className={"btn now-time"}>Now 🕒</button>
+                    </div>
+                </div>
+                <div className={"group-features"}>
+                    <p>Do you want any of the following?</p>
+                    <input type="checkbox" name="whiteboard"/>
+                    <label htmlFor="whiteboard">Whiteboard</label><br/>
+                    <input type="checkbox" name="computer"/>
+                    <label htmlFor="computer">Computer</label><br/>
+                    <input type="checkbox" name="food"/>
+                    <label htmlFor="food">Food Available Nearby</label>
                 </div>
                 <div className={"submit-button"}>
                     <input type="submit" value="Submit" className={"btn submit-btn"} />
