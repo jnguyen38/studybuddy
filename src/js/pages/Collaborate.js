@@ -1,20 +1,6 @@
 import {useState} from "react";
 import axios from "axios";
-//import * as Pyscript from "pyscript";
 import {Link} from "react-router-dom";
-//import {Html, Head, Main, NextScript} from next/document
-//import google from '@types/google.maps';
-//import {GoogleMap, useJsApiLoader} from '@react-google-maps/api'
-//import maps from 'google'
-//const cors = require('cors');
-//const express = require('express')
-//const app = express()
-//app.use(cors())
-
-const key = "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" // API Key
-const units = "imperial"
-const mode = "walking"
-const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 
 function Results(props) {
 
@@ -45,31 +31,47 @@ function Results(props) {
 
 
 export default function Collaborate(props) {
+    /*
     const [state, setState] = useState({
         userBuilding: "",
     });
+     */
 
     const [count, setCount] = useState(0);
     const [results, setResults] = useState([])
     const [locations, setLocations] = useState([])
-    const [usernames, setUsernames] = useState([])
+    const [usernames, setUsernames] = useState([props.user.username])
 
     async function handleSubmit(event) {
         event.preventDefault()
+        console.log(usernames)
         axios.get(props.apiPath + "/api/get/groupRec", {
             params: {
                 groupSize: count + 1,
-                locs: locations
+                whiteboard: event.target.whiteboard.checked,
+                computer: event.target.computer.checked,
+                tv: event.target.tv.checked,
+                printer: event.target.printer.checked,
+                food: event.target.food.checked
             }
         }).then(async (data) => {
             let new_data = await Promise.all(data.data.map(async (place) => Object.assign(place, await get_distance_obj(place["building"], locations))))
-            new_data = new_data.map(place => Object.assign(place, calc_score(place)))
-            new_data.sort((o1,o2) => (o1["score"] - o2["score"]))
-            console.log(new_data)
-            setResults(new_data)
+            axios.get(props.apiPath + "/api/get/groupReviews", {
+                params: {
+                    users: usernames
+                }
+            }).then(reviews => {
+                console.log(data)
+                let priorities = calc_priorities(reviews, data)
+                new_data = new_data.map(place => Object.assign(place, calc_score(place)))
+                new_data.sort((o1, o2) => (o1["score"] - o2["score"]))
+                console.log(new_data)
+                setResults(new_data)
+            })
         });
     }
 
+    /*
     function handleChange(event) {
         const value = event.target.value;
         setState({
@@ -78,13 +80,14 @@ export default function Collaborate(props) {
         });
         console.log(event);
     }
+     */
 
     async function get_distance_obj(building, locs) {
 
         return axios.get(props.apiPath + "/api/get/distances", {
             params: {
                 building: building,
-                locs: locs
+                locs: locs,
             }
         }).then(response => {
             let distances = response.data
@@ -92,6 +95,35 @@ export default function Collaborate(props) {
         })
     }
 
+    // Might switch this to map if it needs to be faster
+    function calc_priorities(reviews, places) {
+        let comfort = []
+        let natural_light = []
+        let loudness = []
+        let outlets = []
+
+        for (let i = 0; i < reviews.length; i++) {
+            let place = places.filter(place => place.spot_id === reviews[i].spot_id)[0]
+            if (place)
+                if (place.table_seat_comfort !== -1)
+                    comfort.append(place.table_seat_comfort)
+                else if (place.nontable_seat_comfort !== -1)
+                    comfort.append(place.nontable_seat_comfort)
+                else
+                    comfort.append(place.couch_comfort)
+                natural_light.append(place.natural_light_rating)
+                loudness.append(place.loudness_rating)
+                outlets.append(places.outlets_rating)
+        }
+
+        let stdevs = {'comfort': Math.std(comfort), 'natural_light_rating': Math.std(natural_light),
+            'loudness_rating': Math.std(loudness), 'outlets_rating': Math.std(outlets)}
+
+        return stdevs
+
+    }
+
+    // Can add rating in here eventually
     function calc_score(place) {
         let dists = place["distances"]
         dists.sort((a,b) => b - a)
@@ -136,7 +168,7 @@ export default function Collaborate(props) {
 
     function getDateNow(event) {
         var today = new Date();
-        return (today.getMonth() + "/" + today.getDate() + "/" + today.getFullYear())
+        return ((today.getMonth() + 1) + "/" + today.getDate() + "/" + today.getFullYear())
     }
 
     function fillDateNow(event) {
@@ -147,6 +179,12 @@ export default function Collaborate(props) {
         let cur_locs = locations
         cur_locs[index] = event.target.value
         setLocations(cur_locs)
+    }
+
+    function handleUsernameChange(index, event) {
+        let cur_users = usernames
+        cur_users[index] = event.target.value
+        setUsernames(cur_users)
     }
 
     return (
@@ -177,12 +215,12 @@ export default function Collaborate(props) {
                     }
                     <div className={"friend-user-input"}>
                         {Array.from(Array(count)).map((c, index) => {
-                            return <input key={index + 1} name={"friendUsername" + index} type="text" placeholder="Enter a username"></input>;
+                            return <input key={index + 1} name={"friendUsername" + index} type="text" placeholder="Enter a username" onChange={handleUsernameChange.bind(this, index + 1)} />;
                         })}
                     </div>
                     <div className={"friend-building-input"}>
                         {Array.from(Array(count)).map((c, index) => {
-                            return <input key={index + 1} name={'friendBuilding' + index} type="text" placeholder="Enter a building name" onChange={handleLocationChange.bind(this, index + 1)}></input>;
+                            return <input key={index + 1} name={'friendBuilding' + index} type="text" placeholder="Enter a building name" onChange={handleLocationChange.bind(this, index + 1)} />;
                         })}
                     </div>
                     {(count > 0) ?
@@ -225,6 +263,10 @@ export default function Collaborate(props) {
                     <label htmlFor="whiteboard">Whiteboard</label><br/>
                     <input type="checkbox" name="computer"/>
                     <label htmlFor="computer">Computer</label><br/>
+                    <input type="checkbox" name="tv"/>
+                    <label htmlFor="tv">TV</label><br/>
+                    <input type="checkbox" name="printer"/>
+                    <label htmlFor="printer">Printer</label><br/>
                     <input type="checkbox" name="food"/>
                     <label htmlFor="food">Food Available Nearby</label>
                 </div>
