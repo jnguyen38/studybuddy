@@ -206,6 +206,7 @@ a:link { text-decoration: none; }
     margin-right: 5px;
 }
 
+.dark-blue-icon {filter: invert(10%) sepia(34%) saturate(2988%) hue-rotate(194deg) brightness(88%) contrast(96%)}
 .light-blue-icon {filter: invert(39%) sepia(27%) saturate(540%) hue-rotate(153deg) brightness(96%) contrast(86%);}
 .warning-icon {filter: invert(18%) sepia(28%) saturate(6256%) hue-rotate(336deg) brightness(87%) contrast(108%);}
 .invert-icon {filter: var(--inverted-filter) !important;}
