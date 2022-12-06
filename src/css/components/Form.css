@@ -49,3 +49,8 @@
     border-color: var(--sb-light-blue);
     color: var(--sb-light-blue);
 }
+
+.like-button {
+    cursor: pointer;
+    margin-right: 20px;
+}

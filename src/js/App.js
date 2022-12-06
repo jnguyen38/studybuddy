@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import Header from "./components/Header";
 import Overview from "./pages/Overview";
 import Footer from "./components/Footer";
-import Location from "./pages/Deep/Location";
+import Location from "./pages/Location";
 import Upload from "./pages/Upload";
 import Search from "./pages/Search";
 import Collaborate from "./pages/Collaborate";
@@ -33,7 +33,7 @@ export default function App() {
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
 
-    const [userLikes, setUserLikes] = useState([]);
+    const [userLikes, setUserLikes] = useState(new Set());
     const [userReviews, setUserReviews] = useState([]);
     const [histData, setHistData] = useState([]);
     const [totalDict, setDict] = useState({});
@@ -49,15 +49,12 @@ export default function App() {
         static setDictHelper(totalDict) {setDict(totalDict)}
         static setHistDataHelper(historyRecDict) {setHistData(historyRecDict)}
         static handleUXMode() {setUXMode(!UXMode);}
-        static updateLikes() {
-            Axios.get(apiPath + "/api/get/likes").then(data => {
-                let tempLikes = [];
-                for (const like of data.data) {
-                    if (user.username === like.username && like.like_bool === 1) {
-                        tempLikes.push(like.spot_id)
-                    }
-                }
-                setUserLikes(tempLikes);
+        static updateLikes(spot_id) {
+            setUserLikes(currLikes => {
+                if (userLikes.has(spot_id)) currLikes.delete(spot_id);
+                else currLikes.add(spot_id);
+
+                return new Set(currLikes);
             });
         }
         static updateReviews() {
@@ -86,7 +83,7 @@ export default function App() {
             setUser({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
             handler.notifySignOut();
             setUserReviews([]);
-            setUserLikes([]);
+            setUserLikes(new Set());
             setDict([]);
             window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
         }
@@ -121,7 +118,7 @@ export default function App() {
         if (n > 5) n = 5;
         return Math.floor(Math.random() * picLayouts[n]);
     }
-
+    
     // useEffect Hooks
     useEffect(() => {
         // Get all spots and store into spots state on page load
@@ -190,10 +187,10 @@ export default function App() {
     useEffect(() => {
       if (user.isSignedIn) {
           Axios.get(apiPath + "/api/get/likes").then(data => {
-              let tempLikes = [];
+              let tempLikes = new Set();
               for (const like of data.data) {
                   if (user.username === like.username && like.like_bool === 1) {
-                      tempLikes.push(like.spot_id)
+                      tempLikes.add(like.spot_id)
                   }
               }
               setUserLikes(tempLikes);
@@ -209,7 +206,7 @@ export default function App() {
           });
       } else {
           setUserReviews([]);
-          setUserLikes([]);
+          setUserLikes(new Set());
           setDict([]);
       }
     }, [user.isSignedIn, user.username])

@@ -1,47 +1,26 @@
 import {useEffect, useState} from "react";
-import {RevModal, EditModal} from "../../components/Modal";
+import {RevModal, EditModal} from "../components/Modal";
 import {useParams} from "react-router-dom";
 import Axios from "axios";
 import GoogleMapReact from 'google-map-react';
 
-import person from "../../../media/icons/person.svg";
-import star from "../../../media/icons/double_star.svg";
-import share from "../../../media/icons/share.svg";
-import camera from "../../../media/icons/camera.svg";
-import wrong from "../../../media/icons/close.svg";
-import check from "../../../media/icons/check.svg";
-import fullHeart from "../../../media/icons/full_heart.svg";
-import emptyHeart from "../../../media/icons/empty_heart.svg";
+import person from "../../media/icons/person.svg";
+import star from "../../media/icons/double_star.svg";
+import share from "../../media/icons/share.svg";
+import camera from "../../media/icons/camera.svg";
+import wrong from "../../media/icons/close.svg";
+import check from "../../media/icons/check.svg";
+import fullHeart from "../../media/icons/full_heart.svg";
+import emptyHeart from "../../media/icons/empty_heart.svg";
 
 export function LocationHeader(props) {
-    return (
-        <div id={"location-header"}>
-            <img src={props.image} alt="" className={"location-img"}/>
-            <div className={"location-header-info"}>
-                <h2>{props.building}</h2>
-                <h3>{props.location}</h3>
-                <p className={"rating"}>★★★★☆</p>
-            </div>
-            <button className={"btn see-all-btn"}>
-                See All Photos
-            </button>
-        </div>
-    );
-}
-
-function LocationButtons(props) {
-    const [showRev, setShowRev] = useState(false);
-
-    function handleRev() {(props.user.isSignedIn) ? setShowRev(() => !showRev) : props.handler.handleShowAuthenticate();}
-    function closeRev() {setShowRev(false);}
-
     function handleLike() {
         if (props.user.isSignedIn) {
+            props.handler.updateLikes(props.spot_id);
+
             Axios.put(props.apiPath + "/api/put/toggleLike", {
                 "user": props.user.username,
                 "spot_id": props.spot_id
-            }).then(() => {
-                props.handler.updateLikes();
             });
         } else {
             props.handler.handleShowAuthenticate();
@@ -52,10 +31,32 @@ function LocationButtons(props) {
     }
 
     return (
+        <div id={"location-header"}>
+            <img src={props.image} alt="" className={"location-img"}/>
+            <div className={"location-header-info"}>
+                <h2>{props.building}</h2>
+                <h3>{props.location}</h3>
+                <p className={"rating"}>★★★★☆</p>
+            </div>
+            <div className={"d-flex f-wrap jc-fe"}>
+                <img src={(props.userLikes.has(props.spot_id)) ? fullHeart : emptyHeart} alt="" style={{zIndex: 20}}
+                     className={(props.userLikes.has(props.spot_id)) ? "icon warning-icon lg-icon like-button" : "icon white-icon lg-icon like-button"} onClick={handleLike}/>
+                <button className={"btn see-all-btn"}>
+                    See All Photos
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function LocationButtons(props) {
+    const [showRev, setShowRev] = useState(false);
+
+    function handleRev() {(props.user.isSignedIn) ? setShowRev(() => !showRev) : props.handler.handleShowAuthenticate();}
+    function closeRev() {setShowRev(false);}
+
+    return (
         <div className={"location-buttons"}>
-            <button className={"btn d-flex-row-c"} id={"like-spot-btn"} onClick={handleLike}>
-                <img src={(props.userLikes.includes(props.spot_id)) ? fullHeart : emptyHeart} alt="" className={"icon white-icon sm-icon"}/>
-            </button>
             <button className={"btn d-flex-row-c"} id={"write-review-btn"} onClick={handleRev}>
                 <img src={star} alt="" className={"icon white-icon sm-icon"}/>
                 Write a Review
@@ -137,19 +138,19 @@ function LocationMain(props) {
 function LocationAside(props) {
     const defaultProps = {
         center: {
-            lat: props.latitude,
-            lng: props.longitude
+            lat: 59.955413,
+            lng: 30.337844
         },
-        zoom: 5
+        zoom: 13
     };
 
     const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
     return (
         <div id={"location-aside"}>
-            <div style={{ height: '200px', width: '200px' }}>
+            <div style={{ height: '20vmax', width: '30vmax' }}>
                 <GoogleMapReact
-                    bootstrapURLKeys={{ key: "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" }}
+                    bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
                     defaultCenter={defaultProps.center}
                     defaultZoom={defaultProps.zoom}
                 >

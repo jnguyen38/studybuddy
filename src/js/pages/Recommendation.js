@@ -226,7 +226,7 @@ function History(props) {
 
     const getAllInfo = useCallback(async (allSpots, likesDict, reviewsDict) => {
         let lengthRev = props.userReviews.length;
-        let lengthLike = props.userLikes.length;
+        let lengthLike = props.userLikes.size;
         let comf = {};
         let rating = 0;
 
@@ -235,7 +235,7 @@ function History(props) {
                 params: {spot_id: spot_id}
             });
 
-            if (props.userLikes.includes(response.data[0].spot_id)) {
+            if (props.userLikes.has(response.data[0].spot_id)) {
                 likesDict["loud"] += response.data[0].loudness_rating / lengthLike;
                 likesDict["light"] += response.data[0].natural_light_rating / lengthLike;
                 likesDict["outlet"] += response.data[0].outlets_rating / lengthLike;
