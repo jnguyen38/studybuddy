@@ -162,20 +162,30 @@
 }
 
 .map-marker {
+    background-color: var(--sb-yellow);
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+}
+
+.map-marker:after {
     font-family: Outfit, sans-serif;
     font-size: .6em;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--sb-white);
-    background-color: var(--sb-yellow);
-    height: 55px;
-    width: 55px;
-    border-radius: 50%;
-    text-align: center;
-    transform: translate(-50%, -50%);
-    padding: 10px;
+    content: attr(content);
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    color: var(--sb-dark-blue);
+    background-color: var(--sb-white);
+    border: 1px solid var(--sb-dark-blue);
+    border-radius: var(--border-radius);
+    padding: 5px;
 }
 
 .review {
@@ -208,4 +218,9 @@
 
 .similar-locations .explore-spot:before {
     bottom: 3px;
+}
+
+.current {
+    font-style: italic;
+    font-weight: bold;
 }

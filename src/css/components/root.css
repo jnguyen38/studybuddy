@@ -63,6 +63,11 @@ code {
     color: var(--sb-blue);
 }
 
+.red {color: #ff4444
+}
+.green {color: #40f140
+}
+
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     font-family: Outfit, sans-serif;
