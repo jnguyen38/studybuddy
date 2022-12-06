@@ -211,7 +211,6 @@ function LocationMain(props) {
                 <h4>About</h4>
                 <p className={"fw-300"}>{props.description}</p><br/>
                 <div className={"d-flex jc-sb full-length"}>
-                    <button className={"btn d-flex-row-c"}>Read More</button>
                     {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("description")}>Edit</button>}
                 </div>
 
@@ -278,7 +277,7 @@ function LocationAside(props) {
             </div>
 
             <div className={"thin full-length line"}/>
-            <h2 className={"fw-500"}>{props.building} Hours</h2><br/>
+            <h2 className={"fw-500"}>{props.building} Information</h2><br/>
             <div style={{width: "min(325px, 100%)"}}>
                 <div className={"d-flex jc-sb full-length"}><p>Sunday</p><p>{formatTime(bInfo.sunOpen)} - {formatTime(bInfo.sunClose)}</p></div>
                 <div className={"d-flex jc-sb full-length"}><p>Monday</p><p>{formatTime(bInfo.monOpen)} - {formatTime(bInfo.monClose)}</p></div>
