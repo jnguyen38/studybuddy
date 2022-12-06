@@ -1,23 +1,20 @@
 import {useCallback, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import Axios from "axios";
 import Select from 'react-select';
+
 
 function Choice(props) {
     let params = useParams()
 
     if (params.typerec === "history") {
-        if (props.user.isSignedIn) {
-            return (<History {...props}/>)
-        } else {
-            props.handler.handleShowAuthenticate();
-        }
+        return (<History {...props}/>)
     } else if (params.typerec === "work") {
         return (<Work {...props}/>)
-    } else {
-        return (<div></div>)
     }
+
+    return (<div></div>)
 
 }
 
@@ -85,13 +82,12 @@ function Work(props) {
             "capacity": workDict["capacity"],
             "table": workDict["table"]
         }).then(data => {
-            console.log(workDict)
-            console.log(data)
             setResults(data.data)
         });
     }, [props.apiPath, workDict]);
 
-    const getAllInfo = useCallback(async () => {
+    const getAllInfo = useCallback(async (workType) => {
+        console.log(workType)
         let lengthSpots = props.workReviews[workType].length;
         let tempWorkDict = {"loud": 0, "light": 0, "outlet": 0, "comfort": 0, "table": 0, "capacity": 0}
         let rating = 0;
@@ -138,15 +134,20 @@ function Work(props) {
         setWorkDict(tempWorkDict)
         return Promise.resolve()
 
-    }, [props.apiPath, props.workReviews, workType]);
+    }, [props.apiPath, props.workReviews]);
 
     useEffect(() => {
 
         if (workType) {
-            getAllInfo().then(() => {
+            getAllInfo(workType).then(() => {
                 handleRequestWork()
             })
         }
+
+    }, [workType])
+
+    useEffect(() => {
+        handleRequestWork()
 
         if (workType) {
             setShowDesc(true)
@@ -154,13 +155,7 @@ function Work(props) {
             setShowDesc(false)
         }
 
-    }, [getAllInfo, handleRequestWork, workType])
-
-    useEffect(() => {
-        handleRequestWork()
-
-    }, [handleRequestWork, workDict])
-
+    }, [handleRequestWork, workDict, workType])
 
     return (
         <div className={"work-container d-flex-col-c"}>
@@ -365,6 +360,14 @@ function Results(props) {
 }
 
 export default function Recommendation(props) {
+
+    useEffect(() => {
+      if (!props.user.isSignedIn) {
+        props.handler.handleShowAuthenticate()
+      }
+    }, [props.user])
+
+
     return (
         <div className={"recommendation-container d-flex f-col"}>
             <div className={"recommendation-header d-flex-col-c"}>
