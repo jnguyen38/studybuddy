@@ -63,6 +63,9 @@ code {
     color: var(--sb-blue);
 }
 
+.red {color: #ff4444}
+.green {color: #40f140}
+
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     font-family: Outfit, sans-serif;
@@ -89,6 +92,10 @@ a:link { text-decoration: none; }
 .text-left {text-align: left;}
 .text-right {text-align: right;}
 .text-center {text-align: center;}
+
+.underline {text-decoration: underline}
+.italic {font-style: italic}
+.clickable {cursor: pointer}
 
 .no-select {
     -webkit-touch-callout: none; /* iOS Safari */

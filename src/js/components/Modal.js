@@ -1,76 +1,37 @@
 import {Link} from "react-router-dom";
 import Axios from "axios";
-import SHA3 from "sha3";
-import info from "../../media/icons/info.svg";
 import CreatableSelect from 'react-select/creatable';
+import SignIn from "../pages/SignIn";
+
+export function AllPhotos(props) {
+    if (!props.show) return;
+
+    return (
+        <div className={"modal"} onClick={props.close}>
+            <div className={"modal-form see-all d-flex f-col"} onClick={e => e.stopPropagation()}>
+                <p className={"see-all-title as-fs"}>Photos ( {props.photos.length} )</p>
+                <div className={"thin light-blue full-length line"}/><br/>
+                <div className={"d-flex f-wrap gap-20 full-length"}>
+                    {props.photos.map((photo, index) => {
+                        const image = "./media/locationsSD/" + photo;
+                        return (
+                            <div className={"see-all-photo-cont"} key={index}>
+                                <img src={image} alt="" className={"see-all-photo"}/>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export function Authenticate(props) {
     if (!props.show) return;
 
-    function handleSignUp() {
-        props.closeSettings();
-        props.close();
-    }
-
-    function handleSignIn(userData) {
-        props.handler.signIn(userData.data);
-        props.close();
-    }
-
-    function handleIncorrectSignIn() {
-        document.getElementById("err-incorrect-sign-in").classList.remove("d-none");
-        document.getElementById("err-incorrect-sign-in").classList.add("d-flex-row-c");
-    }
-
-    function handleSubmit(event) {
-        event.preventDefault();
-
-        let hash = new SHA3(512);
-        hash.update(event.target.password.value);
-
-        function request(event, lat, long) {
-            Axios.put(props.apiPath + "/api/put/signin", {
-              "user": event.target.user.value,
-              "password": hash.digest("hex").toString(),
-              "latitude": lat,
-              "longitude": long
-            }).then((userData) => {
-                if (userData.data.isSignedIn) {
-                    handleSignIn(userData);
-                } else
-                    handleIncorrectSignIn();
-            });
-        }
-
-        props.handler.getMyLocation().then(data => {
-            request(event, data.coords.latitude, data.coords.longitude);
-        }, reason => {
-            console.log(reason);
-            request(event, NaN, NaN);
-        });
-    }
-
     return (
         <div className={"modal"} onMouseDown={props.close}>
-            <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
-                <form onSubmit={handleSubmit} id={"admin-container"} className={"form-container d-flex f-col"}>
-                    <h2>Sign In</h2>
-                    <div className={"thin light-blue line"}/>
-                    <div id={"err-incorrect-sign-in"} className={"warning d-none"}>
-                        <img src={info} alt="" className={"icon warning-icon xxs-icon"}/>
-                        <p>Incorrect username or password</p>
-                    </div>
-                    <input type="text" placeholder="Username" name="user" autoComplete={"username"} required/>
-                    <input type="password" placeholder="Password" name="password" autoComplete={"current-password"} required/>
-                    <div className={"form-buttons d-flex jc-c"}>
-                        <input type="submit" value="Log In" className={"btn submit-btn"}/>
-                    </div>
-                    <div className={"sign-up d-flex-col-c"}>
-                        <p>Don't have an account yet?</p>
-                        <p><Link to={props.path + "/signup"} onClick={handleSignUp}>Sign up here!</Link></p>
-                    </div>
-                </form>
-            </div>
+            <SignIn {...props} grow={true}/>
         </div>
     );
 }
@@ -95,12 +56,12 @@ export function EditModal(props) {
 
     return (
         <div className={"modal"} onMouseDown={props.close}>
-            <div className={"modal-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
+            <div className={"modal-form grow-animation d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
                 {(props.user.isAdmin) ? (!props.editSubmitted) ?
                     <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
                         <h2>Edit the {title}</h2>
                         <div className={"light-blue line"}/>
-                        <textarea placeholder={`Enter your ${props.query} here...`} name="description" maxLength="100" required/>
+                        <textarea placeholder={`Enter your ${props.query} here...`} name="description" maxLength="512" required/>
                         <div className={"form-buttons d-flex jc-fe"}>
                             <input type="reset" value="Clear" className={"btn"}/>
                             <input type="submit" value="Submit" className={"btn submit-btn"}/>
@@ -144,7 +105,7 @@ export function RevModal(props) {
 
     return (
         <div className={"modal"} onClick={props.close}>
-            <div className={"modal-form d-flex-col-c"} onClick={e => e.stopPropagation()}>
+            <div className={"modal-form grow-animation d-flex-col-c"} onClick={e => e.stopPropagation()}>
                 <form onSubmit={handleSubmit} id={"write-review"} className={"form-container d-flex f-col"}>
                     <h2>Write a Review</h2>
                     <div className={"light-blue line"}/>
@@ -153,7 +114,7 @@ export function RevModal(props) {
                         <input type="number" placeholder="Rating" name="rating" min="1" max="5" required/>
                     </div>
                     <CreatableSelect name={"work"} options={props.work} className={"dropdown as-fs"} classNamePrefix={"Select"} placeholder={"Work Type"} required/>
-                    <textarea placeholder="Content" name="description" required/>
+                    <textarea placeholder="Content" name="description" maxLength={300} required/>
                     <div className={"form-buttons d-flex jc-fe"}>
                         <input type="submit" value="Submit" className={"btn submit-btn"}/>
                     </div>

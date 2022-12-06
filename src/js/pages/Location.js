@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {RevModal, EditModal} from "../components/Modal";
+import {RevModal, EditModal, AllPhotos} from "../components/Modal";
 import {Link, useParams} from "react-router-dom";
 import Axios from "axios";
 import GoogleMapReact from 'google-map-react';
@@ -14,6 +14,11 @@ import fullHeart from "../../media/icons/full_heart.svg";
 import emptyHeart from "../../media/icons/empty_heart.svg";
 
 export function LocationHeader(props) {
+    const [showAllPhotos, setShowAllPhotos] = useState(false);
+    const [photos, setPhotos] = useState([]);
+
+    function closeAllPhotos() {setShowAllPhotos(false);}
+
     const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
 
     function handleLike() {
@@ -34,9 +39,17 @@ export function LocationHeader(props) {
         props.handler.setHistDataHelper([]);
     }
 
+    function handleSeeAll() {
+        Axios.get(props.apiPath + "/api/get/allPhotos", {
+            params: {spot_id: props.spot_id}
+        }).then(data => {
+           setPhotos(data.data.split(","));
+           setShowAllPhotos(true)
+        });
+    }
+
     function avgRating(allReviews) {
         if (!allReviews) return 0;
-
         let sum = 0;
         let count = 0;
         for (const review of allReviews) {
@@ -58,10 +71,12 @@ export function LocationHeader(props) {
             <div className={"d-flex f-wrap jc-fe"}>
                 <img src={(props.userLikes.has(props.spot_id)) ? fullHeart : emptyHeart} alt="" style={{zIndex: 20}}
                      className={(props.userLikes.has(props.spot_id)) ? "icon warning-icon lg-icon like-button" : "icon white-icon lg-icon like-button"} onClick={handleLike}/>
-                <button className={"btn see-all-btn"}>
+                <button className={"btn see-all-btn"} onClick={handleSeeAll}>
                     See All Photos
                 </button>
             </div>
+
+            <AllPhotos {...props} show={showAllPhotos} close={closeAllPhotos} photos={photos}/>
         </div>
     );
 }
@@ -224,34 +239,53 @@ function LocationMain(props) {
 }
 
 function LocationAside(props) {
-    const defaultProps = {
-        center: {
-            lat: 41.69921143221658,
-            lng: -86.2388042160717
-        },
-        zoom: 14
-    };
+    const [currentState, setCurrentState] = useState(false);
 
-    const AnyReactComponent = ({ text }) => <div className={"map-marker"}>{text}</div>;
+    const AnyReactComponent = ({ text }) => <div className={"map-marker"} content={text}></div>;
+
+    function formatTime(date) {
+        let h = parseInt(date.toString().slice(0, 2)), m = parseInt(date.toString().slice(3, 5)), dd = "AM";
+        if (h >= 12) {h = h - 12; dd = "PM";}
+        if (h === 0) h = 12;
+        m = m < 10 ? "0" + m : m;
+
+        return `${h.toString()}:${m.toString()} ${dd}`;
+    }
+
+    function dayOfWeek() {
+        const day = new Date().getDay();
+        const dayDict = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
+        return dayDict[day];
+    }
+
+    function current(open, close) {
+        let today = new Date();
+
+        let openVal = parseInt(open.toString().slice(0, 2))*60 + parseInt(open.toString().slice(3, 5));
+        let closeVal = parseInt(close.toString().slice(0, 2))*60 + parseInt(close.toString().slice(3, 5));
+        let currVal = today.getHours()*60 + today.getMinutes();
+
+        return currVal >= openVal && currVal <= closeVal;
+    }
+    
+    useEffect(() => {
+        setCurrentState(current(props.buildingInfo.open, props.buildingInfo.close))
+    }, [props.buildingInfo.close, props.buildingInfo.open])
 
     return (
         <div id={"location-aside"}>
             <div className={"location-map"}>
-                <GoogleMapReact
-                    bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
-                    defaultCenter={defaultProps.center}
-                    defaultZoom={defaultProps.zoom}
-                >
-                    <AnyReactComponent
-                        lat={props.center.lat}
-                        lng={props.center.long}
-                        text={props.building}
-                    />
+                <GoogleMapReact bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
+                                defaultCenter={{lat: props.buildingInfo.lat, lng: props.buildingInfo.long}}
+                                defaultZoom={17}>
+                    <AnyReactComponent lat={props.buildingInfo.lat} lng={props.buildingInfo.long} text={props.building}/>
                 </GoogleMapReact>
             </div>
 
             <div className={"thin full-length line"}/>
-            <h2>{props.building} Hours</h2>
+            <h2>{props.building} Hours</h2><br/>
+            <p><b>{dayOfWeek()}: {formatTime(props.buildingInfo.open)} - {formatTime(props.buildingInfo.close)}</b></p>
+            <p className={currentState ? "current green" : "current red"}>{currentState ? "Currently Open" : "Currently Closed"}</p>
         </div>
     );
 }
@@ -262,14 +296,11 @@ export default function Location(props) {
     const [showEdit, setShowEdit] = useState(false);
     const [editSubmitted, setEditSubmitted] = useState(false);
     const [query, setQuery] = useState("");
-    const [geolocation, setGeolocation] = useState({lat: NaN, long: NaN})
+    const [buildingInfo, setBuildingInfo] = useState({open: NaN, close: NaN, lat: NaN, long: NaN, swipe: false});
 
     const root = document.querySelector(":root");
     const params = useParams()
-    const hoursDict = {0: {open: "sunOpen", close: "sunClose"}, 1: {open: "monOpen", close: "monClose"}, 2: {open: "tuesOpen", close: "tuesClose"},
-        3: {open: "wedOpen", close: "wedClose"}, 4: {open: "thursOpen", close: "thursClose"},
-        5: {open: "friOpen", close: "friClose"}, 6: {open: "satOpen", close: "satClose"}}
-
+   
     function handleShowEdit(queryType) {
         setQuery(queryType)
         setShowEdit(() => !showEdit);
@@ -312,9 +343,12 @@ export default function Location(props) {
                 }
             }).then(data => {
                 const day = new Date().getDay()
+                const hoursDict = {0: {open: "sunOpen", close: "sunClose"}, 1: {open: "monOpen", close: "monClose"}, 2: {open: "tuesOpen", close: "tuesClose"},
+                    3: {open: "wedOpen", close: "wedClose"}, 4: {open: "thursOpen", close: "thursClose"},
+                    5: {open: "friOpen", close: "friClose"}, 6: {open: "satOpen", close: "satClose"}}
 
-                setGeolocation({lat: data.data[0].latitude, long: data.data[0].longitude})
-                console.log(data.data[0]);
+                setBuildingInfo({open: data.data[0][hoursDict[day].open], close: data.data[0][hoursDict[day].close], 
+                    lat: data.data[0].latitude, long: data.data[0].longitude, swipe: data.data[0].swipeAccess})
             });
         }
     }, [props.apiPath, spotData])
@@ -336,7 +370,7 @@ export default function Location(props) {
             <div className={"d-flex-row-l"}>
                 <LocationMain {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
-                {(!isNaN(geolocation.long)) && <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit} center={geolocation}
+                {(!isNaN(buildingInfo.long)) && <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit} buildingInfo={buildingInfo}
                                handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>}
             </div>
         </section>
