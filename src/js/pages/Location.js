@@ -14,6 +14,8 @@ import fullHeart from "../../media/icons/full_heart.svg";
 import emptyHeart from "../../media/icons/empty_heart.svg";
 
 export function LocationHeader(props) {
+    const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
+
     function handleLike() {
         if (props.user.isSignedIn) {
             props.handler.updateLikes(props.spot_id);
@@ -30,13 +32,26 @@ export function LocationHeader(props) {
         props.handler.setHistDataHelper([]);
     }
 
+    function avgRating(allReviews) {
+        if (!allReviews) return 0;
+
+        let sum = 0;
+        let count = 0;
+        for (const review of allReviews) {
+            sum += review.rating;
+            count++;
+        }
+
+        return Math.round(sum / count);
+    }
+
     return (
         <div id={"location-header"}>
             <img src={props.image} alt="" className={"location-img"}/>
             <div className={"location-header-info"}>
                 <h2>{props.building}</h2>
                 <h3>{props.location}</h3>
-                <p className={"rating"}>★★★★☆</p>
+                <p className={"rating"}>{stars[avgRating(props.allReviews[props.spot_id])]}</p>
             </div>
             <div className={"d-flex f-wrap jc-fe"}>
                 <img src={(props.userLikes.has(props.spot_id)) ? fullHeart : emptyHeart} alt="" style={{zIndex: 20}}
