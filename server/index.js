@@ -86,17 +86,45 @@ app.get("/api/get/location", (req, res) => {
 });
 
 app.get("/api/get/groupRec", (req, res) => {
+    console.log(req.query)
     let group = `max_group_size >= ${req.query.groupSize}`;
     let loudness = `loudness_rating > 1`;
-    console.log(group);
+    let whiteboard = (req.query.whiteboard === 'true') ? `notes like '%whiteboard%'` : `1=1`;
+    let computer = (req.query.computer === 'true') ? `notes like '%computer%'` : `1=1`;
+    let tv = (req.query.tv === 'true') ? `notes like '%tv%'` : `1=1`;
+    let printer = (req.query.printer === 'true') ? `printer` : `1=1`
+
+    console.log(`${whiteboard}, ${computer}, ${tv}`)
 
     db.query(`SELECT * \
                 FROM study_spots \
-                WHERE ${group} and ${loudness}`, (err, result) => {
+                WHERE ${group} and ${loudness} \
+                  and ${whiteboard} and ${computer} \
+                  and ${tv} and ${printer}`, (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
 });
+
+app.get("/api/get/groupReviews", (req, res) => {
+    users = req.query.users
+
+    userQuery = ""
+    for (let i = 0; i < users.length; i++) {
+        if (i < (users.length - 1))
+            userQuery += `username='${users[i]}' OR `
+        else
+            userQuery += `username='${users[i]}'`
+    }
+
+    db.query(`SELECT spot_id, rating \
+                FROM reviews \
+                WHERE ${userQuery}`, (err, result) => {
+        if (err) console.log(err)
+        console.log(result)
+        res.send(result)
+    })
+})
 
 
 app.get("/api/get/buildingInfo", (req, res) => {
