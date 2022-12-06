@@ -14,17 +14,52 @@ import fullHeart from "../../media/icons/full_heart.svg";
 import emptyHeart from "../../media/icons/empty_heart.svg";
 
 export function LocationHeader(props) {
+    const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
+
+    function handleLike() {
+        if (props.user.isSignedIn) {
+            props.handler.updateLikes(props.spot_id);
+
+            Axios.put(props.apiPath + "/api/put/toggleLike", {
+                "user": props.user.username,
+                "spot_id": props.spot_id
+            });
+        } else {
+            props.handler.handleShowAuthenticate();
+        }
+
+        props.handler.setDictHelper({});
+        props.handler.setHistDataHelper([]);
+    }
+
+    function avgRating(allReviews) {
+        if (!allReviews) return 0;
+
+        let sum = 0;
+        let count = 0;
+        for (const review of allReviews) {
+            sum += review.rating;
+            count++;
+        }
+
+        return Math.round(sum / count);
+    }
+
     return (
         <div id={"location-header"}>
             <img src={props.image} alt="" className={"location-img"}/>
             <div className={"location-header-info"}>
                 <h2>{props.building}</h2>
                 <h3>{props.location}</h3>
-                <p className={"rating"}>★★★★☆</p>
+                <p className={"rating"}>{stars[avgRating(props.allReviews[props.spot_id])]}</p>
             </div>
-            <button className={"btn see-all-btn"}>
-                See All Photos
-            </button>
+            <div className={"d-flex f-wrap jc-fe"}>
+                <img src={(props.userLikes.has(props.spot_id)) ? fullHeart : emptyHeart} alt="" style={{zIndex: 20}}
+                     className={(props.userLikes.has(props.spot_id)) ? "icon warning-icon lg-icon like-button" : "icon white-icon lg-icon like-button"} onClick={handleLike}/>
+                <button className={"btn see-all-btn"}>
+                    See All Photos
+                </button>
+            </div>
         </div>
     );
 }
@@ -35,27 +70,8 @@ function LocationButtons(props) {
     function handleRev() {(props.user.isSignedIn) ? setShowRev(() => !showRev) : props.handler.handleShowAuthenticate();}
     function closeRev() {setShowRev(false);}
 
-    function handleLike() {
-        if (props.user.isSignedIn) {
-            Axios.put(props.apiPath + "/api/put/toggleLike", {
-                "user": props.user.username,
-                "spot_id": props.spot_id
-            }).then(() => {
-                props.handler.updateLikes();
-            });
-        } else {
-            props.handler.handleShowAuthenticate();
-        }
-
-        props.handler.setDictHelper({});
-        props.handler.setHistDataHelper([]);
-    }
-
     return (
         <div className={"location-buttons"}>
-            <button className={"btn d-flex-row-c"} id={"like-spot-btn"} onClick={handleLike}>
-                <img src={(props.userLikes.includes(props.spot_id)) ? fullHeart : emptyHeart} alt="" className={"icon white-icon sm-icon"}/>
-            </button>
             <button className={"btn d-flex-row-c"} id={"write-review-btn"} onClick={handleRev}>
                 <img src={star} alt="" className={"icon white-icon sm-icon"}/>
                 Write a Review
@@ -77,8 +93,50 @@ function LocationButtons(props) {
     );
 }
 
-function LocationMain(props) {
+function LocationReviews(props) {
+    const stars = {1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
 
+    function timestamp(date, time) {
+        const monthDict = {1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December"}
+        const ending = {1: "st", 2: "nd", 3: "rd"}
+        const year = parseInt(date.slice(0, 4));
+        const month = parseInt(date.slice(5, 7));
+        const day = parseInt(date.slice(8, 10));
+
+        const hourGMT = parseInt(time.slice(0,3));
+        const hourET = (hourGMT - 5 < 0) ? hourGMT + 7 : hourGMT - 5;
+        const minute = parseInt(time.slice(3, 5));
+
+        return `${monthDict[month]} ${day}${ending[day%10] ? ending[day%10] : "th"}, ${year} at ${hourET}:${minute} ET`;
+    }
+
+    return (
+        <div className={"d-flex f-col full-length"}>
+            <br/><div className={"thin full-length line"}/>
+            <h4 className={"as-fs"}>Reviews</h4>
+
+            {(props.allReviews[props.spot_id]) ? props.allReviews[props.spot_id].map((review, index) => {
+                return (
+                    <div className={"review"} key={index}>
+                        <p className={"rating"}>{stars[review.rating]}</p>
+                        <p className={"review-title"}><b>{review.name}</b></p>
+                        <p>{review.content}</p>
+                        <p className={"small-text"}>Posted on {timestamp(review.date, review.time)}</p>
+                    </div>
+                );
+            }) : (
+                <div className={"review"}>
+                    <p>☆☆☆☆☆</p>
+                    <p className={"review-title"}><b>Oh No!</b></p>
+                    <p>There are currently no reviews for this page.</p>
+                    <p>Be the <b>first</b> to leave one!</p>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function LocationMain(props) {
     return (
         <div id={"location-main"}>
             <LocationButtons {...props}/>
@@ -125,6 +183,8 @@ function LocationMain(props) {
                     {(props.tables) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
                     <p>Tables</p>
                 </div>
+
+                <LocationReviews {...props}/>
             </div>
 
             <EditModal {...props} show={props.showEdit} close={props.closeEdit}
@@ -137,29 +197,32 @@ function LocationMain(props) {
 function LocationAside(props) {
     const defaultProps = {
         center: {
-            lat: props.latitude,
-            lng: props.longitude
+            lat: 41.69921143221658,
+            lng: -86.2388042160717
         },
-        zoom: 5
+        zoom: 14
     };
 
-    const AnyReactComponent = ({ text }) => <div>{text}</div>;
+    const AnyReactComponent = ({ text }) => <div className={"map-marker"}>{text}</div>;
 
     return (
         <div id={"location-aside"}>
-            <div style={{ height: '200px', width: '200px' }}>
+            <div className={"location-map"}>
                 <GoogleMapReact
-                    bootstrapURLKeys={{ key: "AIzaSyAT1Fh-IXMLOqzp6tWekPy-0FpplWtITaY" }}
+                    bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
                     defaultCenter={defaultProps.center}
                     defaultZoom={defaultProps.zoom}
                 >
                     <AnyReactComponent
-                        lat={59.955413}
-                        lng={30.337844}
-                        text="My Marker"
+                        lat={props.center.lat}
+                        lng={props.center.long}
+                        text={props.building}
                     />
                 </GoogleMapReact>
             </div>
+
+            <div className={"thin full-length line"}/>
+            <h2>{props.building} Hours</h2>
         </div>
     );
 }
@@ -174,6 +237,9 @@ export default function Location(props) {
 
     const root = document.querySelector(":root");
     const params = useParams()
+    const hoursDict = {0: {open: "sunOpen", close: "sunClose"}, 1: {open: "monOpen", close: "monClose"}, 2: {open: "tuesOpen", close: "tuesClose"},
+        3: {open: "wedOpen", close: "wedClose"}, 4: {open: "thursOpen", close: "thursClose"},
+        5: {open: "friOpen", close: "friClose"}, 6: {open: "satOpen", close: "satClose"}}
 
     function handleShowEdit(queryType) {
         setQuery(queryType)
@@ -216,6 +282,8 @@ export default function Location(props) {
                     "building": spotData.building
                 }
             }).then(data => {
+                const day = new Date().getDay()
+
                 setGeolocation({lat: data.data[0].latitude, long: data.data[0].longitude})
                 console.log(data.data[0]);
             });
