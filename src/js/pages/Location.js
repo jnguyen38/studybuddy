@@ -65,7 +65,7 @@ export function LocationHeader(props) {
             <img src={props.image} alt="" className={"location-img"}/>
             <div className={"location-header-info"}>
                 <h2>{props.building}</h2>
-                <h3>{props.location}</h3>
+                <h3 className={"fw-500"}>{props.location}</h3>
                 <p className={"rating"}>{stars[avgRating(props.allReviews[props.spot_id])]}</p>
             </div>
             <div className={"d-flex f-wrap jc-fe"}>
@@ -97,10 +97,10 @@ function LocationButtons(props) {
                 <img src={share} alt="" className={"icon invert-icon xs-icon"}/>
                 Share
             </button>
-            <button className={"btn d-flex-row-c"}>
-                <img src={camera} alt="" className={"icon invert-icon sm-icon"}/>
-                Add a Photo
-            </button>
+            {/*<button className={"btn d-flex-row-c"}>*/}
+            {/*    <img src={camera} alt="" className={"icon invert-icon sm-icon"}/>*/}
+            {/*    Add a Photo*/}
+            {/*</button>*/}
 
             {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("building")}>Edit Building</button>}
             {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("location")}>Edit Location</button>}
@@ -240,6 +240,7 @@ function LocationMain(props) {
 
 function LocationAside(props) {
     const [currentState, setCurrentState] = useState(false);
+    const bInfo = props.buildingInfo;
 
     const AnyReactComponent = ({ text }) => <div className={"map-marker"} content={text}></div>;
 
@@ -250,12 +251,6 @@ function LocationAside(props) {
         m = m < 10 ? "0" + m : m;
 
         return `${h.toString()}:${m.toString()} ${dd}`;
-    }
-
-    function dayOfWeek() {
-        const day = new Date().getDay();
-        const dayDict = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
-        return dayDict[day];
     }
 
     function current(open, close) {
@@ -270,22 +265,35 @@ function LocationAside(props) {
     
     useEffect(() => {
         setCurrentState(current(props.buildingInfo.open, props.buildingInfo.close))
-    }, [props.buildingInfo.close, props.buildingInfo.open])
+    }, [props.buildingInfo.close, props.buildingInfo.open]);
 
     return (
         <div id={"location-aside"}>
             <div className={"location-map"}>
                 <GoogleMapReact bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
-                                defaultCenter={{lat: props.buildingInfo.lat, lng: props.buildingInfo.long}}
+                                defaultCenter={{lat: bInfo.lat, lng: bInfo.long}}
                                 defaultZoom={17}>
-                    <AnyReactComponent lat={props.buildingInfo.lat} lng={props.buildingInfo.long} text={props.building}/>
+                    <AnyReactComponent lat={bInfo.lat} lng={bInfo.long} text={props.building}/>
                 </GoogleMapReact>
             </div>
 
             <div className={"thin full-length line"}/>
-            <h2>{props.building} Hours</h2><br/>
-            <p><b>{dayOfWeek()}: {formatTime(props.buildingInfo.open)} - {formatTime(props.buildingInfo.close)}</b></p>
-            <p className={currentState ? "current green" : "current red"}>{currentState ? "Currently Open" : "Currently Closed"}</p>
+            <h2 className={"fw-500"}>{props.building} Hours</h2><br/>
+            <div style={{width: "min(325px, 100%)"}}>
+                <div className={"d-flex jc-sb full-length"}><p>Sunday</p><p>{formatTime(bInfo.sunOpen)} - {formatTime(bInfo.sunClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Monday</p><p>{formatTime(bInfo.monOpen)} - {formatTime(bInfo.monClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Tuesday</p><p>{formatTime(bInfo.tuesOpen)} - {formatTime(bInfo.tuesClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Wednesday</p><p>{formatTime(bInfo.wedOpen)} - {formatTime(bInfo.wedClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Thursday</p><p>{formatTime(bInfo.thursOpen)} - {formatTime(bInfo.thursClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Friday</p><p>{formatTime(bInfo.friOpen)} - {formatTime(bInfo.friClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Saturday</p><p>{formatTime(bInfo.satOpen)} - {formatTime(bInfo.satClose)}</p></div>
+            </div><br/>
+            <div>
+                <div className={"thin line"}></div>
+                <p className={"fw-500"}>Today</p><br/>
+                <p className={"fw-500"}>{formatTime(bInfo.open)} - {formatTime(bInfo.close)}</p>
+                <p className={currentState ? "current green" : "current red"}>{currentState ? "Currently Open" : "Currently Closed"}</p>
+            </div>
         </div>
     );
 }
@@ -347,7 +355,7 @@ export default function Location(props) {
                     3: {open: "wedOpen", close: "wedClose"}, 4: {open: "thursOpen", close: "thursClose"},
                     5: {open: "friOpen", close: "friClose"}, 6: {open: "satOpen", close: "satClose"}}
 
-                setBuildingInfo({open: data.data[0][hoursDict[day].open], close: data.data[0][hoursDict[day].close], 
+                setBuildingInfo({...data.data[0], open: data.data[0][hoursDict[day].open], close: data.data[0][hoursDict[day].close], 
                     lat: data.data[0].latitude, long: data.data[0].longitude, swipe: data.data[0].swipeAccess})
             });
         }

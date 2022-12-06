@@ -49,6 +49,9 @@
     margin: 20px 20px 20px -10px;
     transition: all .3s;
     border-color: var(--sb-white);
+    height: auto;
+    min-height: 40px;
+    padding: 5px 15px;
 }
 .see-all-btn:hover {background-color: rgba(255, 255, 255, .3);}
 .see-all-btn:active {background-color: rgba(255, 255, 255, .5);}
@@ -65,12 +68,11 @@
 
 .see-all-photo {
     object-fit: cover;
-    width: 200px;
-    height: 133px;
 }
-.see-all-photo-cont {
-    width: 250px;
-    height: 180px;
+
+.see-all-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .location-buttons {
@@ -233,8 +235,8 @@
     font-size: .8em;
 }
 
-.similar-locations .explore-spot {
-    max-width: 200px;
+.similar-locations .explore-link {
+    max-width: 250px;
 }
 
 .similar-locations .explore-spot:before {

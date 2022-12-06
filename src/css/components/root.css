@@ -69,6 +69,7 @@ code {
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     font-family: Outfit, sans-serif;
+    font-weight: 300;
 }
 
 a {
@@ -301,6 +302,9 @@ a:link { text-decoration: none; }
     }
 
     aside.side-nav {display: none;}
+
+    .similar-locations .explore-link {max-width: 100% !important;}
+    .see-all-display {grid-template-columns: 1fr 1fr !important;}
 }
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {
