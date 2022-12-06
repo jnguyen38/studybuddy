@@ -32,6 +32,7 @@ export default function App() {
     const [work, setWork] = useState([]);
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
+    const [allReviews, setAllReviews] = useState({});
 
     const [userLikes, setUserLikes] = useState(new Set());
     const [userReviews, setUserReviews] = useState([]);
@@ -141,7 +142,6 @@ export default function App() {
         });
 
         Axios.get(apiPath + "/api/get/work").then(res => {
-            console.log(res.data)
             let tempWork = [];
             for (const review of res.data) tempWork.push({value: review.work_type, label: review.work_type})
             setWork(tempWork)
@@ -150,13 +150,21 @@ export default function App() {
         Axios.get(apiPath + "/api/get/reviews").then(res => {
             console.log(res.data)
             let tempWorkReviews = {};
+            let tempAllReviews = {}
             for (const review of res.data) {
-              if (!tempWorkReviews[review.work_type]) {
-                tempWorkReviews[review.work_type] = []
-              }
-              tempWorkReviews[review.work_type].push([review.spot_id, review.rating])
+                if (!tempWorkReviews[review.work_type]) {
+                    tempWorkReviews[review.work_type] = []
+                }
+                tempWorkReviews[review.work_type].push([review.spot_id, review.rating])
+
+                if (review.spot_id in tempAllReviews)
+                    tempAllReviews[review.spot_id].push({content: review.content, work_type: review.work_type, rating: review.rating, time: review.time, date: review.date, name: review.name})
+                else
+                    tempAllReviews[review.spot_id] = [{content: review.content, work_type: review.work_type, rating: review.rating, time: review.time, date: review.date, name: review.name}]
             }
-            setWorkReviews(tempWorkReviews)
+            console.log(tempAllReviews)
+            setAllReviews(tempAllReviews);
+            setWorkReviews(tempWorkReviews);
         });
     }, [apiPath]);
 
@@ -232,7 +240,7 @@ export default function App() {
                         <Route path={path + "/overview"} element={
                             <Overview/>}/>
                         <Route path={path + "/location/:spot_id"} element={
-                            <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
+                            <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate} allReviews={allReviews}/>}/>
                         <Route path={path + "/search"} element={
                             <Search apiPath={apiPath} path={path}/>}/>
                         <Route path={path + "/upload"} element={

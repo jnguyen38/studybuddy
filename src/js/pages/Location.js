@@ -78,8 +78,46 @@ function LocationButtons(props) {
     );
 }
 
-function LocationMain(props) {
+function LocationReviews(props) {
+    const stars = {1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
 
+    function convertDate(date) {
+        const monthDict = {1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December"}
+        const ending = {1: "st", 2: "nd", 3: "rd"}
+        const year = parseInt(date.slice(0, 4));
+        const month = parseInt(date.slice(5, 7));
+        const day = parseInt(date.slice(8, 10));
+
+        return `${monthDict[month]} ${day}${ending[day%10] ? ending[day%10] : "th"}, ${year}`;
+    }
+
+    return (
+        <div className={"d-flex f-col full-length"}>
+            <br/><div className={"thin full-length line"}/>
+            <h4 className={"as-fs"}>Reviews</h4>
+
+            {(props.allReviews[props.spot_id]) ? props.allReviews[props.spot_id].map(review => {
+                return (
+                    <div className={"review"}>
+                        <p className={"rating"}>{stars[review.rating]}</p>
+                        <p className={"review-title"}><b>{review.name}</b></p>
+                        <p>{review.content}</p>
+                        <p className={"small-text"}>Posted on {convertDate(review.date)}</p>
+                    </div>
+                );
+            }) : (
+                <div className={"review"}>
+                    <p>☆☆☆☆☆</p>
+                    <p className={"review-title"}><b>Oh No!</b></p>
+                    <p>There are currently no reviews for this page.</p>
+                    <p>Be the <b>first</b> to leave one!</p>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function LocationMain(props) {
     return (
         <div id={"location-main"}>
             <LocationButtons {...props}/>
@@ -126,6 +164,8 @@ function LocationMain(props) {
                     {(props.tables) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
                     <p>Tables</p>
                 </div>
+
+                <LocationReviews {...props}/>
             </div>
 
             <EditModal {...props} show={props.showEdit} close={props.closeEdit}
@@ -138,10 +178,10 @@ function LocationMain(props) {
 function LocationAside(props) {
     const defaultProps = {
         center: {
-            lat: 59.955413,
-            lng: 30.337844
+            lat: 41.69921143221658,
+            lng: -86.2388042160717
         },
-        zoom: 13
+        zoom: 14
     };
 
     const AnyReactComponent = ({ text }) => <div className={"map-marker"}>{text}</div>;
@@ -164,8 +204,6 @@ function LocationAside(props) {
 
             <div className={"thin full-length line"}/>
             <h2>{props.building} Hours</h2>
-
-
         </div>
     );
 }
@@ -180,6 +218,9 @@ export default function Location(props) {
 
     const root = document.querySelector(":root");
     const params = useParams()
+    const hoursDict = {0: {open: "sunOpen", close: "sunClose"}, 1: {open: "monOpen", close: "monClose"}, 2: {open: "tuesOpen", close: "tuesClose"},
+        3: {open: "wedOpen", close: "wedClose"}, 4: {open: "thursOpen", close: "thursClose"},
+        5: {open: "friOpen", close: "friClose"}, 6: {open: "satOpen", close: "satClose"}}
 
     function handleShowEdit(queryType) {
         setQuery(queryType)
@@ -222,6 +263,8 @@ export default function Location(props) {
                     "building": spotData.building
                 }
             }).then(data => {
+                const day = new Date().getDay()
+
                 setGeolocation({lat: data.data[0].latitude, long: data.data[0].longitude})
                 console.log(data.data[0]);
             });

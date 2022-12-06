@@ -49,10 +49,6 @@ export default function Home(props) {
                             </div>
                             <p>Find a convenient study space to meet your friends!</p>
                         </div></Link>
-                        <Link to={props.path + "/location/040101"}><div className={"home-option"}>
-                            <h1>🔬 Location &rarr;</h1>
-                            <p>Location test page!</p>
-                        </div></Link>
                     </div>
                 </div>
             </div>
