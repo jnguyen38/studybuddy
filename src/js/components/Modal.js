@@ -159,7 +159,7 @@ export function RevModal(props) {
                     <div className={"d-flex jc-sb full-length"}>
                         <input type="text" value={`${props.user.firstName} ${props.user.lastName}`} name="name" readOnly/>
                         <input type="number" placeholder="Rating" name="rating" min="1" max="5" required/>
-                        <CreatableSelect isMulti name="work" options={optionList} className="basic-multi-select" classNamePrefix="select"/>
+                        <CreatableSelect name="work" options={optionList} className="basic-multi-select" classNamePrefix="select"/>
                     </div>
                     <textarea placeholder="Content" name="description" required/>
                     <div className={"form-buttons d-flex jc-fe"}>
