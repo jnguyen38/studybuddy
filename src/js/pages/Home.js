@@ -1,11 +1,21 @@
 import {Link} from "react-router-dom";
 import {useEffect} from "react";
 
+import expandDown from "../../media/icons/expandDown.svg"
+
 export default function Home(props) {
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
 
+    function scrollTo(element) {
+        let elem = document.getElementById(element);
+        elem.scrollIntoView({
+            block: 'start',
+            behavior: 'smooth',
+            inline: 'center'
+        });
+    }
 
     return (
             <div id={"home-container"} className={"d-flex-col-c"}>
@@ -20,6 +30,8 @@ export default function Home(props) {
                             {/*<span>yBuddy</span>*/}
                         </h1>
                     </div>
+
+                    <img src={expandDown} alt="" className={"icon dark-blue-icon down-arrow as-c"} onClick={() => scrollTo("home-menu")}/>
                 </div>
 
                 <div id={"home-menu"} className={"d-flex-col-c"}>
@@ -48,10 +60,6 @@ export default function Home(props) {
                             <h1>👩‍❤️‍👨 Collaborate &rarr;</h1>
                             </div>
                             <p>Find a convenient study space to meet your friends!</p>
-                        </div></Link>
-                        <Link to={props.path + "/location/040101"}><div className={"home-option"}>
-                            <h1>🔬 Location &rarr;</h1>
-                            <p>Location test page!</p>
                         </div></Link>
                     </div>
                 </div>

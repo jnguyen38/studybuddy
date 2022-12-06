@@ -1,23 +1,20 @@
 import {useCallback, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import Axios from "axios";
 import Select from 'react-select';
+
 
 function Choice(props) {
     let params = useParams()
 
     if (params.typerec === "history") {
-        if (props.user.isSignedIn) {
-            return (<History {...props}/>)
-        } else {
-            props.handler.handleShowAuthenticate();
-        }
+        return (<History {...props}/>)
     } else if (params.typerec === "work") {
         return (<Work {...props}/>)
-    } else {
-        return (<div></div>)
     }
+
+    return (<div></div>)
 
 }
 
@@ -224,7 +221,7 @@ function History(props) {
 
     const getAllInfo = useCallback(async (allSpots, likesDict, reviewsDict) => {
         let lengthRev = props.userReviews.length;
-        let lengthLike = props.userLikes.length;
+        let lengthLike = props.userLikes.size;
         let comf = {};
         let rating = 0;
 
@@ -233,7 +230,7 @@ function History(props) {
                 params: {spot_id: spot_id}
             });
 
-            if (props.userLikes.includes(response.data[0].spot_id)) {
+            if (props.userLikes.has(response.data[0].spot_id)) {
                 likesDict["loud"] += response.data[0].loudness_rating / lengthLike;
                 likesDict["light"] += response.data[0].natural_light_rating / lengthLike;
                 likesDict["outlet"] += response.data[0].outlets_rating / lengthLike;
@@ -347,7 +344,7 @@ function Results(props) {
                     const image = "/media/locationsSD/" + result.spot_id + "-00.webp";
 
                     return (
-                        <Link to={`${props.oldpath}/location/${result.spot_id}`} style={{width: "100%"}} key={result.spot_id}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                        <Link to={`${props.oldpath}/location-${result.spot_id}`} style={{width: "100%"}} key={result.spot_id}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
                             <img src={image} alt="" className={"location-img"} loading={"lazy"}/>
                             <div className={"location-header-info full-length result-item-header"}>
                                 <h2>{result.building}</h2>
@@ -363,6 +360,14 @@ function Results(props) {
 }
 
 export default function Recommendation(props) {
+
+    useEffect(() => {
+      if (!props.user.isSignedIn) {
+        props.handler.handleShowAuthenticate()
+      }
+    }, [props.user])
+
+
     return (
         <div className={"recommendation-container d-flex f-col"}>
             <div className={"recommendation-header d-flex-col-c"}>

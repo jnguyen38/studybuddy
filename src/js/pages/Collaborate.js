@@ -1,13 +1,14 @@
 import {useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import {Button, ButtonGroup} from "rsuite";
 
 function Results(props) {
 
     return (
         <div className={"results-container d-flex-col-c gap-20"}>
             {(props.results.length === 0) ?
-                <div>Hello</div>
+                <div></div>
                 :
                 props.results.map(result => {
                     const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
@@ -28,7 +29,6 @@ function Results(props) {
         </div>
     );
 }
-
 
 export default function Collaborate(props) {
     /*
@@ -175,6 +175,19 @@ export default function Collaborate(props) {
         document.getElementById('date-id').value = getDateNow();
     }
 
+    function convertPM(event) {
+        var timePM = document.getElementById('time-id').value;
+        console.log(timePM);
+        let pmArray = timePM.split(":");
+        let pmHours = parseInt(pmArray[0]) + 12;
+        let pmUpdate = pmHours + ":" + pmArray[1];
+        console.log(pmUpdate);
+        document.getElementById('time-id').value = pmUpdate;
+        /*var timePMHours = timePM.getHours() + 12;
+        var timePMUpdate = timePMHours + ":" + timePM.getMinutes();
+        document.getElementById('time-id').value = timePMUpdate;*/
+    }
+
     function handleLocationChange(index, event) {
         let cur_locs = locations
         cur_locs[index] = event.target.value
@@ -247,12 +260,16 @@ export default function Collaborate(props) {
                     <p>When are you meeting?</p>
                     <div className={"time-day-inputs"}>
                         <div className={"day-input"}>
-                            <p>Day: </p>
+                            <p>Date: </p>
                             <input id="date-id" name="day" type="text" placeholder="mm/dd/yyyy"/>
                         </div>
                         <div className={"time-input"}>
                             <p>Time: </p>
                             <input id="time-id" name="time" type="text" placeholder="hh:mm"/>
+                            <ButtonGroup className="am-pm-button" variant="contained" aria-label="outlined primary button group">
+                                <Button className={"small-button"}>AM</Button>
+                                <Button className={"small-button"} onClick={convertPM}>PM</Button>
+                            </ButtonGroup>
                         </div>
                         <button onClick={fillDateTime} className={"btn now-time"}>Now 🕒</button>
                     </div>

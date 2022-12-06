@@ -9,7 +9,7 @@ function ExploreSpot(props) {
     const image = "./media/locationsSD/" + props.id + "-00.webp";
 
     return (
-        <Link className={"explore-link fill"} to={`${props.path}/location/${props.id}`} style={{gridColumn: `span ${props.gridCol}`, gridRow: `span ${props.gridRow}`}}>
+        <Link className={"explore-link fill"} to={`${props.path}/location-${props.id}`} style={{gridColumn: `span ${props.gridCol}`, gridRow: `span ${props.gridRow}`}}>
             <div className={"explore-spot fill"} content={props.location}>
                 <img src={image} alt="" className={"explore-spot-img fill"} loading={"lazy"}/>
             </div>
@@ -43,7 +43,7 @@ function ExploreBuilding(props) {
                     );
                 })}
             </div>
-            <Link to={props.path + "/explore/" + props.building} className={"full-length"}>
+            <Link to={props.path + "/explore-" + props.building} className={"full-length"}>
                 <div className={"explore-see-all text-left"}>
                     <p className={"fw-200"}>See All <b>{props.spots.length}</b> Study Spots in</p>
                     <p><b>{props.building} &rarr;</b></p>

@@ -175,36 +175,8 @@ textarea {
     border-width: 0;
 }
 
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    --slider-thumb-dim: 23px;
-    appearance: none;
-    width: var(--slider-thumb-dim);
-    height: var(--slider-thumb-dim);
-    border: 4px solid var(--sb-yellow);
-    border-radius: var(--border-radius);
-    background: var(--sb-white);
-    cursor: pointer;
-    transition: background-color .1s;
-}
-
 .slider::-webkit-slider-thumb:active {
     background-color: var(--sb-yellow);
-}
-
-.slider-num {
-    margin-right: 10px;
-    width: 12%;
-    padding: 5px;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 800;
-    border: 3px var(--sb-yellow) solid;
-    border-radius: var(--border-radius);
-    background-color: var(--sb-white);
-    color: var(--sb-yellow);
-    font-family: Outfit, sans-serif;
-    transition: all .15s;
 }
 
 .slider-num:focus {

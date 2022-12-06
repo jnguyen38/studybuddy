@@ -2,6 +2,7 @@ import Select from "react-select";
 import {Link} from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
+import {useEffect} from "react";
 
 function FilterTitle(props) {
     return (
@@ -39,13 +40,13 @@ function Results(props) {
     return (
         <div className={"results-container d-flex-col-c gap-20"}>
             {(props.results.length === 0) ?
-                <div>Hello</div>
+                <div></div>
                 :
                 props.results.map(result => {
                     const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
 
                     return (
-                        <Link to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}} key={result.spot_id}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
+                        <Link to={`${props.path}/location-${result.spot_id}`} style={{width: "100%"}} key={result.spot_id}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
                             <img src={image} alt="" className={"location-img"} loading={"lazy"}/>
                             <div className={"location-header-info full-length result-item-header"}>
                                 <h2>{result.building}</h2>
@@ -63,6 +64,7 @@ function Results(props) {
 export default function Search(props) {
     const [sliderGroup, setSliderGroup] = useState(1)
     const [sliderCapacity, setSliderCapacity] = useState(1)
+    const [sliderLoudness, setSliderLoudness] = useState(1)
     const [results, setResults] = useState([])
 
     const optionList = [
@@ -93,7 +95,7 @@ export default function Search(props) {
             "building": event.target.buildings.value,
             "seatComfort": event.target.ratingSC.value,
             "outlets": event.target.ratingO.value,
-            "loudness": event.target.ratingL.value,
+            "loudness": event.target.loudness.value,
             "naturalLight": event.target.ratingNL.value,
             "capacity": event.target.capacity.value,
             "group": event.target.group.value
@@ -102,6 +104,8 @@ export default function Search(props) {
             setResults(data.data)
         });
     }
+
+    useEffect(() => window.scrollTo(0, 0), []);
 
     return (
         <div className={"search-container"}>
@@ -115,7 +119,7 @@ export default function Search(props) {
                     <FilterTitle title={"Building"}/>
                     <div className="App">
                         <div className="dropdown-container">
-                            <Select isMulti name="buildings" options={optionList}
+                            <Select name="buildings" options={optionList}
                                     className="basic-multi-select" classNamePrefix="select"/>
                         </div>
                     </div>
@@ -138,7 +142,12 @@ export default function Search(props) {
                     <Ratings class={"ratingNL"}/>
 
                     <FilterTitle title={"Loudness"}/>
-                    <Ratings class={"ratingL"}/>
+                    <div className={"d-flex jc-sb gap-20"}>
+                        <input type="range" min="1" max="5" className="slider"
+                               onChange={(e) => setSliderLoudness(parseInt(e.target.value))} value={sliderLoudness}/>
+                        <input type="number" className={"slider-num"} min="1" max="5" name="loudness"
+                               onChange={e => setSliderLoudness(parseInt(e.target.value))} value={sliderLoudness}/>
+                    </div>
 
                     <FilterTitle title={"Outlets"}/>
                     <Ratings class={"ratingO"}/>
@@ -161,7 +170,7 @@ export default function Search(props) {
 
                     <FilterTitle title={""}/><br/>
                     <div className={"form-buttons d-flex-row-c"}>
-                        <input type="reset" value="Clear" className={"btn"} onClick={() => {setSliderCapacity(1); setSliderGroup(1);}}/>
+                        <input type="reset" value="Clear" className={"btn"} onClick={() => {setSliderCapacity(1); setSliderGroup(1); setSliderLoudness(1)}}/>
                         <input type="submit" value="Submit" className={"btn submit-btn"}/>
                     </div>
                 </form>

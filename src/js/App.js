@@ -32,8 +32,9 @@ export default function App() {
     const [work, setWork] = useState([]);
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
+    const [allReviews, setAllReviews] = useState({});
 
-    const [userLikes, setUserLikes] = useState([]);
+    const [userLikes, setUserLikes] = useState(new Set());
     const [userReviews, setUserReviews] = useState([]);
     const [histData, setHistData] = useState([]);
     const [totalDict, setDict] = useState({});
@@ -50,26 +51,12 @@ export default function App() {
         static setDictHelper(totalDict) {setDict(totalDict)}
         static setHistDataHelper(historyRecDict) {setHistData(historyRecDict)}
         static handleUXMode() {setUXMode(!UXMode);}
-        static updateLikes() {
-            Axios.get(apiPath + "/api/get/likes").then(data => {
-                let tempLikes = [];
-                for (const like of data.data) {
-                    if (user.username === like.username && like.like_bool === 1) {
-                        tempLikes.push(like.spot_id)
-                    }
-                }
-                setUserLikes(tempLikes);
-            });
-        }
-        static updateReviews() {
-            Axios.get(apiPath + "/api/get/reviews").then(data => {
-                let tempReviews = [];
-                for (const review of data.data) {
-                    if (user.username === review.username) {
-                        tempReviews.push(review)
-                    }
-                }
-                setUserReviews(tempReviews);
+        static updateLikes(spot_id) {
+            setUserLikes(currLikes => {
+                if (userLikes.has(spot_id)) currLikes.delete(spot_id);
+                else currLikes.add(spot_id);
+
+                return new Set(currLikes);
             });
         }
         static signIn(userData) {
@@ -87,7 +74,7 @@ export default function App() {
             setUser({isSignedIn: false, isAdmin: false, firstName: "", lastName: "", username: ""});
             handler.notifySignOut();
             setUserReviews([]);
-            setUserLikes([]);
+            setUserLikes(new Set());
             setDict([]);
             window.localStorage.setItem("user", JSON.stringify({isSignedIn: false, isAdmin: false}));
         }
@@ -122,7 +109,7 @@ export default function App() {
         if (n > 5) n = 5;
         return Math.floor(Math.random() * picLayouts[n]);
     }
-
+    
     // useEffect Hooks
     useEffect(() => {
         // Get all spots and store into spots state on page load
@@ -145,22 +132,27 @@ export default function App() {
         });
 
         Axios.get(apiPath + "/api/get/work").then(res => {
-            console.log(res.data)
             let tempWork = [];
             for (const review of res.data) tempWork.push({value: review.work_type, label: review.work_type})
             setWork(tempWork)
         });
 
         Axios.get(apiPath + "/api/get/reviews").then(res => {
-            console.log(res.data)
             let tempWorkReviews = {};
+            let tempAllReviews = {};
             for (const review of res.data) {
-              if (!tempWorkReviews[review.work_type]) {
-                tempWorkReviews[review.work_type] = []
-              }
-              tempWorkReviews[review.work_type].push([review.spot_id, review.rating])
+                if (!tempWorkReviews[review.work_type]) {
+                    tempWorkReviews[review.work_type] = []
+                }
+                tempWorkReviews[review.work_type].push([review.spot_id, review.rating])
+
+                if (review.spot_id in tempAllReviews)
+                    tempAllReviews[review.spot_id].push({content: review.content, work_type: review.work_type, rating: review.rating, time: review.time, date: review.date, name: review.name})
+                else
+                    tempAllReviews[review.spot_id] = [{content: review.content, work_type: review.work_type, rating: review.rating, time: review.time, date: review.date, name: review.name}]
             }
-            setWorkReviews(tempWorkReviews)
+            setAllReviews(tempAllReviews);
+            setWorkReviews(tempWorkReviews);
         });
     }, [apiPath]);
 
@@ -191,10 +183,10 @@ export default function App() {
     useEffect(() => {
       if (user.isSignedIn) {
           Axios.get(apiPath + "/api/get/likes").then(data => {
-              let tempLikes = [];
+              let tempLikes = new Set();
               for (const like of data.data) {
                   if (user.username === like.username && like.like_bool === 1) {
-                      tempLikes.push(like.spot_id)
+                      tempLikes.add(like.spot_id)
                   }
               }
               setUserLikes(tempLikes);
@@ -210,7 +202,7 @@ export default function App() {
           });
       } else {
           setUserReviews([]);
-          setUserLikes([]);
+          setUserLikes(new Set());
           setDict([]);
       }
     }, [user.isSignedIn, user.username])
@@ -235,8 +227,8 @@ export default function App() {
                             <Devplan/>}/>
                         <Route path={path + "/overview"} element={
                             <Overview/>}/>
-                        <Route path={path + "/location/:spot_id"} element={
-                            <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate}/>}/>
+                        <Route path={path + "/location-:spot_id"} element={
+                            <Location path={path} user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate} allReviews={allReviews} buildings={buildings}/>}/>
                         <Route path={path + "/search"} element={
                             <Search apiPath={apiPath} path={path}/>}/>
                         <Route path={path + "/upload"} element={
@@ -253,7 +245,7 @@ export default function App() {
                             <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
                         <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
                             <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
-                        <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
+                        <Route path={path + "/explore-:building"} element={Object.entries(buildings).length &&
                             <Building buildings={buildings} path={path}/>}/>
                         <Route path={"*"} element={
                             <NotFound/>}/>

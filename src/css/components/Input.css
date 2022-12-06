@@ -34,7 +34,7 @@ textarea:focus, input:focus{
 }
 
 textarea[name="description"] {
-    width: 90%;
+    width: 100%;
     min-height: 200px;
     padding: 5%;
     border-radius: var(--border-radius);

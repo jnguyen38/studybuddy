@@ -1,7 +1,10 @@
 #devplan-container, #overview-container {
     width: 80%;
     padding-top: calc(var(--header-height) * 1.5);
+    padding-inline: 5%;
     margin: 0 auto;
     min-height: 100vh;
-    max-width: 100vw;
+    background-color: var(--reg-bg-transparent-dark);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 10px #333;
 }
