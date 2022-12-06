@@ -81,14 +81,18 @@ function LocationButtons(props) {
 function LocationReviews(props) {
     const stars = {1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
 
-    function convertDate(date) {
+    function timestamp(date, time) {
         const monthDict = {1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December"}
         const ending = {1: "st", 2: "nd", 3: "rd"}
         const year = parseInt(date.slice(0, 4));
         const month = parseInt(date.slice(5, 7));
         const day = parseInt(date.slice(8, 10));
 
-        return `${monthDict[month]} ${day}${ending[day%10] ? ending[day%10] : "th"}, ${year}`;
+        const hourGMT = parseInt(time.slice(0,3));
+        const hourET = (hourGMT - 5 < 0) ? hourGMT + 7 : hourGMT - 5;
+        const minute = parseInt(time.slice(3, 5));
+
+        return `${monthDict[month]} ${day}${ending[day%10] ? ending[day%10] : "th"}, ${year} at ${hourET}:${minute} ET`;
     }
 
     return (
@@ -96,13 +100,13 @@ function LocationReviews(props) {
             <br/><div className={"thin full-length line"}/>
             <h4 className={"as-fs"}>Reviews</h4>
 
-            {(props.allReviews[props.spot_id]) ? props.allReviews[props.spot_id].map(review => {
+            {(props.allReviews[props.spot_id]) ? props.allReviews[props.spot_id].map((review, index) => {
                 return (
-                    <div className={"review"}>
+                    <div className={"review"} key={index}>
                         <p className={"rating"}>{stars[review.rating]}</p>
                         <p className={"review-title"}><b>{review.name}</b></p>
                         <p>{review.content}</p>
-                        <p className={"small-text"}>Posted on {convertDate(review.date)}</p>
+                        <p className={"small-text"}>Posted on {timestamp(review.date, review.time)}</p>
                     </div>
                 );
             }) : (

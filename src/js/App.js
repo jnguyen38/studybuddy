@@ -227,7 +227,7 @@ export default function App() {
                             <Devplan/>}/>
                         <Route path={path + "/overview"} element={
                             <Overview/>}/>
-                        <Route path={path + "/location/:spot_id"} element={
+                        <Route path={path + "/location-:spot_id"} element={
                             <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate} allReviews={allReviews}/>}/>
                         <Route path={path + "/search"} element={
                             <Search apiPath={apiPath} path={path}/>}/>
