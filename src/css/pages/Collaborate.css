@@ -66,6 +66,8 @@
 
 .another-button {
     padding-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 5fr;
 }
 
 .another-btn {
@@ -73,7 +75,9 @@
     color: var(--inverted-text-color);
     border-color: var(--inverted-bg-solid);
     font-size: 1em;
-    width: 11%;
+    width: 100%;
+    grid-column-start: 1;
+    grid-column-end: 2;
 }
 
 .delete-btn {
@@ -82,7 +86,10 @@
     border-color: var(--inverted-bg-solid);
     font-size: 1em;
     margin-left: 20px;
-    width: 11%;
+    width: 100%;
+    flex: 1;
+    grid-column-start: 2;
+    grid-column-end: 3;
 }
 
 .friend-user-input {
@@ -123,4 +130,45 @@
 
 .submit-button {
     padding-top: 20px;
+}
+
+.time-day {
+    padding-top: 20px;
+}
+
+.now-time {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    width: 50%;
+}
+
+.time-day-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 2fr;
+}
+
+.day-input {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    display: flex;
+}
+
+.day-input input[type="text"] {
+    display: block;
+    width: 50%;
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+.time-input {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    display: flex;
+}
+
+.time-input input[type="text"] {
+    display: block;
+    width: 50%;
+    margin-bottom: 20px;
+    margin-left: 10px;
 }
