@@ -143,12 +143,27 @@
 
 #location-aside {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    align-self: flex-start;
     position: sticky;
+    top: 10%;
     width: 30vw;
     height: 100%;
-    margin-left: 20px;
-    background-color: var(--inverted-bg-transparent);
-    color: var(--inverted-text-color);
+    margin: 20px;
+}
+
+.location-map {
+    width: 30vmax;
+    height: 20vmax;
+    margin-bottom: 20px;
+
+}
+
+.map-marker {
+    font-family: Outfit, sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--sb-dark-blue)
 }

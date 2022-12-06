@@ -144,23 +144,28 @@ function LocationAside(props) {
         zoom: 13
     };
 
-    const AnyReactComponent = ({ text }) => <div>{text}</div>;
+    const AnyReactComponent = ({ text }) => <div className={"map-marker"}>{text}</div>;
 
     return (
         <div id={"location-aside"}>
-            <div style={{ height: '20vmax', width: '30vmax' }}>
+            <div className={"location-map"}>
                 <GoogleMapReact
                     bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
                     defaultCenter={defaultProps.center}
                     defaultZoom={defaultProps.zoom}
                 >
                     <AnyReactComponent
-                        lat={59.955413}
-                        lng={30.337844}
-                        text="My Marker"
+                        lat={props.center.lat}
+                        lng={props.center.long}
+                        text={props.building}
                     />
                 </GoogleMapReact>
             </div>
+
+            <div className={"thin full-length line"}/>
+            <h2>{props.building} Hours</h2>
+
+
         </div>
     );
 }
