@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {RevModal, EditModal} from "../components/Modal";
+import {RevModal, EditModal, AllPhotos} from "../components/Modal";
 import {Link, useParams} from "react-router-dom";
 import Axios from "axios";
 import GoogleMapReact from 'google-map-react';
@@ -14,6 +14,11 @@ import fullHeart from "../../media/icons/full_heart.svg";
 import emptyHeart from "../../media/icons/empty_heart.svg";
 
 export function LocationHeader(props) {
+    const [showAllPhotos, setShowAllPhotos] = useState(false);
+    const [photos, setPhotos] = useState([]);
+
+    function closeAllPhotos() {setShowAllPhotos(false);}
+
     const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
 
     function handleLike() {
@@ -35,8 +40,11 @@ export function LocationHeader(props) {
     }
 
     function handleSeeAll() {
-        Axios.get(props.apiPath + "/api/get/allPhotos").then(data => {
-           console.log(data);
+        Axios.get(props.apiPath + "/api/get/allPhotos", {
+            params: {spot_id: props.spot_id}
+        }).then(data => {
+           setPhotos(data.data.split(","));
+           setShowAllPhotos(true)
         });
     }
 
@@ -67,6 +75,8 @@ export function LocationHeader(props) {
                     See All Photos
                 </button>
             </div>
+
+            <AllPhotos {...props} show={showAllPhotos} close={closeAllPhotos} photos={photos}/>
         </div>
     );
 }
