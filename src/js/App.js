@@ -137,7 +137,6 @@ export default function App() {
         });
 
         Axios.get(apiPath + "/api/get/reviews").then(res => {
-            console.log(res.data)
             let tempWorkReviews = {};
             let tempAllReviews = {};
             for (const review of res.data) {
@@ -228,7 +227,7 @@ export default function App() {
                         <Route path={path + "/overview"} element={
                             <Overview/>}/>
                         <Route path={path + "/location-:spot_id"} element={
-                            <Location user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate} allReviews={allReviews}/>}/>
+                            <Location path={path} user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate} allReviews={allReviews} buildings={buildings}/>}/>
                         <Route path={path + "/search"} element={
                             <Search apiPath={apiPath} path={path}/>}/>
                         <Route path={path + "/upload"} element={
@@ -245,7 +244,7 @@ export default function App() {
                             <SignUp user={user} redirect={redirect} path={path} apiPath={apiPath} majors={majors} handler={handler}/>}/>
                         <Route path={path + "/explore"} element={buildings && exploreLayout.length &&
                             <Explore buildings={buildings} path={path} layout={exploreLayout}/>}/>
-                        <Route path={path + "/explore/:building"} element={Object.entries(buildings).length &&
+                        <Route path={path + "/explore-:building"} element={Object.entries(buildings).length &&
                             <Building buildings={buildings} path={path}/>}/>
                         <Route path={"*"} element={
                             <NotFound/>}/>

@@ -94,6 +94,7 @@
 
 .explore-spot {
     position: relative;
+    text-align: right;
     --explore-spot-height: 50px;
     min-height: 100px;
     border-radius: var(--border-radius);
@@ -124,6 +125,6 @@
 
 .explore-spot-img {
     object-fit: cover;
-    box-shadow: 0 0 15px black;
+    box-shadow: 0 0 10px #222;
     border-radius: var(--border-radius);
 }

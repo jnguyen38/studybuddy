@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {RevModal, EditModal} from "../components/Modal";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import Axios from "axios";
 import GoogleMapReact from 'google-map-react';
 
@@ -23,6 +23,8 @@ export function LocationHeader(props) {
             Axios.put(props.apiPath + "/api/put/toggleLike", {
                 "user": props.user.username,
                 "spot_id": props.spot_id
+            }).then(res => {
+                console.log(res);
             });
         } else {
             props.handler.handleShowAuthenticate();
@@ -136,6 +138,34 @@ function LocationReviews(props) {
     );
 }
 
+function SimilarLocations(props) {
+    const [similarSpaces, setSimilarSpaces] = useState([]);
+
+    useEffect(() => {
+        setSimilarSpaces(props.buildings[props.building].sort(() => .5 - Math.random()).slice(0, 2))
+    }, [props.building, props.buildings])
+    
+    return (
+        <div className={"full-length"}>
+            <br/><div className={"thin full-length line"}/>
+            <h4>More Spaces Like This</h4>
+            <div className={"similar-locations d-flex f-wrap gap-20"}>
+                {similarSpaces.length && similarSpaces.map((spot, index) => {
+                    const image = "./media/locationsSD/" + spot.id + "-00.webp";
+
+                    return (
+                        <Link className={"explore-link"} to={`${props.path}/location-${spot.id}`} key={index} onClick={window.location.reload}>
+                            <div className={"explore-spot"} content={spot.location}>
+                                <img src={image} alt="" className={"explore-spot-img fill"} loading={"lazy"}/>
+                            </div>
+                        </Link>
+                    )
+                })}
+            </div>
+        </div>
+    );
+}
+
 function LocationMain(props) {
     return (
         <div id={"location-main"}>
@@ -171,9 +201,6 @@ function LocationMain(props) {
                 </div>
 
                 <br/><div className={"thin full-length line"}/>
-                <h4>More Spaces Like This</h4>
-
-                <br/><div className={"thin full-length line"}/>
                 <h4>Amenities</h4>
                 <div className={"d-flex"}>
                     {(props.printer) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
@@ -183,6 +210,8 @@ function LocationMain(props) {
                     {(props.tables) ? <img src={check} alt="" className={"icon sm-icon"}/> : <img src={wrong} alt="" className={"icon sm-icon"}/>}
                     <p>Tables</p>
                 </div>
+
+                {props.buildings[props.building] && <SimilarLocations {...props}/>}
 
                 <LocationReviews {...props}/>
             </div>
