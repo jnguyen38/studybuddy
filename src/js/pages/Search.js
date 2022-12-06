@@ -2,6 +2,7 @@ import Select from "react-select";
 import {Link} from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
+import {useEffect} from "react";
 
 function FilterTitle(props) {
     return (
@@ -103,6 +104,8 @@ export default function Search(props) {
         });
     }
 
+    useEffect(() => window.scrollTo(0, 0), []);
+
     return (
         <div className={"search-container"}>
             <div className={"search-header d-flex-col-c"}>
@@ -115,7 +118,7 @@ export default function Search(props) {
                     <FilterTitle title={"Building"}/>
                     <div className="App">
                         <div className="dropdown-container">
-                            <Select isMulti name="buildings" options={optionList}
+                            <Select name="buildings" options={optionList}
                                     className="basic-multi-select" classNamePrefix="select"/>
                         </div>
                     </div>

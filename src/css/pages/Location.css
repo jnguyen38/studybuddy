@@ -195,5 +195,17 @@
 .small-text {
     margin-top: 10px;
     font-size: .8em;
+}
 
+.similar-locations {
+    margin-top: 20px;
+    font-size: .8em;
+}
+
+.similar-locations .explore-spot {
+    max-width: 200px;
+}
+
+.similar-locations .explore-spot:before {
+    bottom: 3px;
 }

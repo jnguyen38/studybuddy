@@ -18,7 +18,7 @@ export default function Building(props) {
                             const image = "../media/locationsSD/" + spot.id + "-00.webp";
 
                             return (
-                                <Link className={"explore-link fill"} to={`${props.path}/location/${spot.id}`} key={spot.id}>
+                                <Link className={"explore-link fill"} to={`${props.path}/location-${spot.id}`} key={spot.id}>
                                     <div className={"explore-spot fill"} content={spot.location}>
                                         <img src={image} alt="" className={"explore-spot-img fill"} loading={"lazy"}/>
                                     </div>

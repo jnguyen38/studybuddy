@@ -103,6 +103,13 @@
             blink-caret .75s step-end infinite;
 }
 
+.down-arrow {
+    width: 15vmax;
+    animation: bouncing 1.5s ease-in-out infinite;
+    position: absolute;
+    bottom: 10%;
+    cursor: pointer;
+}
 
 @keyframes typing {
     from { width: 0; }
@@ -112,4 +119,9 @@
 @keyframes blink-caret {
     from, to { border-color: transparent; }
     50% { border-color: var(--sb-white); }
+}
+
+@keyframes bouncing {
+    from, to {transform: translateY(40px)}
+    50% {transform: translateY(80px)}
 }
