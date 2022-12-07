@@ -150,6 +150,16 @@ app.get("/api/get/allPhotos", (req, res) => {
     });
 });
 
+app.get("/api/get/overallRating", (req, res) => {
+	db.query(`SELECT avg(rating) \
+			FROM reviews \
+			WHERE spot_id = ?`, [req.query.spot_id], (err, result) => {
+		console.log(result[0]["avg(rating)"]);
+		if (err) console.log(err);
+		res.send(result);
+	});
+});
+
 /* PUT API ENDPOINTS */
 
 app.put("/api/put/edit", (req, res) => {
