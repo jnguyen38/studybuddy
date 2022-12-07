@@ -4,6 +4,9 @@ import {Link} from "react-router-dom";
 import {Button, ButtonGroup} from "rsuite";
 
 function Results(props) {
+    let locations = props.locations;
+    let groupSize = props.groupSize;
+    let minutes = props.minutes;
 
     return (
         <div className={"results-container d-flex-col-c gap-20"}>
@@ -20,6 +23,11 @@ function Results(props) {
                                 <div className={"location-header-info full-length result-item-header"}>
                                     <h2>{result.building}</h2>
                                     <h3>{result.location}</h3>
+                                    <div className={"walking-distance"}>
+                                        {Array.from(Array(groupSize)).map((c, index) => {
+                                            return <p>{minutes[result.building][index]} minute walk from {locations[index]}</p>
+                                        })}
+                                    </div>
                                 </div>
                             </div>
                         </Link>
@@ -40,6 +48,7 @@ export default function Collaborate(props) {
     const [count, setCount] = useState(0);
     const [results, setResults] = useState([])
     const [locations, setLocations] = useState([])
+    const [minutes, setMinutes] = useState([])
     const [usernames, setUsernames] = useState([props.user.username])
 
     async function handleSubmit(event) {
@@ -90,8 +99,11 @@ export default function Collaborate(props) {
                 locs: locs,
             }
         }).then(response => {
-            let distances = response.data
+            let distances = response.data;
             return {"distances": distances}
+            let cur_minutes = minutes;
+            minutes[building] = response.data;
+            setMinutes(minutes);
         })
     }
 
@@ -142,6 +154,10 @@ export default function Collaborate(props) {
         return {"score": score}
     }
 
+    function displayDistances(event) {
+        console.log(locations)
+    }
+
     function addAnother(event) {
         setCount(count + 1);
         console.log(count);
@@ -179,7 +195,14 @@ export default function Collaborate(props) {
         var timePM = document.getElementById('time-id').value;
         console.log(timePM);
         let pmArray = timePM.split(":");
-        let pmHours = parseInt(pmArray[0]) + 12;
+        let pmHours = parseInt(pmArray[0]);
+        if (pmHours < 12) {
+            pmHours = pmHours + 12;
+        }
+        let pmMinutes = parseInt(pmArray[1])
+        if (pmArray[1] < 10) {
+            pmMinutes = "0" + pmMinutes;
+        }
         let pmUpdate = pmHours + ":" + pmArray[1];
         console.log(pmUpdate);
         document.getElementById('time-id').value = pmUpdate;
@@ -189,8 +212,8 @@ export default function Collaborate(props) {
     }
 
     function handleLocationChange(index, event) {
-        let cur_locs = locations
-        cur_locs[index] = event.target.value
+        let cur_locs = locations;
+        cur_locs[index] = event.target.value;
         setLocations(cur_locs)
     }
 
@@ -291,7 +314,7 @@ export default function Collaborate(props) {
                     <input type="submit" value="Submit" className={"btn submit-btn"} />
                 </div>
             </form>
-            <Results results={results} {...props}/>
+            <Results results={results} locations={locations} minutes={minutes} groupSize={count + 1} {...props}/>
         </div>
     );
 };
