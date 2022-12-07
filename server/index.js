@@ -106,9 +106,9 @@ app.get("/api/get/groupRec", (req, res) => {
 });
 
 app.get("/api/get/groupReviews", (req, res) => {
-    users = req.query.users
+    let users = req.query.users
 
-    userQuery = ""
+    let userQuery = ""
     for (let i = 0; i < users.length; i++) {
         if (i < (users.length - 1))
             userQuery += `username='${users[i]}' OR `
@@ -268,6 +268,17 @@ app.post("/api/post/signup", (req, res) => {
     });
 });
 
+app.post("/api/post/upload", (req, res) => {
+    const rb = req.body;
+    db.query(`INSERT INTO uploads (building, location, floor, description, tables, table_seat_comfort, nontable_seat_comfort, couch_comfort, max_group_size, natural_light_rating, printer, loudness_rating, overall_rating, max_capacity, notes)
+                VALUES (?, ?, ${rb.floor}, ?, ${rb.tables}, ${rb.comfort}, ${rb.comfort}, ${rb.comfort}, ${rb.group}, ${rb.naturalLight}, ${rb.printer}, ${rb.loudness}, ${rb.overall}, ${rb.outlets}, ${rb.capacity}, ?`,
+                [rb.building, rb.location, rb.description, rb.notes], (err, result) => {
+
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
 app.get("/api/get/distances", (req, res) => {
 
     const key = "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" // API Key
@@ -276,7 +287,7 @@ app.get("/api/get/distances", (req, res) => {
     const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 
     let building = req.query.building
-    locString = ""
+    let locString = ""
     for (let i = 0; i < req.query.locs.length; i++) {
         if (i < (req.query.locs.length - 1))
             locString += `${req.query.locs[i]}, Notre Dame, IN | `
@@ -286,7 +297,7 @@ app.get("/api/get/distances", (req, res) => {
 
     let url = `${maps_url}origins=${locString}, Notre Dame, IN&destinations=${building}, Notre Dame, IN&units=${units}&mode=${mode}&key=${key}`
     axios.get(url).then(response => {
-        distances = []
+        let distances = []
         for (let i = 0; i < req.query.locs.length; i++) {
             distances.push(parseInt(response.data["rows"][i]["elements"][0]["duration"]["text"].split(" ")[0]))
         }

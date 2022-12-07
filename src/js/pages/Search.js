@@ -13,7 +13,7 @@ function FilterTitle(props) {
     );
 }
 
-function Ratings(props) {
+export function Ratings(props) {
     let selectedOption = undefined;
 
     function formSubmit (val) {
@@ -23,15 +23,15 @@ function Ratings(props) {
     return (
         <div className={"rating d-flex"}>
             <input id={props.class + "1"} type="radio" name={props.class} value="1" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "1"}>1</label>
+            <label htmlFor={props.class + "1"}>.</label>
             <input id={props.class + "2"} type="radio" name={props.class} value="2" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "2"}>2</label>
+            <label htmlFor={props.class + "2"}>.</label>
             <input id={props.class + "3"} type="radio" name={props.class} value="3" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "3"}>3</label>
+            <label htmlFor={props.class + "3"}>.</label>
             <input id={props.class + "4"} type="radio" name={props.class} value="4" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "4"}>4</label>
+            <label htmlFor={props.class + "4"}>.</label>
             <input id={props.class + "5"} type="radio" name={props.class} value="5" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "5"}>5</label>
+            <label htmlFor={props.class + "5"}>.</label>
         </div>
     );
 }
@@ -141,6 +141,9 @@ export default function Search(props) {
                     <FilterTitle title={"Natural Light"}/>
                     <Ratings class={"ratingNL"}/>
 
+                    <FilterTitle title={"Outlets"}/>
+                    <Ratings class={"ratingO"}/>
+
                     <FilterTitle title={"Loudness"}/>
                     <div className={"d-flex jc-sb gap-20"}>
                         <input type="range" min="1" max="5" className="slider"
@@ -148,9 +151,6 @@ export default function Search(props) {
                         <input type="number" className={"slider-num"} min="1" max="5" name="loudness"
                                onChange={e => setSliderLoudness(parseInt(e.target.value))} value={sliderLoudness}/>
                     </div>
-
-                    <FilterTitle title={"Outlets"}/>
-                    <Ratings class={"ratingO"}/>
 
                     <FilterTitle title={"Group Size"}/>
                     <div className={"d-flex jc-sb gap-20"}>

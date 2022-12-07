@@ -11,12 +11,12 @@ export function AllPhotos(props) {
             <div className={"modal-form see-all d-flex f-col"} onClick={e => e.stopPropagation()}>
                 <p className={"see-all-title as-fs"}>Photos ( {props.photos.length} )</p>
                 <div className={"thin light-blue full-length line"}/><br/>
-                <div className={"d-flex f-wrap gap-20 full-length"}>
+                <div className={"see-all-display gap-20 full-length"}>
                     {props.photos.map((photo, index) => {
                         const image = "./media/locationsSD/" + photo;
                         return (
                             <div className={"see-all-photo-cont"} key={index}>
-                                <img src={image} alt="" className={"see-all-photo"}/>
+                                <img src={image} alt="" className={"see-all-photo fill"}/>
                             </div>
                         );
                     })}
