@@ -77,10 +77,11 @@ export default function Collaborate(props) {
                 let mins = []
                 if (reviews)
                     [ranges, mins] = calc_priorities(reviews.data, data.data)
+                console.log(ranges)
                 let priorities = []
                 for (let i = 0; i < mins.length; i++) {
                     if (mins[i] === 0)
-                        priorities.push("seat_comfort")
+                        priorities.push("table_seat_comfort")
                     else if (mins[i] === 1)
                         priorities.push("natural_light_rating")
                     else if (mins[i] === 2)
@@ -92,7 +93,7 @@ export default function Collaborate(props) {
                 new_data = new_data.map(place => Object.assign(place, calc_score(place, priorities, ranges)))
                 new_data.sort((o1, o2) => (o1["score"] - o2["score"]))
                 console.log(new_data)
-                setResults(new_data)
+                setResults(new_data.slice(0, 10))
             })
         });
     }
@@ -117,10 +118,10 @@ export default function Collaborate(props) {
             }
         }).then(response => {
             let distances = response.data;
-            return {"distances": distances}
             let cur_minutes = minutes;
             minutes[building] = response.data;
             setMinutes(minutes);
+            return {"distances": distances}
         })
     }
 
@@ -133,30 +134,35 @@ export default function Collaborate(props) {
 
         for (let i = 0; i < reviews.length; i++) {
             let place = places.filter(place => place.spot_id === reviews[i].spot_id)[0]
-            if (reviews[i].rating >= 4) {
-                if (place) {
+            if (place) {
+                if (reviews[i].rating >= 4) {
+                    if (place) {
+                        if (place.table_seat_comfort !== -1)
+                            comfort.push(place.table_seat_comfort)
+                        /*
+                    else if (place.nontable_seat_comfort !== -1)
+                        comfort.append(place.nontable_seat_comfort)
+                    else
+                        comfort.append(place.couch_comfort)
+                         */
+                        natural_light.push(place.natural_light_rating)
+                        loudness.push(place.loudness_rating)
+                        outlets.push(place.outlets_rating)
+                    }
+                } else if (reviews[i].rating <= 2) {
+                    console.log(reviews[i])
                     if (place.table_seat_comfort !== -1)
-                        comfort.push(place.table_seat_comfort)
-                    /*
-                else if (place.nontable_seat_comfort !== -1)
-                    comfort.append(place.nontable_seat_comfort)
-                else
-                    comfort.append(place.couch_comfort)
-                     */
+                        comfort.push(6 - place.table_seat_comfort)
                     natural_light.push(place.natural_light_rating)
                     loudness.push(place.loudness_rating)
                     outlets.push(place.outlets_rating)
                 }
             }
-            else if (reviews[i].rating <= 2) {
-                if (place.table_seat_comfort !== -1)
-                    comfort.push(6 - place.table_seat_comfort)
-                natural_light.push(place.natural_light_rating)
-                loudness.push(place.loudness_rating)
-                outlets.push(place.outlets_rating)
-            }
         }
 
+        if (comfort.length === 0)
+            return [{"table_seat_comfort": [2,3], "natural_light_rating": [4,5],
+                "loudness_rating": [2,3], "outlet_rating": [1,3]}, [2,1,0]]
         let all_arrays = [comfort, natural_light, loudness, outlets]
         console.log(all_arrays)
         let means = all_arrays.map(array => array.reduce((a, b) => a + b, 0) / array.length)
@@ -184,7 +190,7 @@ export default function Collaborate(props) {
 
         for (let i = 0; i < mins.length; i++) {
             if (mins[i] === 0)
-                returnObj["comfort"] = [Math.round(means[0] - stdevs[0]), Math.round(means[0] + stdevs[0])]
+                returnObj["table_seat_comfort"] = [Math.round(means[0] - stdevs[0]), Math.round(means[0] + stdevs[0])]
             else if (mins[i] === 1)
                 returnObj["natural_light_rating"] = [Math.round(means[1] - stdevs[1]), Math.round(means[1] + stdevs[1])]
             else if (mins[i] === 2)
@@ -213,12 +219,29 @@ export default function Collaborate(props) {
         score = score_total / denom_total
 
         for (let i = 0; i < priorities.length; i++) {
-            console.log(ranges)
-            if (place.priorities[i] < ranges.priorities[i][0]) {
-                score += (ranges.priorities[i][0] - place.priorities[i]) * (priorities.length - i)
+            if (priorities[i] === "table_seat_comfort" && place["table_seat_comfort"] === -1) {
+                if (place["nontable_seat_comfort"] !== -1) {
+                    if (place["nontable_seat_comfort"] < ranges[`${priorities[i]}`][0]) {
+                        score += (ranges[`${priorities[i]}`][0] - place["nontable_seat_comfort"]) * (priorities.length - i)
+                    } else if (place["nontable_seat_comfort"] > ranges[`${priorities[i]}`][1]) {
+                        score += (place["nontable_seat_comfort"] - ranges[`${priorities[i]}`][1]) * (priorities.length - i)
+                    }
+                }
+                else {
+                    if (place["couch_comfort"] < ranges[`${priorities[i]}`][0]) {
+                        score += (ranges[`${priorities[i]}`][0] - place["couch_comfort"]) * (priorities.length - i)
+                    } else if (place["couch_comfort"] > ranges[`${priorities[i]}`][1]) {
+                        score += (place["couch_comfort"] - ranges[`${priorities[i]}`][1]) * (priorities.length - i)
+                    }
+                }
             }
-            else if (place.priorities[i] > ranges.priorities[i][1]) {
-                score += (place.priorities[i] - ranges.priorities[i][1]) * (priorities.length - i)
+            else {
+                if (place[`${priorities[i]}`] < ranges[`${priorities[i]}`][0]) {
+                    score += (ranges[`${priorities[i]}`][0] - place[`${priorities[i]}`]) * (priorities.length - i)
+                }
+                else if (place[`${priorities[i]}`] > ranges[`${priorities[i]}`][1]) {
+                    score += (place[`${priorities[i]}`] - ranges[`${priorities[i]}`][1]) * (priorities.length - i)
+                }
             }
         }
 
@@ -368,18 +391,28 @@ export default function Collaborate(props) {
                         <button onClick={fillDateTime} className={"btn now-time"}>Now 🕒</button>
                     </div>
                 </div>
-                <div className={"group-features"}>
+                <div className={"group-features d-flex-col-l gap-10"}>
                     <p>Do you want any of the following?</p>
-                    <input type="checkbox" name="whiteboard"/>
-                    <label htmlFor="whiteboard">Whiteboard</label><br/>
-                    <input type="checkbox" name="computer"/>
-                    <label htmlFor="computer">Computer</label><br/>
-                    <input type="checkbox" name="tv"/>
-                    <label htmlFor="tv">TV</label><br/>
-                    <input type="checkbox" name="printer"/>
-                    <label htmlFor="printer">Printer</label><br/>
-                    <input type="checkbox" name="food"/>
-                    <label htmlFor="food">Food Available Nearby</label>
+                    <div className={"d-flex gap-20 ml-20"}>
+                        <input type="checkbox" name="whiteboard"/>
+                        <label htmlFor="whiteboard">Whiteboard</label><br/>
+                    </div>
+                    <div className={"d-flex gap-20 ml-20"}>
+                        <input type="checkbox" name="computer"/>
+                        <label htmlFor="computer">Computer</label><br/>
+                    </div>
+                    <div className={"d-flex gap-20 ml-20"}>
+                        <input type="checkbox" name="tv"/>
+                        <label htmlFor="tv">TV</label><br/>
+                    </div>
+                    <div className={"d-flex gap-20 ml-20"}>
+                        <input type="checkbox" name="printer"/>
+                        <label htmlFor="printer">Printer</label><br/>
+                    </div>
+                    <div className={"d-flex gap-20 ml-20"}>
+                        <input type="checkbox" name="food"/>
+                        <label htmlFor="food">Food Available Nearby</label>
+                    </div>
                 </div>
                 <div className={"submit-button"}>
                     <input type="submit" value="Submit" className={"btn submit-btn"} />
