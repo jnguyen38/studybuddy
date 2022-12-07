@@ -17,6 +17,7 @@
     "google-map-react": "^2.2.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
+    "mathjs": "^11.5.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.8.0",

@@ -2,6 +2,7 @@ import {useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import {Button, ButtonGroup} from "rsuite";
+let math = require('mathjs')
 
 function Results(props) {
     let locations = props.locations;
@@ -50,6 +51,7 @@ export default function Collaborate(props) {
     const [locations, setLocations] = useState([])
     const [minutes, setMinutes] = useState([])
     const [usernames, setUsernames] = useState([props.user.username])
+    const [priorities, setPriorities] = useState([])
 
     async function handleSubmit(event) {
         event.preventDefault()
@@ -70,9 +72,24 @@ export default function Collaborate(props) {
                     users: usernames
                 }
             }).then(reviews => {
-                console.log(data)
-                let priorities = calc_priorities(reviews, data)
-                new_data = new_data.map(place => Object.assign(place, calc_score(place)))
+                console.log(reviews)
+                let ranges = []
+                let mins = []
+                if (reviews)
+                    [ranges, mins] = calc_priorities(reviews.data, data.data)
+                let priorities = []
+                for (let i = 0; i < mins.length; i++) {
+                    if (mins[i] === 0)
+                        priorities.push("seat_comfort")
+                    else if (mins[i] === 1)
+                        priorities.push("natural_light_rating")
+                    else if (mins[i] === 2)
+                        priorities.push("loudness_rating")
+                    else if (mins[i] === 3)
+                        priorities.push("outlets_rating")
+                }
+                //setPriorities[priorities]
+                new_data = new_data.map(place => Object.assign(place, calc_score(place, priorities, ranges)))
                 new_data.sort((o1, o2) => (o1["score"] - o2["score"]))
                 console.log(new_data)
                 setResults(new_data)
@@ -116,27 +133,72 @@ export default function Collaborate(props) {
 
         for (let i = 0; i < reviews.length; i++) {
             let place = places.filter(place => place.spot_id === reviews[i].spot_id)[0]
-            if (place)
-                if (place.table_seat_comfort !== -1)
-                    comfort.append(place.table_seat_comfort)
+            if (reviews[i].rating >= 4) {
+                if (place) {
+                    if (place.table_seat_comfort !== -1)
+                        comfort.push(place.table_seat_comfort)
+                    /*
                 else if (place.nontable_seat_comfort !== -1)
                     comfort.append(place.nontable_seat_comfort)
                 else
                     comfort.append(place.couch_comfort)
-                natural_light.append(place.natural_light_rating)
-                loudness.append(place.loudness_rating)
-                outlets.append(places.outlets_rating)
+                     */
+                    natural_light.push(place.natural_light_rating)
+                    loudness.push(place.loudness_rating)
+                    outlets.push(place.outlets_rating)
+                }
+            }
+            else if (reviews[i].rating <= 2) {
+                if (place.table_seat_comfort !== -1)
+                    comfort.push(6 - place.table_seat_comfort)
+                natural_light.push(place.natural_light_rating)
+                loudness.push(place.loudness_rating)
+                outlets.push(place.outlets_rating)
+            }
         }
 
-        let stdevs = {'comfort': Math.std(comfort), 'natural_light_rating': Math.std(natural_light),
-            'loudness_rating': Math.std(loudness), 'outlets_rating': Math.std(outlets)}
+        let all_arrays = [comfort, natural_light, loudness, outlets]
+        console.log(all_arrays)
+        let means = all_arrays.map(array => array.reduce((a, b) => a + b, 0) / array.length)
+        let stdevs = [math.std(comfort), math.std(natural_light),
+            math.std(loudness), math.std(outlets)]
+        console.log(stdevs)
 
-        return stdevs
+        let mins = [0, -1, -2]
+        for (let i = 1; i < stdevs.length; i++) {
+            if (stdevs[i] <= stdevs[mins[0]]) {
+                mins[2] = mins[1]
+                mins[1] = mins[0]
+                mins[0] = i
+            }
+            else if (mins[1] < 0 || stdevs[i] <= stdevs[mins[1]]) {
+                mins[2] = mins[1]
+                mins[1] = i
+            }
+            else if (mins[2] < 0 || stdevs[i] <= stdevs[mins[2]]) {
+                mins[2] = i
+            }
+        }
+
+        let returnObj = {}
+
+        for (let i = 0; i < mins.length; i++) {
+            if (mins[i] === 0)
+                returnObj["comfort"] = [Math.round(means[0] - stdevs[0]), Math.round(means[0] + stdevs[0])]
+            else if (mins[i] === 1)
+                returnObj["natural_light_rating"] = [Math.round(means[1] - stdevs[1]), Math.round(means[1] + stdevs[1])]
+            else if (mins[i] === 2)
+                returnObj["loudness_rating"] = [Math.round(means[2] - stdevs[2]), Math.round(means[2] + stdevs[2])]
+            else if (mins[i] === 3)
+                returnObj["outlets_rating"] = [Math.round(means[3] - stdevs[3]), Math.round(means[3] + stdevs[3])]
+        }
+
+        return [returnObj, mins]
 
     }
 
     // Can add rating in here eventually
-    function calc_score(place) {
+    function calc_score(place, priorities, ranges) {
         let dists = place["distances"]
         dists.sort((a,b) => b - a)
         let num_locs = place["distances"].length
@@ -150,6 +212,15 @@ export default function Collaborate(props) {
         }
         score = score_total / denom_total
 
+        for (let i = 0; i < priorities.length; i++) {
+            console.log(ranges)
+            if (place.priorities[i] < ranges.priorities[i][0]) {
+                score += (ranges.priorities[i][0] - place.priorities[i]) * (priorities.length - i)
+            }
+            else if (place.priorities[i] > ranges.priorities[i][1]) {
+                score += (place.priorities[i] - ranges.priorities[i][1]) * (priorities.length - i)
+            }
+        }
 
         return {"score": score}
     }
