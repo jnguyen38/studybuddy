@@ -50,7 +50,7 @@ export function LocationHeader(props) {
     
     useEffect(() => {
         if (props.spot_id) {
-            Axios.get("http://db8.cse.nd.edu:5001/api/get/overallRating", {
+            Axios.get(props.apiPath + "/api/get/overallRating", {
                 params: {spot_id: props.spot_id}
             }).then(data => {
                 console.log(data.data[0]["avg(rating)"]);
