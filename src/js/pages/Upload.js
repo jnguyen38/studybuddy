@@ -1,5 +1,5 @@
 import Axios from "axios";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Ratings} from "./Search";
 
 import building from "../../media/icons/building.svg";
@@ -118,7 +118,7 @@ export default function Upload(props) {
 
     function handleSubmit(event) {
         event.preventDefault()
-        Axios.post(props.apiPath + "/api/post/newSpot", {
+        Axios.post(props.apiPath + "/api/post/upload", {
             image: event.target.image.files[0], loudness: event.target.loudness.value,
             comfort: event.target.comfort.value, naturalLight: event.target.naturalLight.value,
             outlets: event.target.outlets.value, overall: event.target.overall.value,
@@ -134,10 +134,12 @@ export default function Upload(props) {
 
     function handleNewImage(event) {setImage(URL.createObjectURL(event.target.files[0]));}
 
+    useEffect(() => window.scrollTo(0, 0), []);
+
     return (
         <div id={"upload-container"}>
-            <div className={"upload-title"}>
-                <h1 className={"fw-500"}>Upload Your Study Space</h1>
+            <div>
+                <h1 className={"title"}>Upload Your Study Space</h1>
             </div>
 
             <form onSubmit={handleSubmit}>

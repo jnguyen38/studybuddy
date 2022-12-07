@@ -232,7 +232,7 @@ export default function App() {
                         <Route path={path + "/search"} element={
                             <Search apiPath={apiPath} path={path}/>}/>
                         <Route path={path + "/upload"} element={
-                            <Upload/>}/>
+                            <Upload apiPath={apiPath}/>}/>
                         <Route path={path + "/recommendation"} element={
                             <Recommendation userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                         <Route path={path + "/recommendation/:typerec"} element={
