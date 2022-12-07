@@ -15,6 +15,7 @@ import emptyHeart from "../../media/icons/empty_heart.svg";
 export function LocationHeader(props) {
     const [showAllPhotos, setShowAllPhotos] = useState(false);
     const [photos, setPhotos] = useState([]);
+    const [overall, setOverall] = useState(0)
 
     function closeAllPhotos() {setShowAllPhotos(false);}
 
@@ -46,18 +47,17 @@ export function LocationHeader(props) {
            setShowAllPhotos(true)
         });
     }
-
-    function avgRating(allReviews) {
-        if (!allReviews) return 0;
-        let sum = 0;
-        let count = 0;
-        for (const review of allReviews) {
-            sum += review.rating;
-            count++;
+    
+    useEffect(() => {
+        if (props.spot_id) {
+            Axios.get("http://db8.cse.nd.edu:5001/api/get/overallRating", {
+                params: {spot_id: props.spot_id}
+            }).then(data => {
+                console.log(data.data[0]["avg(rating)"]);
+                setOverall(data.data[0]["avg(rating)"]);
+            });
         }
-
-        return Math.round(sum / count);
-    }
+    }, [props.apiPath, props.spot_id])
 
     return (
         <div id={"location-header"}>
@@ -65,7 +65,7 @@ export function LocationHeader(props) {
             <div className={"location-header-info"}>
                 <h2>{props.building}</h2>
                 <h3 className={"fw-500"}>{props.location}</h3>
-                <p className={"rating"}>{stars[avgRating(props.allReviews[props.spot_id])]}</p>
+                <p className={"rating"}>{stars[overall]}</p>
             </div>
             <div className={"d-flex f-wrap jc-fe"}>
                 <img src={(props.userLikes.has(props.spot_id)) ? fullHeart : emptyHeart} alt="" style={{zIndex: 20}}

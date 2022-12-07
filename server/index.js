@@ -150,6 +150,20 @@ app.get("/api/get/allPhotos", (req, res) => {
     });
 });
 
+app.get("/api/get/overallRating", (req, res) => {
+    db.query(`SELECT avg(rating) \
+                FROM reviews \
+			    WHERE spot_id = ?`, [req.query.spot_id], (err, result) => {
+        let avg = parseInt(result[0]["avg(rating)"]);
+        if (!avg) avg = 0;
+        db.query(`UPDATE study_spots \
+                    SET overall_rating = ${avg} \
+                    WHERE spot_id = ?`, [req.query.spot_id]);
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
 /* PUT API ENDPOINTS */
 
 app.put("/api/put/edit", (req, res) => {
