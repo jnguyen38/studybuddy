@@ -141,6 +141,9 @@ export default function Search(props) {
                     <FilterTitle title={"Natural Light"}/>
                     <Ratings class={"ratingNL"}/>
 
+                    <FilterTitle title={"Outlets"}/>
+                    <Ratings class={"ratingO"}/>
+
                     <FilterTitle title={"Loudness"}/>
                     <div className={"d-flex jc-sb gap-20"}>
                         <input type="range" min="1" max="5" className="slider"
@@ -148,9 +151,6 @@ export default function Search(props) {
                         <input type="number" className={"slider-num"} min="1" max="5" name="loudness"
                                onChange={e => setSliderLoudness(parseInt(e.target.value))} value={sliderLoudness}/>
                     </div>
-
-                    <FilterTitle title={"Outlets"}/>
-                    <Ratings class={"ratingO"}/>
 
                     <FilterTitle title={"Group Size"}/>
                     <div className={"d-flex jc-sb gap-20"}>

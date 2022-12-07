@@ -100,7 +100,7 @@ export function EditModal(props) {
                     <form onSubmit={handleSubmit} id={"edit-desc"} className={"form-container d-flex f-col"}>
                         <h2>Edit the {title}</h2>
                         <div className={"light-blue line"}/>
-                        <textarea placeholder={`Enter your ${props.query} here...`} name="description" maxLength="100" required/>
+                        <textarea placeholder={`Enter your ${props.query} here...`} name="description" maxLength="512" required/>
                         <div className={"form-buttons d-flex jc-fe"}>
                             <input type="reset" value="Clear" className={"btn"}/>
                             <input type="submit" value="Submit" className={"btn submit-btn"}/>

@@ -184,3 +184,8 @@
     padding: 2px;
     font-size: 0.7em;
 }
+
+.walking-distance {
+    font-size: 1em;
+    text-align: left;
+}
