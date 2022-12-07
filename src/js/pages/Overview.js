@@ -9,6 +9,7 @@ export default function Overview() {
     return (
         <section id={"overview-container"}>
             <h1>Study Buddy</h1>
+            <a href="https://youtu.be/uJvm0ZvAfoY" style={{textDecoration: "underline"}}><b>Youtube Link</b></a>
             <p><b>Description:</b> Our project will rely on a database of study spaces around Notre Dame’s campus.  Our application will allow users to search for study spaces using various filters, including proximity to a window/natural light, availability of printers, the loudness level of the location, whether or not there is desk space available, how many seats there are, and many more options.  Our application will also allow users to find a study space near a particular restaurant, find a central study space for working with group members or friends, or find a location that is on the way between classes or activities.</p>
 
             <p><b>Development Plan:</b> <a href="http://db8.cse.nd.edu/cse30246/studybuddy/devplan">Here</a></p>
