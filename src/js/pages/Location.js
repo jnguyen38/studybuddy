@@ -53,8 +53,9 @@ export function LocationHeader(props) {
             Axios.get(props.apiPath + "/api/get/overallRating", {
                 params: {spot_id: props.spot_id}
             }).then(data => {
-                console.log(data.data[0]["avg(rating)"]);
-                setOverall(data.data[0]["avg(rating)"]);
+                let resVal = data.data[0]["avg(rating)"];
+                if (!resVal) resVal = 0;
+                setOverall(resVal);
             });
         }
     }, [props.apiPath, props.spot_id])
