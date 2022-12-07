@@ -7,7 +7,6 @@ import GoogleMapReact from 'google-map-react';
 import person from "../../media/icons/person.svg";
 import star from "../../media/icons/double_star.svg";
 import share from "../../media/icons/share.svg";
-import camera from "../../media/icons/camera.svg";
 import wrong from "../../media/icons/close.svg";
 import check from "../../media/icons/check.svg";
 import fullHeart from "../../media/icons/full_heart.svg";

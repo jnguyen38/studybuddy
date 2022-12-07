@@ -1,4 +1,4 @@
-import {Link, Navigate} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import info from "../../media/icons/info.svg";
 import SHA3 from "sha3";
 import Axios from "axios";

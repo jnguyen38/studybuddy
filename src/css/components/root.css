@@ -127,6 +127,7 @@ a:link { text-decoration: none; }
 .gap-4p{gap: 4vw; grid-gap: 4vw;}
 .gap-5p{gap: 5%; grid-gap: 5%;}
 
+.mb-40 {margin-bottom: 40px;}
 
 .d-flex-row-l {
     display: flex;
@@ -189,7 +190,7 @@ a:link { text-decoration: none; }
     width: 50px;
     height: 2px;
     background-color: var(--inverted-bg-solid);
-    margin: 3px 0 6px 0;
+    margin: 6px 0;
 }
 
 .inverted {

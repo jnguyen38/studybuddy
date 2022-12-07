@@ -48,6 +48,10 @@
     box-shadow: 0 0 20px var(--inverted-bg-solid);
 }
 
+.home-option h1 {
+    font-weight: 500;
+}
+
 .collaborate-option {
     font-size: 0.9em;
 }
