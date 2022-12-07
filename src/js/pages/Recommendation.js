@@ -335,8 +335,10 @@ function History(props) {
 }
 
 function Results(props) {
+    const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
+
     return (
-        <div className={"results-container d-flex-col-c gap-20"}>
+        <div className={"collaborate-container d-flex-col-c gap-20"}>
             {(props.results.length === 0) ?
                 <div>Sorry, no study spots match the information gathered from your previous activity.</div>
                 :
@@ -348,8 +350,8 @@ function Results(props) {
                             <img src={image} alt="" className={"location-img"} loading={"lazy"}/>
                             <div className={"location-header-info full-length result-item-header"}>
                                 <h2>{result.building}</h2>
-                                <h3>{result.location}</h3>
-                                <p className={"rating"}>★★★★☆</p>
+                                <h3 className={"fw-500"}>{result.location}</h3>
+                                <p className={"rating"}>{stars[result.overall_rating]}</p>
                             </div>
                         </div></Link>
                     );
