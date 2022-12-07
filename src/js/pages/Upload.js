@@ -1,152 +1,161 @@
-import React from "react";
-import ReactAvatarEditor from "react-avatar-editor";
+import Axios from "axios";
+import {useEffect, useState} from "react";
+import {Ratings} from "./Search";
 
-function Ratings(props) {
-    let selectedOption = undefined;
+import building from "../../media/icons/building.svg";
+import location from "../../media/icons/location.svg";
+import group from "../../media/icons/group.svg";
+import person from "../../media/icons/person.svg";
+import stairs from "../../media/icons/stairs.svg";
 
-    function formSubmit (val) {
-        selectedOption = val;
-    }
-
+function SectionTitle(props) {
     return (
-        <div className={"rating d-flex"}>
-            <input id={props.class + "1"} type="radio" name={props.class} value="1" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "1"}>1</label>
-            <input id={props.class + "2"} type="radio" name={props.class} value="2" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "2"}>2</label>
-            <input id={props.class + "3"} type="radio" name={props.class} value="3" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "3"}>3</label>
-            <input id={props.class + "4"} type="radio" name={props.class} value="4" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "4"}>4</label>
-            <input id={props.class + "5"} type="radio" name={props.class} value="5" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "5"}>5</label>
+        <div className={"full-length"}>
+            <br/><div className={"thin full-length line"}/>
+            <h3>{props.title}</h3>
         </div>
     );
 }
 
-class UploadImage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            image: "",
-            sliderGroup: 1,
-            preview: null,
-            width: 500,
-            height: 330,
-        };
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-    handleNewImage = (e) => {
-        this.setState({ image: e.target.files[0] });
-    };
+function UploadDescription() {
+    return (
+        <div className={"d-flex-col-l gap-20"}>
+            <SectionTitle title={"Space Description"}/>
 
-    setSliderGroup = (e) => {
-        this.setState(parseInt(e.target.value))
-    }
-
-    async handleSubmit(e) {
-        if (this.editor) {
-            const img = this.editor.getImageScaledToCanvas().toDataURL();
-        }
-    }
-
-    render() {
-        return (
-            <div className={"upload-container"}>
-                <div className={"upload-header"}>
-                    <h1>Upload a new study space</h1>
+            <div className={"f-responsive-row"}>
+                <div className={"upload-input d-flex"} content={"🛈 The building that your space is located in"}>
+                    <img src={building} alt="" className={"icon sm-icon"}/>
+                    <input name={"building"} type={"text"} placeholder={"Building Name"} maxLength={50} required/>
                 </div>
-                <div className={"upload-body"}>
-                    <div className={"space-left"}>
-                        <div className={"space-information-intro"}>
-                            <div className={"building-input"}>
-                                <label>Building: </label>
-                                <input name="building" type="text" placeholder="Enter a building name"/>
-                            </div>
-                            <div className={"location-input"}>
-                                <label>Location: </label>
-                                <input name="location" type="text" placeholder="Enter a short description"/>
-                            </div>
-                            <div className={"floor-input"}>
-                                <label>Floor: </label>
-                                <input name="floor" type="text" placeholder="Enter a number"/>
-                            </div>
-                        </div>
-                        <h3>Upload a photo here</h3>
-                        <div>
-                            <ReactAvatarEditor
-                                width={this.state.width}
-                                height={this.state.height}
-                                image={this.state.image}
-                                color={[255, 255, 255, 0.6]}
-                                className="editor-canvas"
-                            />
-                        </div>
-                        <br />
-                        <label>
-                            <input
-                                name="upload-img-input"
-                                type="file"
-                                onChange={this.handleNewImage}
-                            />
-                        </label>
-                        <div className={"description-input"}>
-                            <h3>Enter a description of the space</h3>
-                            <textarea></textarea>
-                        </div>
-                        <div className={"notes-input"}>
-                            <h3>Add any amenities/notes</h3>
-                            <textarea></textarea>
-                        </div>
-                    </div>
-                    <div className={"extra-information"}>
-                        <div className={"people-input"}>
-                            <div className={"max-group-input"}>
-                                <label>Maximum Group Size:  </label>
-                                <input name="maxGroup" type="text" placeholder="Enter a number"/>
-                            </div>
-                            <div className={"max-capacity-input"}>
-                                <label>Maximum Capacity: </label>
-                                <input name="maxCapacity" type="text" placeholder="Enter a number"/>
-                            </div>
-                        </div>
-                        <div className={"features-input"}>
-                            <p>Are there any of the following?</p>
-                            <div>
-                                <input type="checkbox" name="table"/>
-                                <label htmlFor="tables">Table</label><br/>
-                                <input type="checkbox" name="couch"/>
-                                <label htmlFor="couch">Couch</label><br/>
-                                <input type="checkbox" name="printer"/>
-                                <label htmlFor="printer">Printer</label>
-                            </div>
-                        </div>
-                        <div className={"loud-input"}>
-                            <p>How loud is it?</p>
-                            <input type="range" min="0" max="5" className="slider" onChange={this.setSliderGroup} value={this.sliderGroup}/>
-                            <input type="number" className={"slider-num"} min="0" max="5" name="group" onChange={this.setSliderGroup} value={this.sliderGroup}/>
-                        </div>
-                        <div className={"seats-input"}>
-                            <p>How comfortable are the seats?</p>
-                            <Ratings class={"ratingSeats"}/>
-                        </div>
-                        <div className={"light-input"}>
-                            <p>How much natural light is there?</p>
-                            <Ratings class={"ratingLight"}/>
-                        </div>
-                        <div className={"outlets-input"}>
-                            <p>How many outlets are there?</p>
-                            <Ratings class={"ratingOutlets"}/>
-                        </div>
-                        <div className={"rating-input"}>
-                            <p>How would you rate this space?</p>
-                            <Ratings class={"ratingOverall"}/>
-                        </div>
-                        <div>
-                            <input type="submit" value="Submit" className={"btn submit-btn"}/>
-                        </div>
-                    </div>
+                <div className={"upload-input d-flex"} content={"🛈 A short name to call your space"}>
+                    <img src={location} alt="" className={"icon sm-icon"}/>
+                    <input name={"location"} type={"text"} placeholder={"Location Name"} maxLength={50} required/>
                 </div>
             </div>
-        )}}
-export default UploadImage;
+
+            <div className={"f-responsive-row"}>
+                <div className={"upload-input d-flex"} content={"🛈 The largest number of people that can work together in the space"}>
+                    <img src={group} alt="" className={"icon sm-icon"}/>
+                    <input name={"group"} type={"number"} placeholder={"Max Group Size"} min={1} required/>
+                </div>
+                <div className={"upload-input d-flex"} content={"🛈 The max number of people that fit in the space"}>
+                    <img src={person} alt="" className={"icon sm-icon"}/>
+                    <input name={"capacity"} type={"number"} placeholder={"Max Capacity"} min={1} required/>
+                </div>
+            </div>
+
+            <div className={"f-responsive-row"}>
+                <div className={"upload-input d-flex"} content={"🛈 The floor that your space is on"}>
+                    <img src={stairs} alt="" className={"icon sm-icon"}/>
+                    <input name={"floor"} type={"number"} placeholder={"Floor Number"} min={-2} required/>
+                </div>
+            </div>
+
+            <div className={"d-flex gap-20 upload-checkbox"}>
+                <input name={"tables"} type={"checkbox"}/>
+                <p>Are there tables?</p>
+            </div>
+
+            <div className={"d-flex gap-20 upload-checkbox"}>
+                <input name={"couches"} type={"checkbox"}/>
+                <p>Are there couches?</p>
+            </div>
+
+            <div className={"d-flex gap-20 upload-checkbox"}>
+                <input name={"printer"} type={"checkbox"}/>
+                <label htmlFor={"printer"}>Is there a nearby printer?</label>
+            </div>
+
+            <textarea name={"description"} placeholder={"Description"} maxLength={512} className={"upload-textarea"} required/>
+            <textarea name={"notes"} placeholder={"Other Notes"} maxLength={512} className={"upload-textarea"}/>
+        </div>
+    );
+}
+
+function UploadRatings(props) {
+    return (
+        <div className={"d-flex-col-l gap-20 mb-40"}>
+            <SectionTitle title={"Space Rating"}/>
+
+            <div className={"d-flex-col-l"}>
+                <p>Loudness </p>
+                <div className={"d-flex jc-sb gap-20"}>
+                    <input type={"range"} min={"1"} max={"5"} className={"slider"}
+                           onChange={(e) => props.setSliderLoudness(parseInt(e.target.value))} value={props.sliderLoudness}/>
+                    <input type={"number"} className={"slider-num"} min={1} max={5} name={"loudness"}
+                           onChange={e => props.setSliderLoudness(parseInt(e.target.value))} value={props.sliderLoudness}/>
+                </div>
+            </div>
+
+            <div className={"f-responsive-row"}>
+                <div className={"d-flex-col-l"}>
+                    <p>Natural Light Rating</p>
+                    <Ratings class={"naturalLight"}/>
+                </div>
+                <div className={"d-flex-col-l"}>
+                    <p>Comfortability Rating</p>
+                    <Ratings class={"comfort"}/>
+                </div>
+            </div>
+
+            <div className={"f-responsive-row"}>
+                <div className={"d-flex-col-l"}>
+                    <p>Outlet Availability</p>
+                    <Ratings class={"outlets"}/>
+                </div>
+                <div className={"d-flex-col-l"}>
+                    <p>Overall Rating</p>
+                    <Ratings class={"overall"}/>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default function Upload(props) {
+    const [image, setImage] = useState(null);
+    const [sliderLoudness, setSliderLoudness] = useState(1)
+
+    function handleSubmit(event) {
+        event.preventDefault()
+        Axios.post(props.apiPath + "/api/post/upload", {
+            image: event.target.image.files[0], loudness: event.target.loudness.value,
+            comfort: event.target.comfort.value, naturalLight: event.target.naturalLight.value,
+            outlets: event.target.outlets.value, overall: event.target.overall.value,
+            building: event.target.building.value, location: event.target.location.value,
+            group: event.target.group.value, capacity: event.target.capacity.value,
+            floor: event.target.floor.value, tables: event.target.tables.value,
+            couches: event.target.couches.value, printer: event.target.printer.value,
+            description: event.target.description.value, notes: event.target.notes.value
+        }).then(res => {
+            console.log(res);
+        })
+    }
+
+    function handleNewImage(event) {setImage(URL.createObjectURL(event.target.files[0]));}
+
+    useEffect(() => window.scrollTo(0, 0), []);
+
+    return (
+        <div id={"upload-container"}>
+            <div>
+                <h1 className={"title"}>Upload Your Study Space</h1>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+                <div className={"d-flex-col-l gap-20"}>
+                    <SectionTitle title={"Upload a Photo"}/>
+                    {image && <img src={image} alt="" className={"upload-image"}/>}
+                    <input name={"image"} type={"file"} onChange={handleNewImage} required/>
+                </div>
+
+                <UploadDescription/>
+                <UploadRatings sliderLoudness={sliderLoudness} setSliderLoudness={setSliderLoudness}/>
+
+                <div className={"form-buttons"}>
+                    <input type={"submit"} value={"Submit"} className={"submit-btn btn"}/>
+                </div>
+            </form>
+        </div>
+    );
+}

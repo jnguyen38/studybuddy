@@ -13,7 +13,7 @@ function FilterTitle(props) {
     );
 }
 
-function Ratings(props) {
+export function Ratings(props) {
     let selectedOption = undefined;
 
     function formSubmit (val) {
@@ -23,22 +23,24 @@ function Ratings(props) {
     return (
         <div className={"rating d-flex"}>
             <input id={props.class + "1"} type="radio" name={props.class} value="1" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "1"}>1</label>
+            <label htmlFor={props.class + "1"}>.</label>
             <input id={props.class + "2"} type="radio" name={props.class} value="2" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "2"}>2</label>
+            <label htmlFor={props.class + "2"}>.</label>
             <input id={props.class + "3"} type="radio" name={props.class} value="3" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "3"}>3</label>
+            <label htmlFor={props.class + "3"}>.</label>
             <input id={props.class + "4"} type="radio" name={props.class} value="4" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "4"}>4</label>
+            <label htmlFor={props.class + "4"}>.</label>
             <input id={props.class + "5"} type="radio" name={props.class} value="5" checked={selectedOption} onChange={(e) => formSubmit(e.target.value)}></input>
-            <label htmlFor={props.class + "5"}>5</label>
+            <label htmlFor={props.class + "5"}>.</label>
         </div>
     );
 }
 
-function Results(props) {
+export function Results(props) {
+    const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
+
     return (
-        <div className={"results-container d-flex-col-c gap-20"}>
+        <div className={"results-container gap-10"}>
             {(props.results.length === 0) ?
                 <div></div>
                 :
@@ -46,14 +48,16 @@ function Results(props) {
                     const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
 
                     return (
-                        <Link to={`${props.path}/location-${result.spot_id}`} style={{width: "100%"}} key={result.spot_id}><div id={"location-header"} className={"result-item"} key={result.spot_id}>
-                            <img src={image} alt="" className={"location-img"} loading={"lazy"}/>
-                            <div className={"location-header-info full-length result-item-header"}>
-                                <h2>{result.building}</h2>
-                                <h3>{result.location}</h3>
-                                <p className={"rating"}>★★★★☆</p>
+                        <Link to={`${props.path}/location-${result.spot_id}`} key={result.spot_id}>
+                            <div className={"result-item"} key={result.spot_id}>
+                                <img src={image} alt="" className={"location-img"} loading={"lazy"}/>
+                                <div className={"result-header-info full-length result-item-header"}>
+                                    <h2>{result.building}</h2>
+                                    <h3 className={"fw-500"}>{result.location}</h3>
+                                    <p>{stars[result.overall_rating]}</p>
+                                </div>
                             </div>
-                        </div></Link>
+                        </Link>
                     );
                 })
             }
@@ -109,9 +113,9 @@ export default function Search(props) {
 
     return (
         <div className={"search-container"}>
-            <div className={"search-header d-flex-col-c"}>
-                <h1>Find a Study Spot</h1>
-                <div className={"thick line"}/>
+            <div className={"d-flex-col-l"}>
+                <h1 className={"title"}>Find a Study Spot</h1><br/>
+                <div className={"thin full-length line"}/>
             </div>
 
             <div className={"search-row"}>
@@ -125,13 +129,19 @@ export default function Search(props) {
                     </div>
 
                     <FilterTitle title={"Features"}/>
-                    <div>
-                        <input type="checkbox" name="table"/>
-                        <label htmlFor="tables">Table</label><br/>
-                        <input type="checkbox" name="couch"/>
-                        <label htmlFor="couch">Couch</label><br/>
-                        <input type="checkbox" name="printer"/>
-                        <label htmlFor="printer">Printer</label>
+                    <div className={"d-flex-col-l gap-10"}>
+                        <div className={"d-flex gap-20 ml-20"}>
+                            <input type="checkbox" name="table"/>
+                            <label htmlFor="tables">Tables Available</label><br/>
+                        </div>
+                        <div className={"d-flex gap-20 ml-20"}>
+                            <input type="checkbox" name="couch"/>
+                            <label htmlFor="couch">Couches Available</label><br/>
+                        </div>
+                        <div className={"d-flex gap-20 ml-20"}>
+                            <input type="checkbox" name="printer"/>
+                            <label htmlFor="printer">Printer Nearby</label>
+                        </div>
                     </div>
 
                     <FilterTitle title={"Seat Comfort"}/>

@@ -43,6 +43,7 @@ export default function App() {
     // Path variables
     const path = "";
     const apiPath = "https://api.studybuddynd.com:8443";
+    //const apiPath = "http://db8.cse.nd.edu:5001"
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions
@@ -231,13 +232,13 @@ export default function App() {
                         <Route path={path + "/search"} element={
                             <Search apiPath={apiPath} path={path}/>}/>
                         <Route path={path + "/upload"} element={
-                            <Upload/>}/>
+                            <Upload apiPath={apiPath}/>}/>
                         <Route path={path + "/recommendation"} element={
                             <Recommendation userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                         <Route path={path + "/recommendation/:typerec"} element={
                             <Recommendation work={work} userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                         <Route path={path + "/collaborate"} element={
-                            <Collaborate apiPath={apiPath} path={path}/>}/>
+                            <Collaborate apiPath={apiPath} path={path} user={user}/>}/>
                         <Route path={path + "/signin"} element={
                             <SignIn user={user} redirect={redirect} path={path} apiPath={apiPath} handler={handler}/>}/>
                         <Route path={path + "/signup"} element={

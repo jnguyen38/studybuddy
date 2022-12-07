@@ -63,9 +63,13 @@ code {
     color: var(--sb-blue);
 }
 
+.red {color: #ff4444}
+.green {color: #40f140}
+
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     font-family: Outfit, sans-serif;
+    font-weight: 300;
 }
 
 a {
@@ -90,10 +94,18 @@ a:link { text-decoration: none; }
 .text-right {text-align: right;}
 .text-center {text-align: center;}
 
+.underline {text-decoration: underline}
+.italic {font-style: italic}
+.clickable {cursor: pointer}
+
+h1.title {
+    font-size: 3em;
+    font-weight: 300;
+}
+
 .no-select {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
@@ -113,12 +125,12 @@ a:link { text-decoration: none; }
 .as-c {align-self: center;}
 .as-fs {align-self: flex-start;}
 .as-fe {align-self: flex-end;}
+.gap-10{gap: 10px; grid-gap: 10px;}
 .gap-20{gap: 20px; grid-gap: 20px;}
 .gap-40{gap: 40px; grid-gap: 40px;}
-.gap-2_5p{gap: 2.5%; grid-gap: 2.5%;}
-.gap-4p{gap: 4vw; grid-gap: 4vw;}
-.gap-5p{gap: 5%; grid-gap: 5%;}
 
+.mb-40 {margin-bottom: 40px;}
+.ml-20 {margin-left: 20px;}
 
 .d-flex-row-l {
     display: flex;
@@ -181,7 +193,7 @@ a:link { text-decoration: none; }
     width: 50px;
     height: 2px;
     background-color: var(--inverted-bg-solid);
-    margin: 3px 0 6px 0;
+    margin: 6px 0;
 }
 
 .inverted {
@@ -294,6 +306,9 @@ a:link { text-decoration: none; }
     }
 
     aside.side-nav {display: none;}
+
+    .similar-locations .explore-link {max-width: 100% !important;}
+    .see-all-display {grid-template-columns: 1fr 1fr !important;}
 }
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {

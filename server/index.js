@@ -5,13 +5,12 @@ const axios = require('axios');
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
+const {spawn} = require('child_process');
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/api.studybuddynd.com/privkey.pem');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/api.studybuddynd.com/fullchain.pem');
 const credentials = {key: privateKey, cert: certificate};
 
 const app = express();
-
-const  PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -86,17 +85,45 @@ app.get("/api/get/location", (req, res) => {
 });
 
 app.get("/api/get/groupRec", (req, res) => {
+    console.log(req.query)
     let group = `max_group_size >= ${req.query.groupSize}`;
     let loudness = `loudness_rating > 1`;
-    console.log(group);
+    let whiteboard = (req.query.whiteboard === 'true') ? `notes like '%whiteboard%'` : `1=1`;
+    let computer = (req.query.computer === 'true') ? `notes like '%computer%'` : `1=1`;
+    let tv = (req.query.tv === 'true') ? `notes like '%tv%'` : `1=1`;
+    let printer = (req.query.printer === 'true') ? `printer` : `1=1`
+
+    console.log(`${whiteboard}, ${computer}, ${tv}`)
 
     db.query(`SELECT * \
                 FROM study_spots \
-                WHERE ${group} and ${loudness}`, (err, result) => {
+                WHERE ${group} and ${loudness} \
+                  and ${whiteboard} and ${computer} \
+                  and ${tv} and ${printer}`, (err, result) => {
         if (err) console.log(err);
         res.send(result);
     });
 });
+
+app.get("/api/get/groupReviews", (req, res) => {
+    let users = req.query.users
+
+    let userQuery = ""
+    for (let i = 0; i < users.length; i++) {
+        if (i < (users.length - 1))
+            userQuery += `username='${users[i]}' OR `
+        else
+            userQuery += `username='${users[i]}'`
+    }
+
+    db.query(`SELECT spot_id, rating \
+                FROM reviews \
+                WHERE ${userQuery}`, (err, result) => {
+        if (err) console.log(err)
+        console.log(result)
+        res.send(result)
+    })
+})
 
 
 app.get("/api/get/buildingInfo", (req, res) => {
@@ -106,6 +133,35 @@ app.get("/api/get/buildingInfo", (req, res) => {
         if (err) console.log(err);
         res.send(result);
     })
+});
+
+app.get("/api/get/allPhotos", (req, res) => {
+    let dataToSend;
+	const input = `${req.query.spot_id}`;
+    const python = spawn('python', ['server/py/get_pictures.py', input]);
+    python.stdout.on('data', data => {
+        console.log('Pipe data from python script ...');
+        dataToSend = data.toString();
+    });
+    python.on('close', (code) => {
+        console.log(`child process close all stdio with code ${code}`);
+        // send data to browser
+        res.send(dataToSend);
+    });
+});
+
+app.get("/api/get/overallRating", (req, res) => {
+    db.query(`SELECT avg(rating) \
+                FROM reviews \
+			    WHERE spot_id = ?`, [req.query.spot_id], (err, result) => {
+        let avg = parseInt(result[0]["avg(rating)"]);
+        if (!avg) avg = 0;
+        db.query(`UPDATE study_spots \
+                    SET overall_rating = ${avg} \
+                    WHERE spot_id = ?`, [req.query.spot_id]);
+        if (err) console.log(err);
+        res.send(result);
+    });
 });
 
 /* PUT API ENDPOINTS */
@@ -226,6 +282,17 @@ app.post("/api/post/signup", (req, res) => {
     });
 });
 
+app.post("/api/post/upload", (req, res) => {
+    const rb = req.body;
+    db.query(`INSERT INTO uploads (building, location, floor, description, tables, table_seat_comfort, nontable_seat_comfort, couch_comfort, max_group_size, natural_light_rating, printer, loudness_rating, overall_rating, max_capacity, notes)
+                VALUES (?, ?, ${rb.floor}, ?, ${rb.tables}, ${rb.comfort}, ${rb.comfort}, ${rb.comfort}, ${rb.group}, ${rb.naturalLight}, ${rb.printer}, ${rb.loudness}, ${rb.overall}, ${rb.outlets}, ${rb.capacity}, ?`,
+                [rb.building, rb.location, rb.description, rb.notes], (err, result) => {
+
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
 app.get("/api/get/distances", (req, res) => {
 
     const key = "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" // API Key
@@ -234,7 +301,7 @@ app.get("/api/get/distances", (req, res) => {
     const maps_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 
     let building = req.query.building
-    locString = ""
+    let locString = ""
     for (let i = 0; i < req.query.locs.length; i++) {
         if (i < (req.query.locs.length - 1))
             locString += `${req.query.locs[i]}, Notre Dame, IN | `
@@ -244,7 +311,7 @@ app.get("/api/get/distances", (req, res) => {
 
     let url = `${maps_url}origins=${locString}, Notre Dame, IN&destinations=${building}, Notre Dame, IN&units=${units}&mode=${mode}&key=${key}`
     axios.get(url).then(response => {
-        distances = []
+        let distances = []
         for (let i = 0; i < req.query.locs.length; i++) {
             distances.push(parseInt(response.data["rows"][i]["elements"][0]["duration"]["text"].split(" ")[0]))
         }
@@ -253,10 +320,6 @@ app.get("/api/get/distances", (req, res) => {
 });
 
 /* LISTENERS */
-
-app.listen(PORT, ()=>{
-    console.log("Server is running on port " + PORT)
-});
 
 let httpServer = http.createServer(app);
 let httpsServer = https.createServer(credentials, app);

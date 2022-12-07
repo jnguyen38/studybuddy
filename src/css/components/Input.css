@@ -33,18 +33,19 @@ textarea:focus, input:focus{
     outline: none;
 }
 
-textarea[name="description"] {
-    width: 100%;
+textarea {
+    width: calc(100% - 2*min(5%, 20px));
     min-height: 200px;
-    padding: 5%;
+    padding: min(5%, 20px);
     border-radius: var(--border-radius);
     transition: all .2s;
+    font-size: .95em;
 }
 
-textarea[name="description"]:focus {
+textarea:focus {
     border-color: var(--sb-light-blue);
     border-width: 3px !important;
-    padding: calc(5% - 2px);
+    padding: calc(min(5%, 20px) - 2px);
 }
 
 .dropdown {
@@ -52,3 +53,60 @@ textarea[name="description"]:focus {
     max-width: 100%;
 }
 
+input[type="file"] {
+    border: none;
+    padding: 0;
+}
+
+input::file-selector-button {
+    color: var(--inverted-text-color);
+    background-color: var(--inverted-bg-solid);
+    border: none;
+    font-family: Outfit, sans-serif;
+    border-radius: var(--border-radius);
+    padding: 5px 10px;
+    margin-right: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 1px var(--inverted-bg-solid);
+}
+
+input::file-selector-button:hover {
+    box-shadow: 0 0 3px var(--inverted-bg-solid);
+}
+
+input[type="checkbox"] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    display: grid;
+    place-content: center;
+    appearance: none;
+    background-color: #fff;
+    margin: 0;
+    font: inherit;
+    color: var(--sb-white);
+    width: 1.15em;
+    height: 1.15em;
+    border-radius: var(--border-radius);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transform: translateY(-0.075em);
+}
+
+input[type="checkbox"]:focus {
+    border: none;
+    padding: 0;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--sb-yellow);
+}
+
+input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}

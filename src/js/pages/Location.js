@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {RevModal, EditModal} from "../components/Modal";
+import {RevModal, EditModal, AllPhotos} from "../components/Modal";
 import {Link, useParams} from "react-router-dom";
 import Axios from "axios";
 import GoogleMapReact from 'google-map-react';
@@ -7,13 +7,18 @@ import GoogleMapReact from 'google-map-react';
 import person from "../../media/icons/person.svg";
 import star from "../../media/icons/double_star.svg";
 import share from "../../media/icons/share.svg";
-import camera from "../../media/icons/camera.svg";
 import wrong from "../../media/icons/close.svg";
 import check from "../../media/icons/check.svg";
 import fullHeart from "../../media/icons/full_heart.svg";
 import emptyHeart from "../../media/icons/empty_heart.svg";
 
 export function LocationHeader(props) {
+    const [showAllPhotos, setShowAllPhotos] = useState(false);
+    const [photos, setPhotos] = useState([]);
+    const [overall, setOverall] = useState(0)
+
+    function closeAllPhotos() {setShowAllPhotos(false);}
+
     const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
 
     function handleLike() {
@@ -34,34 +39,43 @@ export function LocationHeader(props) {
         props.handler.setHistDataHelper([]);
     }
 
-    function avgRating(allReviews) {
-        if (!allReviews) return 0;
-
-        let sum = 0;
-        let count = 0;
-        for (const review of allReviews) {
-            sum += review.rating;
-            count++;
-        }
-
-        return Math.round(sum / count);
+    function handleSeeAll() {
+        Axios.get(props.apiPath + "/api/get/allPhotos", {
+            params: {spot_id: props.spot_id}
+        }).then(data => {
+           setPhotos(data.data.split(","));
+           setShowAllPhotos(true)
+        });
     }
+    
+    useEffect(() => {
+        if (props.spot_id) {
+            Axios.get(props.apiPath + "/api/get/overallRating", {
+                params: {spot_id: props.spot_id}
+            }).then(data => {
+                console.log(data.data[0]["avg(rating)"]);
+                setOverall(data.data[0]["avg(rating)"]);
+            });
+        }
+    }, [props.apiPath, props.spot_id])
 
     return (
         <div id={"location-header"}>
             <img src={props.image} alt="" className={"location-img"}/>
             <div className={"location-header-info"}>
                 <h2>{props.building}</h2>
-                <h3>{props.location}</h3>
-                <p className={"rating"}>{stars[avgRating(props.allReviews[props.spot_id])]}</p>
+                <h3 className={"fw-500"}>{props.location}</h3>
+                <p className={"rating"}>{stars[overall]}</p>
             </div>
             <div className={"d-flex f-wrap jc-fe"}>
                 <img src={(props.userLikes.has(props.spot_id)) ? fullHeart : emptyHeart} alt="" style={{zIndex: 20}}
                      className={(props.userLikes.has(props.spot_id)) ? "icon warning-icon lg-icon like-button" : "icon white-icon lg-icon like-button"} onClick={handleLike}/>
-                <button className={"btn see-all-btn"}>
+                <button className={"btn see-all-btn"} onClick={handleSeeAll}>
                     See All Photos
                 </button>
             </div>
+
+            <AllPhotos {...props} show={showAllPhotos} close={closeAllPhotos} photos={photos}/>
         </div>
     );
 }
@@ -82,10 +96,10 @@ function LocationButtons(props) {
                 <img src={share} alt="" className={"icon invert-icon xs-icon"}/>
                 Share
             </button>
-            <button className={"btn d-flex-row-c"}>
-                <img src={camera} alt="" className={"icon invert-icon sm-icon"}/>
-                Add a Photo
-            </button>
+            {/*<button className={"btn d-flex-row-c"}>*/}
+            {/*    <img src={camera} alt="" className={"icon invert-icon sm-icon"}/>*/}
+            {/*    Add a Photo*/}
+            {/*</button>*/}
 
             {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("building")}>Edit Building</button>}
             {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("location")}>Edit Location</button>}
@@ -196,7 +210,6 @@ function LocationMain(props) {
                 <h4>About</h4>
                 <p className={"fw-300"}>{props.description}</p><br/>
                 <div className={"d-flex jc-sb full-length"}>
-                    <button className={"btn d-flex-row-c"}>Read More</button>
                     {props.user.isAdmin && <button className={"btn d-flex-row-c"} onClick={() => props.handleEditAuth("description")}>Edit</button>}
                 </div>
 
@@ -224,34 +237,61 @@ function LocationMain(props) {
 }
 
 function LocationAside(props) {
-    const defaultProps = {
-        center: {
-            lat: 41.69921143221658,
-            lng: -86.2388042160717
-        },
-        zoom: 14
-    };
+    const [currentState, setCurrentState] = useState(false);
+    const bInfo = props.buildingInfo;
 
-    const AnyReactComponent = ({ text }) => <div className={"map-marker"}>{text}</div>;
+    const AnyReactComponent = ({ text }) => <div className={"map-marker"} content={text}></div>;
+
+    function formatTime(date) {
+        let h = parseInt(date.toString().slice(0, 2)), m = parseInt(date.toString().slice(3, 5)), dd = "AM";
+        if (h >= 12) {h = h - 12; dd = "PM";}
+        if (h === 0) h = 12;
+        m = m < 10 ? "0" + m : m;
+
+        return `${h.toString()}:${m.toString()} ${dd}`;
+    }
+
+    function current(open, close) {
+        let today = new Date();
+
+        let openVal = parseInt(open.toString().slice(0, 2))*60 + parseInt(open.toString().slice(3, 5));
+        let closeVal = parseInt(close.toString().slice(0, 2))*60 + parseInt(close.toString().slice(3, 5));
+        let currVal = today.getHours()*60 + today.getMinutes();
+
+        return currVal >= openVal && currVal <= closeVal;
+    }
+    
+    useEffect(() => {
+        setCurrentState(current(props.buildingInfo.open, props.buildingInfo.close))
+    }, [props.buildingInfo.close, props.buildingInfo.open]);
 
     return (
         <div id={"location-aside"}>
             <div className={"location-map"}>
-                <GoogleMapReact
-                    bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
-                    defaultCenter={defaultProps.center}
-                    defaultZoom={defaultProps.zoom}
-                >
-                    <AnyReactComponent
-                        lat={props.center.lat}
-                        lng={props.center.long}
-                        text={props.building}
-                    />
+                <GoogleMapReact bootstrapURLKeys={{ key: "AIzaSyBYmmmLt6AxjNqDP4DW-uGZ8UHTPGqkgRE" }}
+                                defaultCenter={{lat: bInfo.lat, lng: bInfo.long}}
+                                defaultZoom={17}>
+                    <AnyReactComponent lat={bInfo.lat} lng={bInfo.long} text={props.building}/>
                 </GoogleMapReact>
             </div>
 
             <div className={"thin full-length line"}/>
-            <h2>{props.building} Hours</h2>
+            <h2 className={"fw-500"}>{props.building} Information</h2><br/>
+            <div style={{width: "min(325px, 100%)"}}>
+                <div className={"d-flex jc-sb full-length"}><p>Sunday</p><p>{formatTime(bInfo.sunOpen)} - {formatTime(bInfo.sunClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Monday</p><p>{formatTime(bInfo.monOpen)} - {formatTime(bInfo.monClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Tuesday</p><p>{formatTime(bInfo.tuesOpen)} - {formatTime(bInfo.tuesClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Wednesday</p><p>{formatTime(bInfo.wedOpen)} - {formatTime(bInfo.wedClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Thursday</p><p>{formatTime(bInfo.thursOpen)} - {formatTime(bInfo.thursClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Friday</p><p>{formatTime(bInfo.friOpen)} - {formatTime(bInfo.friClose)}</p></div>
+                <div className={"d-flex jc-sb full-length"}><p>Saturday</p><p>{formatTime(bInfo.satOpen)} - {formatTime(bInfo.satClose)}</p></div>
+            </div><br/>
+            <div>
+                <div className={"thin line"}></div>
+                <p className={"fw-500"}>Today</p><br/>
+                <p className={"fw-500"}>{formatTime(bInfo.open)} - {formatTime(bInfo.close)}</p>
+                <p className={currentState ? "current green" : "current red"}>{currentState ? "Currently Open" : "Currently Closed"}</p>
+            </div>
         </div>
     );
 }
@@ -262,14 +302,11 @@ export default function Location(props) {
     const [showEdit, setShowEdit] = useState(false);
     const [editSubmitted, setEditSubmitted] = useState(false);
     const [query, setQuery] = useState("");
-    const [geolocation, setGeolocation] = useState({lat: NaN, long: NaN})
+    const [buildingInfo, setBuildingInfo] = useState({open: NaN, close: NaN, lat: NaN, long: NaN, swipe: false});
 
     const root = document.querySelector(":root");
     const params = useParams()
-    const hoursDict = {0: {open: "sunOpen", close: "sunClose"}, 1: {open: "monOpen", close: "monClose"}, 2: {open: "tuesOpen", close: "tuesClose"},
-        3: {open: "wedOpen", close: "wedClose"}, 4: {open: "thursOpen", close: "thursClose"},
-        5: {open: "friOpen", close: "friClose"}, 6: {open: "satOpen", close: "satClose"}}
-
+   
     function handleShowEdit(queryType) {
         setQuery(queryType)
         setShowEdit(() => !showEdit);
@@ -312,9 +349,12 @@ export default function Location(props) {
                 }
             }).then(data => {
                 const day = new Date().getDay()
+                const hoursDict = {0: {open: "sunOpen", close: "sunClose"}, 1: {open: "monOpen", close: "monClose"}, 2: {open: "tuesOpen", close: "tuesClose"},
+                    3: {open: "wedOpen", close: "wedClose"}, 4: {open: "thursOpen", close: "thursClose"},
+                    5: {open: "friOpen", close: "friClose"}, 6: {open: "satOpen", close: "satClose"}}
 
-                setGeolocation({lat: data.data[0].latitude, long: data.data[0].longitude})
-                console.log(data.data[0]);
+                setBuildingInfo({...data.data[0], open: data.data[0][hoursDict[day].open], close: data.data[0][hoursDict[day].close], 
+                    lat: data.data[0].latitude, long: data.data[0].longitude, swipe: data.data[0].swipeAccess})
             });
         }
     }, [props.apiPath, spotData])
@@ -336,7 +376,7 @@ export default function Location(props) {
             <div className={"d-flex-row-l"}>
                 <LocationMain {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit}
                               handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>
-                {(!isNaN(geolocation.long)) && <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit} center={geolocation}
+                {(!isNaN(buildingInfo.long)) && <LocationAside {...spotData} {...props} closeEdit={closeEdit} editSubmit={editSubmit} showEdit={showEdit} buildingInfo={buildingInfo}
                                handleShowEdit={handleShowEdit} query={query} editSubmitted={editSubmitted} handleEditAuth={handleEditAuth}/>}
             </div>
         </section>

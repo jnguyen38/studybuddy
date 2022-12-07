@@ -174,7 +174,7 @@ export default function SignUp(props) {
 
     return (!props.user.isSignedIn) ? (
         <section id={"sign-up-container"} className={"d-flex-col-c"}>
-            <div className={"sign-up-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
+            <div className={"wide-form d-flex-col-c"} onMouseDown={e => e.stopPropagation()}>
                 <form onSubmit={handleSubmit} className={"form-container d-flex-col-c"}>
                     <h2>Create an Account</h2>
                     <div className={"thin light-blue full-length line"}/>

@@ -40,26 +40,27 @@ export default function Home(props) {
                     <div id={"home-op-display"}>
                         <Link to={props.path + "/search"}><div className={"home-option"}>
                             <h1>🔍 Search &rarr;</h1>
-                            <p>Search for your favorite study spaces on campus!
-                            </p>
+                            <p>Search for your favorite study spaces on campus!</p>
                         </div></Link>
+
                         <Link to={props.path + "/explore"}><div className={"home-option"}>
                             <h1>🚀 Explore &rarr;</h1>
                             <p>Explore study spaces on campus that you haven't visited before!</p>
                         </div></Link>
+
                         <Link to={props.path + "/recommendation"}><div className={"home-option"}>
                             <h1>🎲 Suggest &rarr;</h1>
                             <p>Find spot recommendations based on your previous activity or work needs!</p>
                         </div></Link>
+
+                        <Link to={props.path + "/collaborate"}><div className={"home-option"}>
+                            <h1 className={"collaborate-option"}>👩‍❤️‍👨 Collaborate &rarr;</h1>
+                            <p>Find a convenient study space to meet your friends!</p>
+                        </div></Link>
+
                         <Link to={props.path + "/upload"}><div className={"home-option"}>
                             <h1>📤 Upload &rarr;</h1>
                             <p>Add your favorite study space!</p>
-                        </div></Link>
-                        <Link to={props.path + "/collaborate"}><div className={"home-option"}>
-                            <div className={"collaborate-option"}>
-                            <h1>👩‍❤️‍👨 Collaborate &rarr;</h1>
-                            </div>
-                            <p>Find a convenient study space to meet your friends!</p>
                         </div></Link>
                     </div>
                 </div>
