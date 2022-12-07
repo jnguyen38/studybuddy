@@ -9,8 +9,11 @@ function Results(props) {
     let groupSize = props.groupSize;
     let minutes = props.minutes;
 
+    const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
+
+
     return (
-        <div className={"results-container d-flex-col-c gap-20"}>
+        <div className={"collaborate-container d-flex-col-c gap-20"}>
             {(props.results.length === 0) ?
                 <div></div>
                 :
@@ -18,12 +21,13 @@ function Results(props) {
                     const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
 
                     return (
-                        <Link key={result.spot_id} to={`${props.path}/location/${result.spot_id}`} style={{width: "100%"}}>
+                        <Link key={result.spot_id} to={`${props.path}/location-${result.spot_id}`} style={{width: "100%"}}>
                             <div id={"location-header"} className={"result-item"}>
                                 <img src={image} alt="" className={"location-img"}/>
                                 <div className={"location-header-info full-length result-item-header"}>
                                     <h2>{result.building}</h2>
-                                    <h3>{result.location}</h3>
+                                    <h3 className={"fw-500"}>{result.location}</h3>
+                                    <p>{stars[result.overall_rating]}</p>
                                     <div className={"walking-distance"}>
                                         {Array.from(Array(groupSize)).map((c, index) => {
                                             return <p>{minutes[result.building][index]} minute walk from {locations[index]}</p>

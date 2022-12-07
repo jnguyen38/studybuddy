@@ -60,6 +60,7 @@ export function LocationHeader(props) {
         }
     }, [props.apiPath, props.spot_id])
 
+
     return (
         <div id={"location-header"}>
             <img src={props.image} alt="" className={"location-img"}/>
