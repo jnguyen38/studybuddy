@@ -8,6 +8,7 @@ function Results(props) {
     let locations = props.locations;
     let groupSize = props.groupSize;
     let minutes = props.minutes;
+    console.log(props.required)
 
     const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
 
@@ -15,7 +16,7 @@ function Results(props) {
     return (
         <div className={"collaborate-container d-flex-col-c gap-20"}>
             {(props.results.length === 0) ?
-                <div></div>
+                <div>Sorry, no results matched your filters. Please try again</div>
                 :
                 props.results.map(result => {
                     const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
@@ -31,6 +32,12 @@ function Results(props) {
                                     <div className={"walking-distance"}>
                                         {Array.from(Array(groupSize)).map((c, index) => {
                                             return <p>{minutes[result.building][index]} minute walk from {locations[index]}</p>
+                                        })}
+                                        {result.openStatus === "swipe" &&
+                                            <p>Swipe Access Needed 💳</p>
+                                        }
+                                        {Array.from(Array(props.required)).map((c, index) => {
+                                            return <p>{props.required[index]}: ✅</p>
                                         })}
                                     </div>
                                 </div>
@@ -55,6 +62,7 @@ export default function Collaborate(props) {
     const [locations, setLocations] = useState([])
     const [minutes, setMinutes] = useState([])
     const [usernames, setUsernames] = useState([props.user.username])
+    const [required, setRequired] = useState([])
     const [priorities, setPriorities] = useState([])
 
     async function handleSubmit(event) {
@@ -66,11 +74,13 @@ export default function Collaborate(props) {
                 whiteboard: event.target.whiteboard.checked,
                 computer: event.target.computer.checked,
                 tv: event.target.tv.checked,
-                printer: event.target.printer.checked,
-                food: event.target.food.checked
+                printer: event.target.printer.checked
             }
         }).then(async (data) => {
             let new_data = await Promise.all(data.data.map(async (place) => Object.assign(place, await get_distance_obj(place["building"], locations))))
+            new_data = await Promise.all(new_data.map(async (place) => Object.assign(place, await get_open(place["building"], event.target.day.value, event.target.time.value))))
+            new_data = new_data.filter(place => place.openStatus !== "closed")
+            console.log(new_data)
             axios.get(props.apiPath + "/api/get/groupReviews", {
                 params: {
                     users: usernames
@@ -96,22 +106,18 @@ export default function Collaborate(props) {
                 //setPriorities[priorities]
                 new_data = new_data.map(place => Object.assign(place, calc_score(place, priorities, ranges)))
                 new_data.sort((o1, o2) => (o1["score"] - o2["score"]))
+                let required = []
+                if (event.target.whiteboard.checked) required.push("Whiteboard")
+                if (event.target.computer.checked) required.push("Computers")
+                if (event.target.tv.checked) required.push("TV")
+                if (event.target.printer.checked) required.push("Printer")
+                setRequired(required)
+                console.log(required)
                 console.log(new_data)
                 setResults(new_data.slice(0, 10))
             })
         });
     }
-
-    /*
-    function handleChange(event) {
-        const value = event.target.value;
-        setState({
-            ...state,
-            [event.target.name]: value,
-        });
-        console.log(event);
-    }
-     */
 
     async function get_distance_obj(building, locs) {
 
@@ -127,6 +133,31 @@ export default function Collaborate(props) {
             setMinutes(minutes);
             return {"distances": distances}
         })
+    }
+
+    async function get_open(building, day, time) {
+        return axios.get(props.apiPath + "/api/get/buildingInfo", {
+            params: {
+                building: building
+            }
+        }).then(response => {
+            const hoursDict = {0: {open: "sunOpen", close: "sunClose"}, 1: {open: "monOpen", close: "monClose"}, 2: {open: "tuesOpen", close: "tuesClose"},
+                3: {open: "wedOpen", close: "wedClose"}, 4: {open: "thursOpen", close: "thursClose"},
+                5: {open: "friOpen", close: "friClose"}, 6: {open: "satOpen", close: "satClose"}}
+            day = new Date(day)
+            let cur_day = day.getDay()
+            let openTime = response.data[0][hoursDict[cur_day].open]
+            let closeTime = response.data[0][hoursDict[cur_day].close]
+            let openVal = parseInt(openTime.toString().slice(0, 2))*60 + parseInt(openTime.toString().slice(3, 5));
+            let closeVal = parseInt(closeTime.toString().slice(0, 2))*60 + parseInt(closeTime.toString().slice(3, 5));
+            let currVal = parseInt(time.slice(0,2)*60) + parseInt(time.slice(3,5));
+            if (currVal > openVal && (currVal < closeVal || openVal > closeVal))
+                return {"openStatus": "open"}
+            else if (response.data[0].swipeAccess)
+                return {"openStatus": "swipe"}
+            else
+                return {"openStatus": "closed"}
+        });
     }
 
     // Might switch this to map if it needs to be faster
@@ -154,7 +185,6 @@ export default function Collaborate(props) {
                         outlets.push(place.outlets_rating)
                     }
                 } else if (reviews[i].rating <= 2) {
-                    console.log(reviews[i])
                     if (place.table_seat_comfort !== -1)
                         comfort.push(6 - place.table_seat_comfort)
                     natural_light.push(place.natural_light_rating)
@@ -194,13 +224,13 @@ export default function Collaborate(props) {
 
         for (let i = 0; i < mins.length; i++) {
             if (mins[i] === 0)
-                returnObj["table_seat_comfort"] = [Math.round(means[0] - stdevs[0]), Math.round(means[0] + stdevs[0])]
+                returnObj["table_seat_comfort"] = Math.round(means[0])
             else if (mins[i] === 1)
-                returnObj["natural_light_rating"] = [Math.round(means[1] - stdevs[1]), Math.round(means[1] + stdevs[1])]
+                returnObj["natural_light_rating"] = Math.round(means[1])
             else if (mins[i] === 2)
-                returnObj["loudness_rating"] = [Math.round(means[2] - stdevs[2]), Math.round(means[2] + stdevs[2])]
+                returnObj["loudness_rating"] = Math.round(means[2])
             else if (mins[i] === 3)
-                returnObj["outlets_rating"] = [Math.round(means[3] - stdevs[3]), Math.round(means[3] + stdevs[3])]
+                returnObj["outlets_rating"] = Math.round(means[3])
         }
 
         return [returnObj, mins]
@@ -208,7 +238,7 @@ export default function Collaborate(props) {
     }
 
     // Can add rating in here eventually
-    function calc_score(place, priorities, ranges) {
+    function calc_score(place, priorities, values) {
         let dists = place["distances"]
         dists.sort((a,b) => b - a)
         let num_locs = place["distances"].length
@@ -222,31 +252,16 @@ export default function Collaborate(props) {
         }
         score = score_total / denom_total
 
+        //console.log(priorities, values)
         for (let i = 0; i < priorities.length; i++) {
             if (priorities[i] === "table_seat_comfort" && place["table_seat_comfort"] === -1) {
-                if (place["nontable_seat_comfort"] !== -1) {
-                    if (place["nontable_seat_comfort"] < ranges[`${priorities[i]}`][0]) {
-                        score += (ranges[`${priorities[i]}`][0] - place["nontable_seat_comfort"]) * (priorities.length - i)
-                    } else if (place["nontable_seat_comfort"] > ranges[`${priorities[i]}`][1]) {
-                        score += (place["nontable_seat_comfort"] - ranges[`${priorities[i]}`][1]) * (priorities.length - i)
-                    }
-                }
-                else {
-                    if (place["couch_comfort"] < ranges[`${priorities[i]}`][0]) {
-                        score += (ranges[`${priorities[i]}`][0] - place["couch_comfort"]) * (priorities.length - i)
-                    } else if (place["couch_comfort"] > ranges[`${priorities[i]}`][1]) {
-                        score += (place["couch_comfort"] - ranges[`${priorities[i]}`][1]) * (priorities.length - i)
-                    }
-                }
+                if (place["nontable_seat_comfort"] !== -1)
+                    score += Math.abs(values[`${priorities[i]}`] - place["nontable_seat_comfort"]) * (priorities.length - i)
+                else
+                    score += Math.abs(values[`${priorities[i]}`] - place["couch_comfort"]) * (priorities.length - i)
             }
-            else {
-                if (place[`${priorities[i]}`] < ranges[`${priorities[i]}`][0]) {
-                    score += (ranges[`${priorities[i]}`][0] - place[`${priorities[i]}`]) * (priorities.length - i)
-                }
-                else if (place[`${priorities[i]}`] > ranges[`${priorities[i]}`][1]) {
-                    score += (place[`${priorities[i]}`] - ranges[`${priorities[i]}`][1]) * (priorities.length - i)
-                }
-            }
+            else
+                score += Math.abs(values[`${priorities[i]}`] - place[`${priorities[i]}`]) * (priorities.length - i)
         }
 
         return {"score": score}
@@ -333,6 +348,9 @@ export default function Collaborate(props) {
                         <p>Where are you?</p>
                         <input key = "0" name="userBuilding" type="text" placeholder="Enter a building name" onChange={handleLocationChange.bind(this, 0)}/>
                     </div>
+                    <div className={"note"}>
+                        <p>Note: Enter full name of building (i.e. "Knott Hall" instead of "Knott")</p>
+                    </div>
                 </div>
                 <div className={"friends-info"}>
                     {(count > 0) ?
@@ -367,12 +385,12 @@ export default function Collaborate(props) {
                 </div>
                 <div className={"another-button"}>
                     {(count > 0) ?
-                        <button onClick={addAnother} className={"btn another-btn"}>Add another friend!</button>
+                        <button type="button" onClick={addAnother} className={"btn another-btn"}>Add another friend!</button>
                         :
-                        <button onClick={addAnother} className={"btn another-btn"}>Add a friend!</button>
+                        <button type="button" onClick={addAnother} className={"btn another-btn"}>Add a friend!</button>
                     }
                     {(count > 0) ?
-                        <button onClick={removeFriend} className={"btn delete-btn"}>Remove friend</button>
+                        <button type="button" onClick={removeFriend} className={"btn delete-btn"}>Remove friend</button>
                         :
                         <div/>
                     }
@@ -388,11 +406,11 @@ export default function Collaborate(props) {
                             <p>Time: </p>
                             <input id="time-id" name="time" type="text" placeholder="hh:mm"/>
                             <ButtonGroup className="am-pm-button" variant="contained" aria-label="outlined primary button group">
-                                <Button className={"small-button"}>AM</Button>
-                                <Button className={"small-button"} onClick={convertPM}>PM</Button>
+                                <Button type="button" className={"small-button"}>AM</Button>
+                                <Button type="button" className={"small-button"} onClick={convertPM}>PM</Button>
                             </ButtonGroup>
                         </div>
-                        <button onClick={fillDateTime} className={"btn now-time"}>Now 🕒</button>
+                        <button type="button" onClick={fillDateTime} className={"btn now-time"}>Now 🕒</button>
                     </div>
                 </div>
                 <div className={"group-features d-flex-col-l gap-10"}>
@@ -413,16 +431,12 @@ export default function Collaborate(props) {
                         <input type="checkbox" name="printer"/>
                         <label htmlFor="printer">Printer</label><br/>
                     </div>
-                    <div className={"d-flex gap-20 ml-20"}>
-                        <input type="checkbox" name="food"/>
-                        <label htmlFor="food">Food Available Nearby</label>
-                    </div>
                 </div>
                 <div className={"submit-button"}>
                     <input type="submit" value="Submit" className={"btn submit-btn"} />
                 </div>
             </form>
-            <Results results={results} locations={locations} minutes={minutes} groupSize={count + 1} {...props}/>
+            <Results results={results} locations={locations} minutes={minutes} groupSize={count + 1} required={required} {...props}/>
         </div>
     );
 };
