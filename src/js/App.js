@@ -43,7 +43,7 @@ export default function App() {
     // Path variables
     const path = "";
     const apiPath = "https://api.studybuddynd.com:8443";
-    //const apiPath = "http://db8.cse.nd.edu:5001"
+    //const apiPath = "http://db8.cse.nd.edu:5002"
     const redirect = {home: path + "/", dev: path + "/devplan", overview: path + "/overview"};
 
     // Handler Functions

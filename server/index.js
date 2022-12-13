@@ -87,17 +87,17 @@ app.get("/api/get/location", (req, res) => {
 app.get("/api/get/groupRec", (req, res) => {
     console.log(req.query)
     let group = `max_group_size >= ${req.query.groupSize}`;
-    let loudness = `loudness_rating > 1`;
+    //let loudness = `loudness_rating > 1`;
     let whiteboard = (req.query.whiteboard === 'true') ? `notes like '%whiteboard%'` : `1=1`;
     let computer = (req.query.computer === 'true') ? `notes like '%computer%'` : `1=1`;
     let tv = (req.query.tv === 'true') ? `notes like '%tv%'` : `1=1`;
     let printer = (req.query.printer === 'true') ? `printer` : `1=1`
 
-    console.log(`${whiteboard}, ${computer}, ${tv}`)
+    //console.log(`${whiteboard}, ${computer}, ${tv}`)
 
     db.query(`SELECT * \
                 FROM study_spots \
-                WHERE ${group} and ${loudness} \
+                WHERE ${group} and \
                   and ${whiteboard} and ${computer} \
                   and ${tv} and ${printer}`, (err, result) => {
         if (err) console.log(err);
