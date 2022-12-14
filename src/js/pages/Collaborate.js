@@ -77,7 +77,7 @@ export default function Collaborate(props) {
                 printer: event.target.printer.checked
             }
         }).then(async (data) => {
-            console.log(data)
+            console.log(data.data)
             let new_data = await Promise.all(data.data.map(async (place) => Object.assign(place, await get_distance_obj(place["building"], locations))))
             new_data = await Promise.all(new_data.map(async (place) => Object.assign(place, await get_open(place["building"], event.target.day.value, event.target.time.value))))
             new_data = new_data.filter(place => place.openStatus !== "closed")
