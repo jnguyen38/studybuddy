@@ -383,11 +383,11 @@ export default function Recommendation(props) {
 
             <div className={"recommendation-select-row"}>
                 <div id={"op-display"}>
-                    <Link to={props.path + "/history"}><div className={"rec-option"}>
+                    <Link to={props.path + "-history"}><div className={"rec-option"}>
                             <h1>👀 History &rarr;</h1>
                             <p>Find a study spot based on your likes and reviews!</p>
                     </div></Link>
-                    <Link to={props.path + "/work"}><div className={"rec-option"}>
+                    <Link to={props.path + "-work"}><div className={"rec-option"}>
                             <h1>📖 Work Type &rarr;</h1>
                             <p>Find a study spot based on the type of work you're doing!</p>
                     </div></Link>

@@ -241,7 +241,7 @@ export default function App() {
                             <Upload apiPath={apiPath}/>}/>
                         <Route path={path + "/recommendation"} element={
                             <Recommendation userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
-                        <Route path={path + "/recommendation/:typerec"} element={
+                        <Route path={path + "/recommendation-:typerec"} element={
                             <Recommendation work={work} userLikes={userLikes} userReviews={userReviews} workReviews={workReviews} totalDict={totalDict} histData={histData} handler={handler} apiPath={apiPath} user={user} path={path + "/recommendation"} oldpath={path}/>}/>
                         <Route path={path + "/collaborate"} element={
                             <Collaborate apiPath={apiPath} path={path} user={user}/>}/>

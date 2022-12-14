@@ -237,11 +237,11 @@ app.post("/api/post/review", (req, res) => {
 app.post("/api/post/search", (req, res) => {
     let building = (req.body.building) ? `building="${req.body.building}"` : `building!=""`;
     let seatComfort = (req.body.seatComfort) ? `` : ``;
-    let outlets = (req.body.outlets) ? `outlets_rating=${req.body.outlets}` : `outlets_rating>=1`;
-    let loudness = (req.body.loudness) ? `loudness_rating=${req.body.loudness}` : `loudness_rating>=1`;
-    let naturalLight = (req.body.naturalLight) ? `natural_light_rating=${req.body.naturalLight}` : `natural_light_rating>=1`;
-    let capacity = (req.body.capacity) ? `max_capacity>=${req.body.capacity}` : `max_capacity>=1`;
-    let group = (req.body.group) ? `max_group_size>=${req.body.group}` : `max_group_size>=1`;
+    let outlets = (req.body.outlets) ? `outlets_rating=${req.body.outlets}` : `outlets_rating>=-1`;
+    let loudness = (req.body.loudness) ? `loudness_rating=${req.body.loudness}` : `loudness_rating>=-1`;
+    let naturalLight = (req.body.naturalLight) ? `natural_light_rating=${req.body.naturalLight}` : `natural_light_rating>=-1`;
+    let capacity = (req.body.capacity) ? `max_capacity>=${req.body.capacity}` : `max_capacity>=-1`;
+    let group = (req.body.group) ? `max_group_size>=${req.body.group}` : `max_group_size>=-1`;
 
     db.query(`SELECT * \
                 FROM study_spots \
