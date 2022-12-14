@@ -71,27 +71,7 @@ export default function Search(props) {
     const [sliderLoudness, setSliderLoudness] = useState(1)
     const [results, setResults] = useState([])
 
-    const optionList = [
-        { value: "Hammes Notre Dame Bookstore", label: "Hammes Notre Dame Bookstore" },
-        { value: "Notre Dame Law School", label: "Notre Dame Law School" },
-        { value: "Stinson-Remick Hall of Engineering", label: "Stinson-Remick Hall of Engineering" },
-        { value: "Hesburgh Center", label: "Hesburgh Center" },
-        { value: "Stayer Center", label: "Stayer Center" },
-        { value: "Mendoza College of Business", label: "Mendoza College of Business" },
-        { value: "DeBartolo Hall", label: "DeBartolo Hall" },
-        { value: "Fitzpatrick Hall of Engineering", label: "Fitzpatrick Hall of Engineering" },
-        { value: "Cushing Hall of Engineering", label: "Cushing Hall of Engineering" },
-        { value: "Duncan Student Center", label: "Duncan Student Center" },
-        { value: "Bond Hall", label: "Bond Hall" },
-        { value: "Coleman Morse Center", label: "Coleman-Morse Center" },
-        { value: "O'Shaughnessy Hall", label: "O'Shaughnessy Hall" },
-        { value: "Jordan Hall of Science", label: "Jordan Hall of Science" },
-        { value: "Pasquerilla Center", label: "Pasquerilla Center" },
-        { value: "McCourtney Hall", label: "McCourtney Hall" },
-        { value: "Hesburgh Library", label: "Hesburgh Library" },
-        { value: "Nieuwland Hall of Science", label: "Nieuwland Hall of Science" },
-        { value: "LaFortune Student Center", label: "LaFortune Student Center" },
-    ];
+    const optionList = props.buildings;
 
     function handleSubmit(event) {
         event.preventDefault()
