@@ -7,7 +7,6 @@ let math = require('mathjs')
 function Results(props) {
     let locations = props.locations;
     let groupSize = props.groupSize;
-    let minutes = props.minutes;
     console.log(props.required)
 
     const stars = {0: "☆☆☆☆☆", 1: "★☆☆☆☆", 2: "★★☆☆☆", 3: "★★★☆☆", 4: "★★★★☆", 5: "★★★★★"};
