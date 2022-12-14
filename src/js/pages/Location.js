@@ -53,7 +53,7 @@ export function LocationHeader(props) {
             Axios.get(props.apiPath + "/api/get/overallRating", {
                 params: {spot_id: props.spot_id}
             }).then(data => {
-                let resVal = data.data[0]["avg(rating)"];
+                let resVal = parseInt(data.data[0]["avg(rating)"]);
                 if (!resVal) resVal = 0;
                 setOverall(resVal);
             });
@@ -260,7 +260,7 @@ function LocationAside(props) {
         let closeVal = parseInt(close.toString().slice(0, 2))*60 + parseInt(close.toString().slice(3, 5));
         let currVal = today.getHours()*60 + today.getMinutes();
 
-        return currVal >= openVal && currVal <= closeVal;
+        return (closeVal <= openVal) ? currVal >= openVal : currVal >= openVal && currVal <= closeVal;
     }
     
     useEffect(() => {

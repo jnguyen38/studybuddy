@@ -45,7 +45,7 @@ export function Results(props) {
                 <div></div>
                 :
                 props.results.map(result => {
-                    const image = "./media/locationsSD/" + result.spot_id + "-00.webp";
+                    const image = "./media/locationsGallery/" + result.spot_id + "-00.webp";
 
                     return (
                         <Link to={`${props.path}/location-${result.spot_id}`} key={result.spot_id}>
@@ -68,7 +68,7 @@ export function Results(props) {
 export default function Search(props) {
     const [sliderGroup, setSliderGroup] = useState(1)
     const [sliderCapacity, setSliderCapacity] = useState(1)
-    const [sliderLoudness, setSliderLoudness] = useState(1)
+    const [sliderLoudness, setSliderLoudness] = useState(undefined)
     const [results, setResults] = useState([])
 
     const optionList = props.buildings;
