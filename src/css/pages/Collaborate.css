@@ -23,6 +23,7 @@
     display: grid;
     grid-template-columns: 4fr 2fr;
     grid-template-rows: auto;
+    max-width: 300px;
 }
 
 .self-input {
@@ -45,6 +46,9 @@
     grid-template-columns: 2fr 2fr 1fr;
     grid-template-rows: auto 1fr;
     padding-top: 20px;
+    max-width: 400px;
+    column-gap: 30px;
+    text-align: center;
 }
 
 .display-friends {
@@ -57,11 +61,13 @@
 
 .friends-names {
     flex: 1;
+    margin-right: 10px;
 }
 
 .friends-buildings {
     flex: 1;
 }
+
 
 .another-button {
     padding-top: 20px;
@@ -100,7 +106,7 @@
 
 .friend-user-input input[type="text"]{
     display: block;
-    width: 75%;
+    width: 100%;
     padding: 2px;
     margin-bottom: 3px;
 }
@@ -114,7 +120,7 @@
 
 .friend-building-input input[type="text"]{
     display: block;
-    width: 75%;
+    width: 100%;
     padding: 2px;
     margin-bottom: 3px;
 }
@@ -124,7 +130,7 @@
     grid-column-start: 1;
     grid-column-end: 2;
     display: block;
-    width: 75%;
+    width: 100%;
 }
 
 .submit-button {

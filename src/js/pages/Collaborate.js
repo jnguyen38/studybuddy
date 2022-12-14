@@ -31,13 +31,13 @@ function Results(props) {
                                     <p>{stars[result.overall_rating]}</p>
                                     <div className={"walking-distance"}>
                                         {Array.from(Array(groupSize)).map((c, index) => {
-                                            return <p>{minutes[result.building][index]} minute walk from {locations[index]}</p>
+                                            return <p>{result.distances[index]} minute walk from {locations[index]}</p>
                                         })}
                                         {result.openStatus === "swipe" &&
-                                            <p>Swipe Access Needed 💳</p>
+                                            <p>💳 Swipe Access Needed</p>
                                         }
-                                        {Array.from(Array(props.required)).map((c, index) => {
-                                            return <p>{props.required[index]}: ✅</p>
+                                        {Array.from(Array(props.required.length)).map((c, index) => {
+                                            return <p>✅ {props.required[index]}</p>
                                         })}
                                     </div>
                                 </div>
@@ -77,7 +77,6 @@ export default function Collaborate(props) {
                 printer: event.target.printer.checked
             }
         }).then(async (data) => {
-            console.log(data.data)
             let new_data = await Promise.all(data.data.map(async (place) => Object.assign(place, await get_distance_obj(place["building"], locations))))
             new_data = await Promise.all(new_data.map(async (place) => Object.assign(place, await get_open(place["building"], event.target.day.value, event.target.time.value))))
             new_data = new_data.filter(place => place.openStatus !== "closed")
@@ -113,7 +112,6 @@ export default function Collaborate(props) {
                 if (event.target.tv.checked) required.push("TV")
                 if (event.target.printer.checked) required.push("Printer")
                 setRequired(required)
-                console.log(required)
                 console.log(new_data)
                 setResults(new_data.slice(0, 10))
             })
@@ -175,12 +173,6 @@ export default function Collaborate(props) {
                     if (place) {
                         if (place.table_seat_comfort !== -1)
                             comfort.push(place.table_seat_comfort)
-                        /*
-                    else if (place.nontable_seat_comfort !== -1)
-                        comfort.append(place.nontable_seat_comfort)
-                    else
-                        comfort.append(place.couch_comfort)
-                         */
                         natural_light.push(place.natural_light_rating)
                         loudness.push(place.loudness_rating)
                         outlets.push(place.outlets_rating)
@@ -196,14 +188,12 @@ export default function Collaborate(props) {
         }
 
         if (comfort.length === 0)
-            return [{"table_seat_comfort": [2,3], "natural_light_rating": [4,5],
-                "loudness_rating": [2,3], "outlet_rating": [1,3]}, [2,1,0]]
+            return [{"table_seat_comfort": [3], "natural_light_rating": [4],
+                "loudness_rating": [3], "outlet_rating": [2]}, [2,1,0]]
         let all_arrays = [comfort, natural_light, loudness, outlets]
-        console.log(all_arrays)
         let means = all_arrays.map(array => array.reduce((a, b) => a + b, 0) / array.length)
         let stdevs = [math.std(comfort), math.std(natural_light),
             math.std(loudness), math.std(outlets)]
-        console.log(stdevs)
 
         let mins = [0, -1, -2]
         for (let i = 1; i < stdevs.length; i++) {
@@ -240,8 +230,8 @@ export default function Collaborate(props) {
 
     // Can add rating in here eventually
     function calc_score(place, priorities, values) {
-        let dists = place["distances"]
-        dists.sort((a,b) => b - a)
+        let dists = [...place["distances"]].sort()
+        //dists.sort((a,b) => b - a)
         let num_locs = place["distances"].length
         let score = 0
         let denom_total = 0
@@ -253,7 +243,6 @@ export default function Collaborate(props) {
         }
         score = score_total / denom_total
 
-        //console.log(priorities, values)
         for (let i = 0; i < priorities.length; i++) {
             if (priorities[i] === "table_seat_comfort" && place["table_seat_comfort"] === -1) {
                 if (place["nontable_seat_comfort"] !== -1)
@@ -264,6 +253,8 @@ export default function Collaborate(props) {
             else
                 score += Math.abs(values[`${priorities[i]}`] - place[`${priorities[i]}`]) * (priorities.length - i)
         }
+
+        score += (5 - (place.overall_rating || 3)) * 2
 
         return {"score": score}
     }
@@ -284,7 +275,11 @@ export default function Collaborate(props) {
 
     function getTimeNow(event) {
         var now = new Date();
-        return (now.getHours() + ':' + now.getMinutes());
+        let hour = now.getHours();
+        let minute = now.getMinutes();
+        if (hour < 10) hour = "0" + hour;
+        if (minute < 10) minute = "0" + minute;
+        return (hour + ':' + minute);
     }
 
     function fillTimeNow(event) {
@@ -307,7 +302,6 @@ export default function Collaborate(props) {
 
     function convertPM(event) {
         var timePM = document.getElementById('time-id').value;
-        console.log(timePM);
         let pmArray = timePM.split(":");
         let pmHours = parseInt(pmArray[0]);
         if (pmHours < 12) {
@@ -318,7 +312,6 @@ export default function Collaborate(props) {
             pmMinutes = "0" + pmMinutes;
         }
         let pmUpdate = pmHours + ":" + pmArray[1];
-        console.log(pmUpdate);
         document.getElementById('time-id').value = pmUpdate;
         /*var timePMHours = timePM.getHours() + 12;
         var timePMUpdate = timePMHours + ":" + timePM.getMinutes();
