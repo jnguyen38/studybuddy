@@ -97,7 +97,7 @@ app.get("/api/get/groupRec", (req, res) => {
 
     db.query(`SELECT * \
                 FROM study_spots \
-                WHERE ${group} and \
+                WHERE ${group} \
                   and ${whiteboard} and ${computer} \
                   and ${tv} and ${printer}`, (err, result) => {
         if (err) console.log(err);
