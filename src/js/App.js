@@ -33,7 +33,7 @@ export default function App() {
     const [buildings, setBuildings] = useState({}); // Object of buildings and corresponding spot_ids Ex: {"Duncan Student Center": ["010100", "010101",...], ...}
     const [exploreLayout, setExploreLayout] = useState([]);
     const [allReviews, setAllReviews] = useState({});
-
+    const [listBuildings, setListBuildings] = useState([]);
     const [userLikes, setUserLikes] = useState(new Set());
     const [userReviews, setUserReviews] = useState([]);
     const [histData, setHistData] = useState([]);
@@ -109,7 +109,7 @@ export default function App() {
         if (n > 5) n = 5;
         return Math.floor(Math.random() * picLayouts[n]);
     }
-    
+
     // useEffect Hooks
     useEffect(() => {
         // Get all spots and store into spots state on page load
@@ -122,6 +122,12 @@ export default function App() {
                     tempBuildings[spot.building] = [{id: spot.spot_id, location: spot.location}];
             }
             setBuildings(tempBuildings);
+        });
+
+        Axios.get(apiPath + "/api/get/buildings").then(res => {
+            let tempListBuildings = []
+            for (const building of res.data) tempListBuildings.push({value: building.building, label: building.building})
+            setListBuildings(tempListBuildings);
         });
 
         // Get majors and store into majors state on page load
@@ -230,7 +236,7 @@ export default function App() {
                         <Route path={path + "/location-:spot_id"} element={
                             <Location path={path} user={user} work={work} userLikes={userLikes} handler={handler} apiPath={apiPath} showAuthenticate={showAuthenticate} allReviews={allReviews} buildings={buildings}/>}/>
                         <Route path={path + "/search"} element={
-                            <Search apiPath={apiPath} path={path}/>}/>
+                            <Search apiPath={apiPath} path={path} buildings={listBuildings}/>}/>
                         <Route path={path + "/upload"} element={
                             <Upload apiPath={apiPath}/>}/>
                         <Route path={path + "/recommendation"} element={
@@ -258,5 +264,3 @@ export default function App() {
         <div/>
     );
 }
-
-
