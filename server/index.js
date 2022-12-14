@@ -59,6 +59,14 @@ app.get("/api/get/majors", (req, res) => {
     });
 });
 
+app.get("/api/get/buildings", (req, res) => {
+    db.query("SELECT DISTINCT building \
+                FROM buildings", (err, result) => {
+        if (err) console.log(err);
+        res.send(result);
+    });
+});
+
 app.get("/api/get/usernames", (req, res) => {
     db.query("SELECT username \
                 FROM users;", (err, result) => {
@@ -326,4 +334,3 @@ let httpsServer = https.createServer(credentials, app);
 
 httpServer.listen(8080);
 httpsServer.listen(8443);
-
