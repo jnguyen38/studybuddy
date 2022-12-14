@@ -293,7 +293,7 @@ app.post("/api/post/signup", (req, res) => {
 app.post("/api/post/upload", (req, res) => {
     const rb = req.body;
     db.query(`INSERT INTO uploads (building, location, floor, description, tables, table_seat_comfort, nontable_seat_comfort, couch_comfort, max_group_size, natural_light_rating, printer, loudness_rating, overall_rating, outlets_rating, max_capacity, notes)
-                VALUES (?, ?, ${rb.floor}, ?, ${rb.tables}, ${rb.comfort}, ${rb.comfort}, ${rb.comfort}, ${rb.group}, ${rb.naturalLight}, ${rb.printer}, ${rb.loudness}, ${rb.overall}, ${rb.outlets}, ${rb.capacity}, ?`,
+                VALUES (?, ?, ${rb.floor}, ?, ${rb.tables}, ${rb.comfort}, ${rb.comfort}, ${rb.comfort}, ${rb.group}, ${rb.naturalLight}, ${rb.printer}, ${rb.loudness}, ${rb.overall}, ${rb.outlets}, ${rb.capacity}, ?)`,
                 [rb.building, rb.location, rb.description, rb.notes], (err, result) => {
 
         if (err) console.log(err);
