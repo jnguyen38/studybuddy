@@ -118,7 +118,7 @@ export default function Upload(props) {
 
     function handleSubmit(event) {
         event.preventDefault()
-        Axios.post("http://db8.cse.nd.edu:5019" + "/api/post/upload", {
+        Axios.post(props.apiPath + "/api/post/upload", {
             image: event.target.image.files[0], loudness: event.target.loudness.value,
             comfort: event.target.comfort.value, naturalLight: event.target.naturalLight.value,
             outlets: event.target.outlets.value, overall: event.target.overall.value,
