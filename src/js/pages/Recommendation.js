@@ -166,7 +166,7 @@ function Work(props) {
                 <Description/>
             </div>
             <div className={"rec-results"}>
-                <HelperResults/>
+                <HelperResults {...props}/>
             </div>
         </div>
     )
